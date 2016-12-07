@@ -22,28 +22,33 @@
     </h:head>
 
     <h:body styleClass="main-body #{beanGuestPreferences.compact ? 'layout-compact' : null}">
-        
+
+        <p:commandLink id="logout" actionListener="#{loginBean.logout}" style="margin-right:20px;" oncomplete="logout(xhr, status, args)">
+            <h:outputText value="logout" />
+        </p:commandLink>
+
+
         <div class="layout-wrapper #{beanGuestPreferences.menuLayout}">
             <ui:include src="./topbar.xhtml" />
             <ui:include src="./menu.xhtml" />
-            
+
             <div class="layout-main">
                 <ui:insert name="content"/>
-                
+
                 <ui:include src="./footer.xhtml" />
             </div>
         </div>
-        
-        <p:ajaxStatus style="width:32px;height:32px;position:fixed;right:7px;bottom:7px">
-           <f:facet name="start">
-               <i class="fa fa-circle-o-notch fa-spin ajax-loader" aria-hidden="true"></i>
-           </f:facet>
 
-           <f:facet name="complete">
-               <h:outputText value="" />
-           </f:facet>
-       </p:ajaxStatus>
-        
+        <p:ajaxStatus style="width:32px;height:32px;position:fixed;right:7px;bottom:7px">
+            <f:facet name="start">
+                <i class="fa fa-circle-o-notch fa-spin ajax-loader" aria-hidden="true"></i>
+            </f:facet>
+
+            <f:facet name="complete">
+                <h:outputText value="" />
+            </f:facet>
+        </p:ajaxStatus>
+
 
         <h:outputStylesheet name="css/nanoscroller.css" library="ultima-layout" />
         <h:outputStylesheet name="css/animate.css" library="ultima-layout" />
