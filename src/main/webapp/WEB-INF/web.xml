@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-
     <description>${project.version}</description>
     <display-name>${project.artifactId} - ${project.version}</display-name>
-
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
         <!-- <param-value>Production</param-value> -->
     </context-param>
-    
     <context-param>
         <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
         <param-value>true</param-value>
@@ -26,9 +23,6 @@
         <param-name>com.sun.faces.enableRestoreView11Compatibility</param-name>
         <param-value>true</param-value>
     </context-param>
-    
-    
-    
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -46,9 +40,6 @@
     <welcome-file-list>
         <welcome-file>login.xhtml</welcome-file>
     </welcome-file-list>
-    
-    
-    
     <!-- Error Pages -->
     <error-page>
         <exception-type>java.lang.Exception</exception-type>
@@ -62,9 +53,6 @@
         <error-code>500</error-code>
         <location>/access-denied.xhtml</location>
     </error-page>
-    
-    
-    
     <!-- FONTS -->
     <mime-mapping>
         <extension>ttf</extension>
@@ -110,5 +98,4 @@
         <extension>svg#fontawesomeregular</extension>
         <mime-type>image/svg+xml</mime-type>
     </mime-mapping>
-    
 </web-app>

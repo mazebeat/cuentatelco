@@ -25,7 +25,14 @@
  */
 package cl.intelidata.beans;
 
+import cl.intelidata.jpa.Cliente;
+import cl.intelidata.jpa.Persona;
+import cl.intelidata.jpa.Usuarios;
+import cl.intelidata.negocio.NegocioCliente;
+import cl.intelidata.negocio.NegocioLogin;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -33,6 +40,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 import org.primefaces.context.RequestContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -43,11 +52,15 @@ import org.primefaces.context.RequestContext;
 public class LoginBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
+    private static Logger logger = LoggerFactory.getLogger(LoginBean.class);
+    private Usuarios user;
+    private Cliente client;
+    private Persona person;
     private String username;
     private String password;
     private boolean loggedin = false;
 
-    public boolean estaLogeado() {
+    public boolean isLogged() {
         return loggedin;
     }
 
@@ -67,23 +80,63 @@ public class LoginBean implements Serializable {
         this.password = password;
     }
 
+    public Usuarios getUser() {
+        return user;
+    }
+
+    public void setUser(Usuarios user) {
+        this.user = user;
+    }
+
+    public Cliente getClient() {
+        return client;
+    }
+
+    public void setClient(Cliente client) {
+        this.client = client;
+    }
+
+    public Persona getPerson() {
+        return person;
+    }
+
+    public void setPerson(Persona person) {
+        this.person = person;
+    }
+
     public void login(ActionEvent actionEvent) {
-        RequestContext context = RequestContext.getCurrentInstance();
-        FacesMessage msg = null;
+        try {
+            RequestContext context = RequestContext.getCurrentInstance();
+            FacesMessage msg = null;
 
-        if (username != null && username.equals("admin") && password != null && password.equals("admin")) {
-            loggedin = true;
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenid@", username);
-        } else {
-            loggedin = false;
-            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Login Error", "Credenciales no válidas");
-        }
+            NegocioLogin nl = new NegocioLogin();
+            user = nl.validLogin(username, password);
 
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-        context.addCallbackParam("isLogged", loggedin);
-        if (loggedin) {
-            context.addCallbackParam("view", "dashboard.xhtml");
+            if (user != null) {
+                loggedin = true;
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenid@", username.toUpperCase());
+            } else {
+                loggedin = false;
+                msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Login Error", "Credenciales no válidas");
+            }
+
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            context.addCallbackParam("isLogged", loggedin);
+
+            if (loggedin) {
+                clientData();
+                context.addCallbackParam("view", "dashboard.xhtml");
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         }
+    }
+
+    public void clientData() {
+        List data = new ArrayList();
+        NegocioCliente nc = new NegocioCliente();
+        client = nc.findById(user.getIdCliente());
+        person = nc.findPersonaByCliente(user.getIdCliente());
     }
 
     public void logout() {

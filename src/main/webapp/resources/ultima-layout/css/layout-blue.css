@@ -735,9 +735,14 @@ body {
   .layout-wrapper .topbar .logo {
     display: inline-block;
     vertical-align: middle;
-    width: 200px;
-    height: 30px;
-    background: url("#{resource['ultima-layout:images/logo.png']}") top left no-repeat; }
+    width: 250px;
+    height: 50px;
+    /* background: url("#{resource['ultima-layout:images/logo.png']}") top left no-repeat; */
+    background: url("http://www.betauser.cl/idataEntel/images/logo-entel-blanco.png");
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+    background-size: contain; }
   .layout-wrapper .topbar .topbar-left {
     box-sizing: border-box;
     padding: 20px;
@@ -1972,3 +1977,5 @@ body.layout-compact {
     padding: 14px 16px; }
     body.layout-compact .layout-wrapper .topbar .topbar-right .topbar-items > li > a i {
       font-size: 20px; } }
+
+/*# sourceMappingURL=layout-blue.css.map */

@@ -92,9 +92,9 @@
 }
 
 @mixin opacity($opacity) {
-  opacity: $opacity;
-  $opacity-ie: $opacity * 100;
-  filter: alpha(opacity=$opacity-ie);
+    opacity: $opacity;
+    $opacity-ie: $opacity * 100;
+    filter: alpha(opacity=$opacity-ie);
 }
 
 @mixin icon-override($icon) {    
@@ -128,7 +128,7 @@
 
     /* Support for IE. */
     font-feature-settings: 'liga';
-    
+
     &:before {
         content: $icon;
     }

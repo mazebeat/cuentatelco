@@ -15,22 +15,21 @@
         <title>PrimeFaces Ultima</title>
         <h:outputScript name="js/ripple.js" library="ultima-layout" />
         <script type="text/javascript">
-        $(function() {
-            $('#menu-button').on('click', function(e) {
-                var menu = $('#menu');
-                if(menu.hasClass('lmenu-active')) {
-                    menu.addClass('fadeOutUp');
-                    
-                    setTimeout(function() {
-                        menu.removeClass('fadeOutUp fadeInDown lmenu-active');
-                    },500);
-                }
-                else {
-                    menu.addClass('lmenu-active fadeInDown');
-                }
-                e.preventDefault();
+            $(function () {
+                $('#menu-button').on('click', function (e) {
+                    var menu = $('#menu');
+                    if (menu.hasClass('lmenu-active')) {
+                        menu.addClass('fadeOutUp');
+
+                        setTimeout(function () {
+                            menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+                        }, 500);
+                    } else {
+                        menu.addClass('lmenu-active fadeInDown');
+                    }
+                    e.preventDefault();
+                });
             });
-        });
         </script>
     </h:head>
 
@@ -39,30 +38,30 @@
             <div id="header">
                 <div class="header-top clearfix">
                     <span class="logo"></span>
-                    
+
                     <a id="menu-button" href="#">
-                       <span class="fa fa-bars"></span>
+                        <span class="fa fa-bars"></span>
                     </a>
                     <ul id="menu" class="animated">
-                       <li><a href="#"><i class="ui-icon ui-icon-home"></i><span>Home</span></a></li>
-                       <li><a href="#introduction"><i class="ui-icon ui-icon-open-in-browser"></i><span>Introduction</span></a></li>
-                       <li><a href="#features"><i class="ui-icon ui-icon-list"></i><span>Features</span></a></li>
-                       <li><a href="#promotion"><i class="ui-icon ui-icon-group-work"></i><span>Promotion</span></a></li>
-                       <li><a href="#pricing"><i class="ui-icon ui-icon-attach-money"></i><span>Pricing</span></a></li>
-                       <li><a href="#video"><i class="ui-icon ui-icon-videocam"></i><span>Video</span></a></li>
+                        <li><a href="#"><i class="ui-icon ui-icon-home"></i><span>Home</span></a></li>
+                        <li><a href="#introduction"><i class="ui-icon ui-icon-open-in-browser"></i><span>Introduction</span></a></li>
+                        <li><a href="#features"><i class="ui-icon ui-icon-list"></i><span>Features</span></a></li>
+                        <li><a href="#promotion"><i class="ui-icon ui-icon-group-work"></i><span>Promotion</span></a></li>
+                        <li><a href="#pricing"><i class="ui-icon ui-icon-attach-money"></i><span>Pricing</span></a></li>
+                        <li><a href="#video"><i class="ui-icon ui-icon-videocam"></i><span>Video</span></a></li>
                     </ul>
                 </div>
-                
+
                 <div class="header-content clearfix">
                     <h1>Your application slogan comes here</h1>
                     <p:button outcome="/dashboard" value="Sign Up Now" styleClass="secondary"/>
                 </div>
             </div>
-            
+
             <div id="features">
                 <h2>The Ultimate Material Application Template for PrimeFaces</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse delectus sit velit, aspernatur voluptates molestiae, enim recusandae. Odit dicta, maiores quas ad nesciunt, illum expedita veritatis illo quam odio id!</p>
-            
+
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-4">
                         <h3>Creative</h3>
@@ -85,7 +84,7 @@
                             <i class="material-icons">&#xE89D;</i>
                         </div>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-md-4">
                         <div class="feature-icon">
                             <i class="material-icons">&#xE259;</i>
@@ -109,7 +108,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div id="promotion" class="clearfix">
                 <div class="ui-g">
                     <div class="ui-g-12 ui-lg-8">
@@ -121,12 +120,12 @@
                             <h3>Just</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab perferendis nesciunt ad reiciendis explicabo consequatur sapiente odit ipsa harum illum, necessitatibus quaerat voluptates aspernatur iure, aperiam possimus sint sit mollitia!</p>
                         </div>
-                        
+
                         <div class="card">
                             <h3>Like</h3>
                             <p>Ab perferendis nesciunt ad reiciendis explicabo consequatur sapiente odit ipsa harum illum. Necessitatibus quaerat voluptates aspernatur iure, aperiam possimus sint sit mollitia!</p>
                         </div>
-                        
+
                         <div class="card">
                             <h3>That</h3>
                             <p>Necessitatibus quaerat voluptates aspernatur iure, aperiam possimus sint sit mollitia! Ab perferendis nesciunt ad reiciendis explicabo consequatur sapiente odit ipsa harum illum.</p>
@@ -134,11 +133,11 @@
                     </div>
                 </div>
             </div>
-            
+
             <div id="pricing">
                 <h2>Pricing</h2>
                 <p>Esse delectus sit velit, aspernatur voluptates molestiae, enim recusandae. Odit dicta, maiores quas ad nesciunt, illum expedita veritatis illo quam odio id!</p>
-            
+
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-4 pricing-box pricing-basic">
                         <div class="card">
@@ -194,20 +193,20 @@
                     </div>
                 </div>
             </div>
-            
+
             <div id="video">
-               <div class="video-content">
-                   <h2>Video</h2>
-                   <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque.</p>
-                   <div class="video-container">
-                       <iframe src="https://www.youtube.com/embed/B_lYGUtCd0g" frameborder="0" width="560" height="330"></iframe>
-                   </div>
-               </div>
-           </div>
-           
-           <div class="footer">
-               <div class="footer-content">
-                   <div class="ui-g">
+                <div class="video-content">
+                    <h2>Video</h2>
+                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/B_lYGUtCd0g" frameborder="0" width="560" height="330"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="footer-content">
+                    <div class="ui-g">
                         <div class="ui-g-12 ui-md-6">
                             <p>PRIMEFACES ULTIMA</p>
                         </div>
@@ -224,10 +223,10 @@
                             </ul>
                         </div>
                     </div>
-               </div>
-           </div>
+                </div>
+            </div>
         </div>
-        
+
         <h:outputStylesheet name="css/animate.css" library="ultima-layout" />
         <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
         <h:outputStylesheet name="css/layout-#{beanGuestPreferences.theme}.css" library="ultima-layout" />

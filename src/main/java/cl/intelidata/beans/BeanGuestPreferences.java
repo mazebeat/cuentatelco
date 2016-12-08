@@ -27,15 +27,10 @@ import javax.faces.bean.SessionScoped;
 public class BeanGuestPreferences implements Serializable {
 
     private Map<String, String> themeColors;
-
     private String theme = "indigo";
-
     private String menuClass = null;
-
-    private String profileMode = "overlay";
-
-    private String menuLayout = "static";
-
+    private String profileMode = "inline"; // overlay | inline
+    private String menuLayout = "static"; // horizontal | static |
     private boolean compact = false;
 
     @PostConstruct

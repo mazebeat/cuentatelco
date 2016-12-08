@@ -13,7 +13,7 @@
             <meta name="apple-mobile-web-app-capable" content="yes" />
             <meta name="theme-color" content="#{beanGuestPreferences.themeColors[beanGuestPreferences.theme]}" />
         </f:facet>
-        <title>PrimeFaces Ultima</title>
+        <title>IData</title>
         <h:outputScript name="js/nanoscroller.js" library="ultima-layout" />
         <h:outputScript name="js/layout.js" library="ultima-layout" />
         <h:outputScript name="js/ripple.js" library="ultima-layout" />
@@ -22,19 +22,12 @@
     </h:head>
 
     <h:body styleClass="main-body #{beanGuestPreferences.compact ? 'layout-compact' : null}">
-
-        <p:commandLink id="logout" actionListener="#{loginBean.logout}" style="margin-right:20px;" oncomplete="logout(xhr, status, args)">
-            <h:outputText value="logout" />
-        </p:commandLink>
-
-
         <div class="layout-wrapper #{beanGuestPreferences.menuLayout}">
             <ui:include src="./topbar.xhtml" />
             <ui:include src="./menu.xhtml" />
 
             <div class="layout-main">
                 <ui:insert name="content"/>
-
                 <ui:include src="./footer.xhtml" />
             </div>
         </div>
@@ -49,11 +42,65 @@
             </f:facet>
         </p:ajaxStatus>
 
-
         <h:outputStylesheet name="css/nanoscroller.css" library="ultima-layout" />
         <h:outputStylesheet name="css/animate.css" library="ultima-layout" />
         <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
-        <h:outputStylesheet name="css/layout-#{beanGuestPreferences.theme}.css" library="ultima-layout" />
+        <h:outputStylesheet name="css/layout-#{beanGuestPreferences.theme}.css" library="ultima-layout" />        
+        <style type="text/css">
+            body .ui-fieldset, body .ui-fieldset .ui-fieldset-legend .ui-fieldset-toggler {
+                padding: 5px;
+            }
+            body .ui-fieldset .ui-fieldset-legend .ui-fieldset-toggler {
+            }
+            .text-uppercase {
+                text-transform: uppercase;
+            }
+            .list-unstyled { 
+                padding-left: 0;
+                list-style: none;
+            }
+            .list-inline {
+                padding-left: 0;
+                margin-left: -5px;
+                list-style: none;
+            }
+            .list-inline > li {
+                display: inline-block;
+                float: left;
+                padding-right: 5px;
+                padding-left: 5px;
+            }
+
+            .footer {
+                color: #ffffff;                
+            }
+            .footer .card {
+                background-color: #0273af;
+            }
+            .footer a {
+                font-size: 12px;
+            }
+
+            .footer a,
+            .footer a:link,
+            .footer a:visited,
+            .footer a:focus,
+            .footer a:hover {
+                color: #ffffff;
+            }
+            .footer .social-icons img {
+                max-width: 42px; 
+            }
+        </style>
     </h:body>
 
+    <script type="text/javascript">
+        //<![CDATA[
+        function logout(xhr, status, args) {
+            setTimeout(function () {
+                window.location = 'login.xhtml';
+            }, 500);
+        }
+        //]]>
+    </script>
 </html>

@@ -5,7 +5,7 @@
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui"
     xmlns:pu="http://primefaces.org/ultima">
-    
+
     <h:form id="menuform"> 
         <div class="layout-menu #{beanGuestPreferences.menuClass}">
             <div class="nano">
@@ -14,89 +14,74 @@
                         <div class="profile">
                             <div class="profile-image"></div>
                             <a id="profile-options" href="#">
-                                <span class="profile-name">Jane Williams</span>
+                                <span class="profile-name">#{loginBean.person.nombre}</span>
                                 <i class="material-icons">&#xE313;</i>
                             </a>
                         </div>
-                    
+
                         <ul id="profile-menu" class="ultima-menu">
                             <li role="menuitem">
-                                <a href="#" class="ripplelink">
+                                <a href="#">
                                     <i class="material-icons">&#xE7FD;</i>
-                                    <span>Profile</span>
+                                    <span>Perfil</span>
                                 </a>
                             </li>
                             <li role="menuitem">
-                                <a href="#" class="ripplelink">
-                                    <i class="material-icons">&#xE32A;</i>
-                                    <span>Privacy</span>
+                                <a href="#">
+                                    <i class="material-icons">perm_phone_msg</i>
+                                    <span>Contacto</span>
+                                </a>
+                            </li>
+                            <li role="menuitem"> 
+                                <a href="#">
+                                    <i class="material-icons">link</i>
+                                    <span>Telegram</span>
                                 </a>
                             </li>
                             <li role="menuitem">
-                                <a href="#" class="ripplelink">
-                                    <i class="material-icons">&#xE8B9;</i>
-                                    <span>Settings</span>
+                                <a href="#">
+                                    <i class="material-icons">link</i>
+                                    <span>Facebook</span>
                                 </a>
                             </li>
                             <li role="menuitem">
-                                <a href="#" class="ripplelink">
+                                <p:commandLink id="logout" actionListener="#{loginBean.logout}" style="margin-right:20px;" oncomplete="logout(xhr, status, args)">
                                     <i class="material-icons">&#xE8AC;</i>
                                     <span>Logout</span>
-                                </a>
+                                </p:commandLink>
                             </li>
                         </ul>
                     </ui:fragment>
-                    
+
+                    <div class="ui-g">
+                        <div class="ui-g-12" style="padding-bottom: 0;">
+                            <p:fieldset legend="Información Personal" toggleable="true" toggleSpeed="500" collapsed="true" id="personalinfo">
+                                <small>
+                                    <h:panelGrid columns="1" cellpadding="5">
+                                        <div class="ui-g-6 ui-g-nopad bold"><strong>RUT</strong></div>
+                                        <div class="ui-g-6 ui-g-nopad footer-text-right">#{loginBean.client.rut}</div>
+                                        <div class="ui-g-6 ui-g-nopad bold"><strong>Dirección</strong></div>
+                                        <div class="ui-g-6 ui-g-nopad footer-text-right">#{loginBean.person.direccionPersonal}</div>
+                                    </h:panelGrid>
+                                </small>
+                            </p:fieldset>
+                        </div>
+                    </div>
+
                     <pu:menu widgetVar="me">
-                        <p:menuitem id="um_dashboard" value="Dashboard" icon="&#xE871;" outcome="/dashboard"/>
-                        <p:submenu id="themes" label="Themes" icon="&#xE40A;">
-                            <p:menuitem id="theme1" value="Indigo - Pink" icon="&#xE3AE;" actionListener="#{beanGuestPreferences.setTheme('indigo')}" ajax="false" />
-                            <p:menuitem id="theme2" value="Brown - Green" icon="&#xE3AE;" actionListener="#{beanGuestPreferences.setTheme('brown')}" ajax="false" />
-                            <p:menuitem id="theme3" value="Blue - Amber" icon="&#xE3AE;" actionListener="#{beanGuestPreferences.setTheme('blue')}" ajax="false" />
-                            <p:menuitem id="theme4" value="Blue Grey - Green" icon="&#xE3AE;" actionListener="#{beanGuestPreferences.setTheme('blue-grey')}" ajax="false" />
-                            <p:menuitem id="theme5" value="Dark - Blue" icon="&#xE3AE;" actionListener="#{beanGuestPreferences.setTheme('dark-blue')}" ajax="false" />
-                            <p:menuitem id="theme6" value="Dark - Green" icon="&#xE3AE;" actionListener="#{beanGuestPreferences.setTheme('dark-green')}" ajax="false" />
-                            <p:menuitem id="theme7" value="Green - Yellow" icon="&#xE3AE;" actionListener="#{beanGuestPreferences.setTheme('green')}" ajax="false" />
-                            <p:menuitem id="theme8" value="Purple - Cyan" icon="&#xE3AE;" actionListener="#{beanGuestPreferences.setTheme('purple-cyan')}" ajax="false" />
-                            <p:menuitem id="theme9" value="Purple - Amber" icon="&#xE3AE;" actionListener="#{beanGuestPreferences.setTheme('purple-amber')}" ajax="false" />
-                            <p:menuitem id="theme10" value="Teal - Lime" icon="&#xE3AE;" actionListener="#{beanGuestPreferences.setTheme('teal')}" ajax="false" />
-                            <p:menuitem id="theme11" value="Cyan - Amber" icon="&#xE3AE;" actionListener="#{beanGuestPreferences.setTheme('cyan')}" ajax="false" />
-                            <p:menuitem id="theme12" value="Grey - Deep Orange" icon="&#xE3AE;" actionListener="#{beanGuestPreferences.setTheme('grey')}" ajax="false" />
+                        <p:menuitem id="um_home" value="Home" icon="home" outcome="/dashboard" />
+                        <p:menuitem id="um_accountdetail" value="Detalles de la cuenta" icon="chrome_reader_mode" outcome="/account_detail" />
+                        <p:submenu id="um_reports" label="Reportes" icon="&#xE40A;">
+                            <p:menuitem id="report1" value="Detalle del mes" icon="donut_small" />
+                            <p:menuitem id="report2" value="Evolución total mensual" icon="trending_up" />
+                            <p:menuitem id="report3" value="Histórico de productos" icon="donut_large" />
+                            <p:menuitem id="report4" value="Teléfonos por productos" icon="donut_large" />
                         </p:submenu>
-                        <p:submenu id="um_customization" label="Customization" icon="&#xE8B8;">
-                            <p:menuitem id="custom1" value="Compact Size" icon="&#xE061;" actionListener="#{beanGuestPreferences.setCompact(true)}" ajax="false"/>
-                            <p:menuitem id="custom2" value="Material Size" icon="&#xE062;" actionListener="#{beanGuestPreferences.setCompact(false)}" ajax="false"/>
-                            <p:menuitem id="custom3" value="Static Menu" icon="&#xE5D2;" actionListener="#{beanGuestPreferences.setMenuLayout('static')}" ajax="false"/>
-                            <p:menuitem id="custom4" value="Overlay Menu" icon="&#xE879;" actionListener="#{beanGuestPreferences.setMenuLayout('overlay')}" ajax="false"/>
-                            <p:menuitem id="custom5" value="Horizontal Menu" icon="&#xE22C;" actionListener="#{beanGuestPreferences.setMenuLayout('horizontal')}" ajax="false"/>
-                            <p:menuitem id="custom6" value="Light Menu" icon="&#xE893;" actionListener="#{beanGuestPreferences.setLightMenu}" ajax="false" />
-                            <p:menuitem id="custom7" value="Dark Menu" icon="&#xE892;" actionListener="#{beanGuestPreferences.setDarkMenu}" ajax="false"/>
-                            <p:menuitem id="custom8" value="Inline Profile" icon="&#xE0BA;" actionListener="#{beanGuestPreferences.setProfileMode('inline')}" ajax="false" />
-                            <p:menuitem id="custom9" value="Top Profile" icon="&#xE55A;" actionListener="#{beanGuestPreferences.setProfileMode('overlay')}" ajax="false"/>
-                        </p:submenu>
-                        <p:submenu id="um_hierarchy" label="Menu Hierarchy" icon="&#xE5D2;">
-                            <p:submenu id="um_sm1" label="Submenu 1" icon="&#xE8D2;">
-                                <p:submenu id="um_sm11" label="Submenu 1.1" icon="&#xE8D2;">
-                                    <p:menuitem id="um_lnk111" value="Link 1.1.1" icon="&#xE8D2;" url="#" />
-                                    <p:menuitem id="um_lnk112" value="Link 1.1.2" icon="&#xE8D2;" url="#" />
-                                    <p:menuitem id="um_lnk113" value="Link 1.1.3" icon="&#xE8D2;" url="#" />
-                                </p:submenu>
-                                <p:submenu id="um_sm12" label="Submenu 1.2" icon="&#xE8D2;">
-                                    <p:menuitem id="um_lnk121" value="Link 1.2.1" icon="&#xE8D2;" url="#" />
-                                </p:submenu>
-                            </p:submenu>
-                            <p:submenu id="um_sm2" label="Submenu 2" icon="&#xE8D2;">
-                                <p:submenu id="um_sm21" label="Submenu 2.1" icon="&#xE8D2;">
-                                    <p:menuitem id="um_lnk211" value="Link 2.1.1" icon="&#xE8D2;" url="#" />
-                                    <p:menuitem id="um_lnk212" value="Link 2.1.2" icon="&#xE8D2;" url="#" />
-                                </p:submenu>
-                                <p:submenu id="um_sm22" label="Submenu 2.2" icon="&#xE8D2;">
-                                    <p:menuitem id="um_lnk221" value="Link 2.2.1" icon="&#xE8D2;" url="#" />
-                                </p:submenu>
-                            </p:submenu>
-                        </p:submenu>
+                        <p:menuitem id="um_promotions" value="Promociones" icon="card_giftcard;" outcome="/promotions" />
+                        <p:menuitem id="um_legal" value="Legal" icon="gavel" outcome="/legal" />
+                        <p:menuitem id="um_customerservice" value="Servicio al cliente" icon="announcement" outcome="/customer_service" />
                     </pu:menu>
-                </div>
+                </div>outcome
             </div>
         </div>
     </h:form>

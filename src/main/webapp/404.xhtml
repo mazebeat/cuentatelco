@@ -12,16 +12,16 @@
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
             <meta name="apple-mobile-web-app-capable" content="yes" />
         </f:facet>
-        <title>PrimeFaces Ultima</title>
+        <title>IData 404</title>
         <h:outputScript name="js/ripple.js" library="ultima-layout" />
     </h:head>
 
     <h:body styleClass="exception-body notfound-page">
-    
+
         <div class="exception-type">
             <p:graphicImage name="images/404.svg" library="ultima-layout" />
         </div>
-        
+
         <div class="card exception-panel">
             <i class="material-icons">&#xE001;</i>
             <h1>Page Not Found</h1>
@@ -29,6 +29,8 @@
             <p:button outcome="/dashboard" value="Homepage" styleClass="secondary"/>
         </div>
         
+        <h:outputText value="#{beanGuestPreferences.theme}"></h:outputText>
+
         <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
         <h:outputStylesheet name="css/layout-#{beanGuestPreferences.theme}.css" library="ultima-layout" />
     </h:body>
