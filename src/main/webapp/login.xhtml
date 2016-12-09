@@ -33,13 +33,15 @@
                         </div>
                         <div class="ui-g-12">
                             <h:panelGroup styleClass="md-inputfield">
-                                <p:inputText id="username" value="#{loginBean.username}" required="true"/>
+                                <p:inputText id="username" value="#{loginBean.username}" required="true" requiredMessage="Debe ingresar email o RUT">
+                                    <f:validateLength minimum="2" />
+                                </p:inputText>
                                 <label>Email o RUT</label>
                             </h:panelGroup>
                         </div>
                         <div class="ui-g-12">
                             <h:panelGroup styleClass="md-inputfield">
-                                <p:password id="password" value="#{loginBean.password}" required="true"/>
+                                <p:password id="password" value="#{loginBean.password}" required="true" requiredMessage="Debe ingresar contraseña"/>
                                 <label>Contraseña</label>
                             </h:panelGroup>
                         </div>

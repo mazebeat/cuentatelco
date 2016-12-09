@@ -28,7 +28,7 @@ package cl.intelidata.beans;
 import cl.intelidata.jpa.Cliente;
 import cl.intelidata.jpa.Persona;
 import cl.intelidata.jpa.Usuarios;
-import cl.intelidata.negocio.NegocioCliente;
+import cl.intelidata.negocio.NegocioClient;
 import cl.intelidata.negocio.NegocioLogin;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,6 +53,7 @@ public class LoginBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
     private static Logger logger = LoggerFactory.getLogger(LoginBean.class);
+
     private Usuarios user;
     private Cliente client;
     private Persona person;
@@ -134,7 +135,7 @@ public class LoginBean implements Serializable {
 
     public void clientData() {
         List data = new ArrayList();
-        NegocioCliente nc = new NegocioCliente();
+        NegocioClient nc = new NegocioClient();
         client = nc.findById(user.getIdCliente());
         person = nc.findPersonaByCliente(user.getIdCliente());
     }

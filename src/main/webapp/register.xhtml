@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card">
+                    <h1>Registro Usuario</h1>
+                    <h:form>
+                        <div class="ui-g-12">
+                            <div class="ui-panelgrid-cell ui-g-6">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="name" value="#{registerBean.name}" required="true" requiredMessage="Ingrese nombre"/>
+                                    <label>Nombre</label>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-6">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="lastname" value="#{registerBean.lastname}" required="true" requiredMessage="Ingrese apellidos"/>
+                                    <label>Apellidos</label>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                        <div class="ui-g-12">
+                            <div class="ui-g-6">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="email" value="#{registerBean.email}" required="true" requiredMessage="Ingrese email"/>
+                                    <label>Email</label>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-6">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="rut" value="#{registerBean.rut}" required="true" requiredMessage="Ingrese RUT"/>
+                                    <label>RUT</label>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                        <div class="ui-g-12">
+                            <div class="ui-g-6">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="password" value="#{registerBean.password}" required="true" requiredMessage="Ingrese contraseña"/>
+                                    <label>Contraseña</label>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-6">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="passwordconfirm" value="#{registerBean.passwordConfirm}" required="true" requiredMessage="Debe confirmar la contraseña"/>
+                                    <label>Repetir contraseña</label>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="ui-g-12">
+                            <p:button outcome="/dashboard" value="Volver" icon="ui-icon-help" styleClass="secondary"/>
+                            <p:commandButton id="registerButton" value="Registrarce" icon="ui-icon-person" actionListener="#{registerBean.register}" 
+                                             oncomplete="managerRegister(xhr, status, args)"/>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+    <script type="text/javascript">
+        //<![CDATA[
+        function managerRegister(xhr, status, args) {
+            if (!args.validationFailed && args.isRegistered) {
+                setTimeout(function () {
+                    window.location = args.view;
+                }, 500);
+
+            }
+        }
+        //]]>
+    </script>
+</ui:composition>

@@ -34,17 +34,17 @@ import cl.intelidata.utils.EntityHelper;
  *
  * @author DFeliu
  */
-public class NegocioCliente {
+public class NegocioClient {
 
     private ClienteJpaController clientCtrl;
     private Cliente client;
 
-    public NegocioCliente() {
+    public NegocioClient() {
         clientCtrl = new ClienteJpaController(EntityHelper.getInstance().getEntityManagerFactory());
         client = null;
     }
 
-    public NegocioCliente(int idCliente) {
+    public NegocioClient(int idCliente) {
         clientCtrl = new ClienteJpaController(EntityHelper.getInstance().getEntityManagerFactory());
         client = clientCtrl.findCliente(idCliente);
     }
