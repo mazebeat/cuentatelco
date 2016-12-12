@@ -74,7 +74,7 @@ public class NegocioClient {
     public String address(int idClient) {
         return clientCtrl.findCliente(idClient).getPersonaId().getDireccionPersonal();
     }
-    
+
     public String rut() {
         return client.getRut();
     }
@@ -82,7 +82,7 @@ public class NegocioClient {
     public String rut(int idClient) {
         return clientCtrl.findCliente(idClient).getRut();
     }
-    
+
     public String celphone() {
         return client.getPersonaId().getCelularPersonal();
     }
@@ -94,7 +94,7 @@ public class NegocioClient {
     public Cliente findById(int idClient) {
         return clientCtrl.findCliente(idClient);
     }
-    
+
     public Persona findPersonaByCliente(int idClient) {
         return clientCtrl.findCliente(idClient).getPersonaId();
     }

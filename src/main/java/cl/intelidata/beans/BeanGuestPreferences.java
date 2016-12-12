@@ -30,7 +30,7 @@ public class BeanGuestPreferences implements Serializable {
     private String theme = "indigo";
     private String menuClass = null;
     private String profileMode = "inline"; // overlay | inline
-    private String menuLayout = "static"; // horizontal | static |
+    private String menuLayout = "static"; // horizontal | static | overlay
     private boolean compact = false;
 
     @PostConstruct

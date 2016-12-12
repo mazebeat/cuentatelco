@@ -29,22 +29,30 @@ import cl.intelidata.controllers.ClienteJpaController;
 import cl.intelidata.controllers.PersonaJpaController;
 import cl.intelidata.jpa.Cliente;
 import cl.intelidata.jpa.Persona;
-import cl.intelidata.jpa.Usuarios;
 import cl.intelidata.utils.EntityHelper;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ComponentSystemEvent;
 import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author Dev-DFeliu
+ * @author DFeliu
  */
 public class NegocioRegister {
 
     private static Logger logger = LoggerFactory.getLogger(NegocioRegister.class);
 
-    public boolean validatePassword(String pass, String passconf) {
-        return pass.equals(passconf);
+    public boolean validatePassword2(String pass, String passconf) {
+        // TODO Add validation of password and hash
+        if (pass.equals(passconf) && true) {
+            return true;
+        }
+        return false;
     }
 
     public void register(String name, String lastname, String email, String rut, String password) {
@@ -89,5 +97,33 @@ public class NegocioRegister {
             }
         }
         return id;
+    }
+
+    public void validatePassword(ComponentSystemEvent event) {
+
+        FacesContext fc = FacesContext.getCurrentInstance();
+
+        UIComponent components = event.getComponent();
+
+        UIInput uiInputPassword = (UIInput) components.findComponent("password");
+        String password = uiInputPassword.getLocalValue() == null ? ""
+                : uiInputPassword.getLocalValue().toString();
+        String passwordId = uiInputPassword.getClientId();
+
+        UIInput uiInputConfirmPassword = (UIInput) components.findComponent("confirmPassword");
+        String confirmPassword = uiInputConfirmPassword.getLocalValue() == null ? ""
+                : uiInputConfirmPassword.getLocalValue().toString();
+
+        if (password.isEmpty() || confirmPassword.isEmpty()) {
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+
+            FacesMessage msg = new FacesMessage("Password must match confirm password");
+            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+            fc.addMessage(passwordId, msg);
+            fc.renderResponse();
+        }
     }
 }

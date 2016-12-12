@@ -25,17 +25,48 @@
  */
 package cl.intelidata.utils;
 
-import cl.intelidata.controllers.ClienteJpaController;
-import cl.intelidata.controllers.EmpresaJpaController;
-import cl.intelidata.jpa.Cliente;
-import cl.intelidata.jpa.Empresa;
+import java.util.Random;
 
 /**
  *
- * @author Dev-DFeliu
+ * @author DFeliu
  */
 public class Functions {
-    
-    
 
+    public Functions() {
+    }
+
+    public String randomString(int length, boolean min, boolean uc, boolean n, boolean sc) {
+        String source = "";
+
+        if (min == true) {
+            source += "abcdefghijklmnopqrstuvwxyz";
+        }
+        if (uc == true) {
+            source += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        }
+        if (n == true) {
+            source += "1234567890";
+        }
+        if (sc == true) {
+            source += "|@#~$%()=^*+[]{}-_";
+        }
+
+        if (length > 0) {
+            String rstr = "";
+            int max = source.length() - 1;
+            for (int i = 1; i <= length; i++) {
+                int num = randInt(1, max);
+                rstr += source.substring(source.length(), num - 1);
+            }
+            return rstr;
+        } else {
+            return "";
+        }
+    }
+
+    public static int randInt(int min, int max) {
+        Random rand = new Random();
+        return rand.nextInt((max - min) + 1) + min;
+    }
 }

@@ -31,7 +31,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
+import javax.faces.event.ComponentSystemEvent;
 import org.primefaces.context.RequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,8 +52,11 @@ public class RegisterBean implements Serializable {
     private String email;
     private String rut;
     private String password;
-    private String passwordConfirm;
     private boolean registered = false;
+
+    public RegisterBean() {
+        System.out.println("enter");
+    }
 
     public String getName() {
         return name;
@@ -95,14 +98,6 @@ public class RegisterBean implements Serializable {
         this.password = password;
     }
 
-    public String getPasswordConfirm() {
-        return passwordConfirm;
-    }
-
-    public void setPasswordConfirm(String passwordConfirm) {
-        this.passwordConfirm = passwordConfirm;
-    }
-
     public boolean isRegistered() {
         return registered;
     }
@@ -111,14 +106,15 @@ public class RegisterBean implements Serializable {
         this.registered = registered;
     }
 
-    public void register(ActionEvent actionEvent) {
+    public void register() {
+//    public void register(ActionEvent actionEvent) {
         try {
             RequestContext context = RequestContext.getCurrentInstance();
             FacesMessage msg = null;
 
             NegocioRegister nr = new NegocioRegister();
 
-            if (nr.validatePassword(password, passwordConfirm)) {
+            if (true) {
                 nr.register(name, lastname, email, rut, password);
                 registered = true;
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Registrad@ Correctamente", name.toUpperCase());

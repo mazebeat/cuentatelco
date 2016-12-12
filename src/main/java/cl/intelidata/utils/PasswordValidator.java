@@ -23,49 +23,42 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package cl.intelidata.negocio;
+package cl.intelidata.utils;
 
-import cl.intelidata.controllers.UsuarioJpaController;
-import cl.intelidata.jpa.Usuario;
-import cl.intelidata.utils.EntityHelper;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.FacesValidator;
+import javax.faces.validator.Validator;
+import javax.faces.validator.ValidatorException;
 
 /**
- * Clase de muestra de conexion via JpaController y con EntityManager
  *
- * @author Juan
+ * @author DFeliu
  */
-public class NegocioPrueba {
+@FacesValidator("passwordValidator")
+public class PasswordValidator implements Validator {
 
-    private static Logger logger = LoggerFactory.getLogger(NegocioPrueba.class);
+    @Override
+    public void validate(FacesContext context, UIComponent component,
+            Object value) throws ValidatorException {
 
-    public static List<Usuario> getUsuarios() {
-        UsuarioJpaController usuarioJpaController
-                = new UsuarioJpaController(EntityHelper.getInstance().getEntityManagerFactory());
-        return usuarioJpaController.findUsuarioEntities();
-    }
+        String password = value.toString();
 
-    public static List<Usuario> getUsuariosConEM() throws Exception {
-        EntityManager em = null;
+        UIInput uiInputConfirmPassword = (UIInput) component.getAttributes().get("confirmPassword");
+        String confirmPassword = uiInputConfirmPassword.getSubmittedValue().toString();
 
-        try {
-            em = EntityHelper.getInstance().getEntityManager();
-            Query query = em.createQuery("Select u from Usuario u", Usuario.class);
-            return query.getResultList();
-        } catch (Exception ex) {
-            logger.error(ex.getMessage(), ex);
-            throw ex;
-        } finally {
-            // Siempre cerrar EntityManager
-            if (em != null && em.isOpen()) {
-                em.close();
-            }
+        // Let required="true" do its job.
+        if (password == null || password.isEmpty() || confirmPassword == null
+                || confirmPassword.isEmpty()) {
+            return;
         }
 
+        if (!password.equals(confirmPassword)) {
+            uiInputConfirmPassword.setValid(false);
+            throw new ValidatorException(new FacesMessage(
+                    "Password must match confirm password."));
+        }
     }
-
 }
