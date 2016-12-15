@@ -25,9 +25,8 @@
  */
 package cl.intelidata.negocio;
 
-import cl.intelidata.controllers.TelegramUsuarioIntegracionJpaController;
-import cl.intelidata.jpa.TelegramUsuarioIntegracion;
-import cl.intelidata.jpa.Usuarios;
+import cl.intelidata.jpa.Cliente;
+import cl.intelidata.jpa.Persona;
 import cl.intelidata.utils.EntityHelper;
 import javax.persistence.EntityManager;
 import org.slf4j.Logger;
@@ -37,46 +36,33 @@ import org.slf4j.LoggerFactory;
  *
  * @author DFeliu
  */
-public class NegocioTelegram {
+public class NegocioDashboard {
 
-    private static Logger logger = LoggerFactory.getLogger(NegocioRegister.class);
+    private static Logger logger = LoggerFactory.getLogger(NegocioDashboard.class);
 
-    public NegocioTelegram() {
-    }
-
-    public int getCodigoIntegracion(Usuarios user) {
-        int code = 0;
-
-        try {
-            code = getUserCode(user);
-
-            if (code == 0) {
-                code = genCodeIntegration();
-
-                TelegramUsuarioIntegracionJpaController tctrl = new TelegramUsuarioIntegracionJpaController(EntityHelper.getInstance().getEntityManagerFactory());
-                TelegramUsuarioIntegracion tui = new TelegramUsuarioIntegracion();
-                tui.setIdUsuario(user);
-                tui.setCodigo(code);
-                tctrl.create(tui);
-            }
-        } catch (Exception ex) {
-            logger.error(ex.getMessage(), ex);
-        }
-
-        return code;
-    }
-
-    public int getUserCode(Usuarios user) throws Exception {
+    public boolean isRegister(int id) throws Exception {
         EntityManager em = null;
-        TelegramUsuarioIntegracion t;
-        int code = 0;
+        Cliente c;
 
         try {
             em = EntityHelper.getInstance().getEntityManager();
-            t = em.createNamedQuery("TelegramUsuarioIntegracion.GetUserCode", TelegramUsuarioIntegracion.class)
-                    .setParameter("idUsuario", user)
+            c = em.createNamedQuery("Cliente.isRegister", Cliente.class)
+                    .setParameter("id", id)
                     .getSingleResult();
-            code = t.getCodigo();
+            if (c == null) {
+                return false;
+            }
+
+            Persona p = c.getPersonaId();
+            boolean getEmail = (p.getEmailPersonal() != null && !p.getEmailPersonal().isEmpty());
+            boolean getAddress = (p.getDireccionPersonal() != null && !p.getDireccionPersonal().isEmpty());
+            boolean getPhone = (p.getTelefonoFijoPersonal() != null && !p.getTelefonoFijoPersonal().isEmpty());
+            boolean getCelphone = (p.getCelularPersonal() != null && !p.getCelularPersonal().isEmpty());
+            boolean getFacebook = (p.getFacebook() != null && !p.getFacebook().isEmpty());
+            boolean getTwitter = (p.getTwitter() != null && !p.getTwitter().isEmpty());
+            boolean getSkype = (p.getSkype() != null && !p.getSkype().isEmpty());
+
+            return getEmail && getAddress && getPhone && getCelphone && getFacebook && getTwitter && getSkype;
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
             throw ex;
@@ -85,10 +71,5 @@ public class NegocioTelegram {
                 em.close();
             }
         }
-        return code;
-    }
-
-    private int genCodeIntegration() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

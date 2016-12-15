@@ -55,7 +55,9 @@ public class NegocioRegister {
         return false;
     }
 
-    public void register(String name, String lastname, String email, String rut, String password) {
+    public boolean register(String name, String lastname, String email, String rut, String password) {
+        boolean response = false;
+
         try {
             ClienteJpaController cctrl = new ClienteJpaController(EntityHelper.getInstance().getEntityManagerFactory());
             PersonaJpaController pctrl = new PersonaJpaController(EntityHelper.getInstance().getEntityManagerFactory());
@@ -71,10 +73,13 @@ public class NegocioRegister {
             // TODO: Agregar hash a la password
             cu.setClave(password);
             cu.setPersonaId(p);
-            cctrl.edit(cu);
+
+            response = true;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
+
+        return response;
     }
 
     public int getIdClient(String rut) throws Exception {

@@ -25,12 +25,13 @@
  */
 package cl.intelidata.beans;
 
-import cl.intelidata.negocio.NegocioDashboard;
-import javax.enterprise.context.SessionScoped;
+import cl.intelidata.jpa.Usuarios;
+import cl.intelidata.negocio.NegocioFacebook;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,38 +41,61 @@ import org.slf4j.LoggerFactory;
  */
 @ManagedBean
 @SessionScoped
-public class DashboardBean implements Serializable {
+public class FacebookBean implements Serializable {
 
-    private static final long serialVersionUID = -2152389656664659476L;
-    private static Logger logger = LoggerFactory.getLogger(DashboardBean.class);
+    private static Logger logger = LoggerFactory.getLogger(FacebookBean.class);
+    private NegocioFacebook ctrl;
+    private int code;
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
 
-    public LoginBean getLoginbean() {
-        return loginbean;
+    public NegocioFacebook getCtrl() {
+        return ctrl;
     }
 
-    public void setLoginbean(LoginBean loginbean) {
-        this.loginbean = loginbean;
+    public void setCtrl(NegocioFacebook ctrl) {
+        this.ctrl = ctrl;
     }
 
-    public DashboardBean() {
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public FacebookBean() {
+        this.ctrl = new NegocioFacebook();
     }
 
     @PostConstruct
     public void init() {
-        NegocioDashboard ctrl = new NegocioDashboard();
-        boolean works;
-        try {
-            if (loginbean.getUser() != null && ctrl.isRegister(loginbean.getUser().getIdCliente())) {
-                works = true;
-            } else {
-                works = false;
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
+        System.out.println("Init" + FacebookBean.class);
     }
 
+    public String load() {
+        Usuarios user = loginbean.getUser();
+
+        if (user != null) {
+            setCode(getCtrl().getCodigoIntegracion(user));
+        }
+
+        return "facebook?faces-redirect=true";
+    }
+
+    /**
+     * @return the loginbean
+     */
+    public LoginBean getLoginbean() {
+        return loginbean;
+    }
+
+    /**
+     * @param loginbean the loginbean to set
+     */
+    public void setLoginbean(LoginBean loginbean) {
+        this.loginbean = loginbean;
+    }
 }

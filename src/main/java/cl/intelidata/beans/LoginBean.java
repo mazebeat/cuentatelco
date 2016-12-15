@@ -31,13 +31,13 @@ import cl.intelidata.jpa.Usuarios;
 import cl.intelidata.negocio.NegocioClient;
 import cl.intelidata.negocio.NegocioLogin;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.ComponentSystemEvent;
 import javax.servlet.http.HttpSession;
 import org.primefaces.context.RequestContext;
 import org.slf4j.Logger;
@@ -134,7 +134,6 @@ public class LoginBean implements Serializable {
     }
 
     public void clientData() {
-        List data = new ArrayList();
         NegocioClient nc = new NegocioClient();
         client = nc.findById(user.getIdCliente());
         person = nc.findPersonaByCliente(user.getIdCliente());
@@ -144,5 +143,14 @@ public class LoginBean implements Serializable {
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         session.invalidate();
         loggedin = false;
+    }
+
+    public void isAdmin(ComponentSystemEvent event) {
+        FacesContext fc = FacesContext.getCurrentInstance();
+
+        if (getUser() == null) {
+            ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication().getNavigationHandler();
+            nav.performNavigation("access-denied");
+        }
     }
 }

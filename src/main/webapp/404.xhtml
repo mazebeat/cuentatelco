@@ -13,13 +13,13 @@
             <meta name="apple-mobile-web-app-capable" content="yes" />
         </f:facet>
         <title>IData 404</title>
-        <!--<h:outputScript name="js/ripple.js" library="ultima-layout" />-->
+        <h:outputScript name="js/ripple.js" library="ultima-layout" />
     </h:head>
 
     <h:body styleClass="exception-body notfound-page">
 
         <div class="exception-type">
-            <!--<p:graphicImage name="images/404.svg" library="ultima-layout" />-->
+            <p:graphicImage name="images/404.svg" library="ultima-layout" />
         </div>
 
         <div class="card exception-panel">
@@ -28,11 +28,9 @@
             <div class="exception-detail">The resource you are looking for does not exist.</div>
             <p:button outcome="/dashboard" value="Homepage" styleClass="secondary"/>
         </div>
-        
-        <h:outputText value="#{beanGuestPreferences.theme}"></h:outputText>
 
-        <!--<h:outputStylesheet name="css/ripple.css" library="ultima-layout" />-->
-        <!--<h:outputStylesheet name="css/layout-#{beanGuestPreferences.theme}.css" library="ultima-layout" />-->
+        <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
+        <h:outputStylesheet name="css/layout-#{beanGuestPreferences.theme}.css" library="ultima-layout" />
     </h:body>
 
 </html>

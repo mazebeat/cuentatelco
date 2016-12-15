@@ -25,6 +25,8 @@
  */
 package cl.intelidata.beans;
 
+import cl.intelidata.jpa.Persona;
+import cl.intelidata.jpa.Usuarios;
 import cl.intelidata.negocio.NegocioRegister;
 import java.io.Serializable;
 import javax.faces.application.FacesMessage;
@@ -107,15 +109,13 @@ public class RegisterBean implements Serializable {
     }
 
     public void register() {
-//    public void register(ActionEvent actionEvent) {
         try {
             RequestContext context = RequestContext.getCurrentInstance();
-            FacesMessage msg = null;
+            FacesMessage msg;
 
             NegocioRegister nr = new NegocioRegister();
 
-            if (true) {
-                nr.register(name, lastname, email, rut, password);
+            if (nr.register(name, lastname, email, rut, password)) {
                 registered = true;
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Registrad@ Correctamente", name.toUpperCase());
             } else {
@@ -127,7 +127,6 @@ public class RegisterBean implements Serializable {
             context.addCallbackParam("isRegistered", registered);
 
             if (registered) {
-                context.addCallbackParam("view", "dashboard.xhtml");
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

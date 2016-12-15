@@ -25,12 +25,10 @@
  */
 package cl.intelidata.beans;
 
-import cl.intelidata.negocio.NegocioDashboard;
-import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,39 +37,14 @@ import org.slf4j.LoggerFactory;
  * @author DFeliu
  */
 @ManagedBean
-@SessionScoped
-public class DashboardBean implements Serializable {
+@ViewScoped
+public class ProfileBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
-    private static Logger logger = LoggerFactory.getLogger(DashboardBean.class);
-
-    @ManagedProperty(value = "#{loginBean}")
-    private LoginBean loginbean;
-
-    public LoginBean getLoginbean() {
-        return loginbean;
-    }
-
-    public void setLoginbean(LoginBean loginbean) {
-        this.loginbean = loginbean;
-    }
-
-    public DashboardBean() {
-    }
+    private static Logger logger = LoggerFactory.getLogger(ProfileBean.class);
 
     @PostConstruct
     public void init() {
-        NegocioDashboard ctrl = new NegocioDashboard();
-        boolean works;
-        try {
-            if (loginbean.getUser() != null && ctrl.isRegister(loginbean.getUser().getIdCliente())) {
-                works = true;
-            } else {
-                works = false;
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
+        
     }
-
 }

@@ -30,28 +30,36 @@
 
                         <ul class="ultima-menu animated">
                             <li role="menuitem">
-                                <a href="#">
-                                    <i class="material-icons">&#xE7FD;</i>
-                                    <span>Perfil</span>
-                                </a>
+                                <h:form>
+                                    <h:outputLink value="profile.xhtml"> 
+                                        <i class="material-icons">&#xE7FD;</i>
+                                        <span>Perfil</span>
+                                    </h:outputLink>
+                                </h:form>
                             </li>
                             <li role="menuitem">
-                                <a href="#">
-                                    <i class="material-icons">perm_phone_msg</i>
-                                    <span>Contacto</span>
-                                </a>
+                                <h:form> 
+                                    <h:outputLink value="contact.xhtml">
+                                        <i class="material-icons">perm_phone_msg</i>
+                                        <span>Contacto</span>
+                                    </h:outputLink>
+                                </h:form>
                             </li>
                             <li role="menuitem"> 
-                                <a href="#">
-                                    <i class="material-icons">link</i>
-                                    <span>Telegram</span>
-                                </a>
+                                <h:form> 
+                                    <h:commandLink action="#{telegramBean.load()}"> 
+                                        <i class="material-icons">link</i>
+                                        <span>Telegram</span>
+                                    </h:commandLink>                                
+                                </h:form>
                             </li>
                             <li role="menuitem">
-                                <a href="#">
-                                    <i class="material-icons">link</i>
-                                    <span>Facebook</span>
-                                </a>
+                                <h:form> 
+                                    <h:commandLink action="#{facebookBean.load()}"> 
+                                        <i class="material-icons">link</i>
+                                        <span>Facebook</span>
+                                    </h:commandLink >                                
+                                </h:form>
                             </li>
                             <li role="menuitem">
                                 <p:commandLink id="logout" actionListener="#{loginBean.logout}" style="margin-right:20px;" oncomplete="logout(xhr, status, args)">

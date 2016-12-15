@@ -21,28 +21,28 @@
 
                         <ul id="profile-menu" class="ultima-menu">
                             <li role="menuitem">
-                                <a href="#">
+                                <h:outputLink value="profile.xhtml"> 
                                     <i class="material-icons">&#xE7FD;</i>
                                     <span>Perfil</span>
-                                </a>
+                                </h:outputLink>
                             </li>
                             <li role="menuitem">
-                                <a href="#">
+                                <h:outputLink value="contact.xhtml">
                                     <i class="material-icons">perm_phone_msg</i>
                                     <span>Contacto</span>
-                                </a>
+                                </h:outputLink>
                             </li>
                             <li role="menuitem"> 
-                                <a href="#">
+                                <h:commandLink action="#{telegramBean.load()}"> 
                                     <i class="material-icons">link</i>
                                     <span>Telegram</span>
-                                </a>
+                                </h:commandLink >                                
                             </li>
                             <li role="menuitem">
-                                <a href="#">
+                                <h:commandLink action="#{facebookBean.load()}"> 
                                     <i class="material-icons">link</i>
                                     <span>Facebook</span>
-                                </a>
+                                </h:commandLink >                                
                             </li>
                             <li role="menuitem">
                                 <p:commandLink id="logout" actionListener="#{loginBean.logout}" style="margin-right:20px;" oncomplete="logout(xhr, status, args)">

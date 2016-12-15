@@ -21,6 +21,8 @@
         <ui:insert name="head"/>
     </h:head>
 
+    <f:event listener="#{loginBean.isAdmin}" type="preRenderView" />
+
     <h:body styleClass="main-body #{beanGuestPreferences.compact ? 'layout-compact' : null}">
         <div class="layout-wrapper #{beanGuestPreferences.menuLayout}">
             <ui:include src="./topbar.xhtml" />

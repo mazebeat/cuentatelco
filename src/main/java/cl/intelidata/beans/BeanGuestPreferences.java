@@ -29,7 +29,7 @@ public class BeanGuestPreferences implements Serializable {
     private Map<String, String> themeColors;
     private String theme = "indigo";
     private String menuClass = null;
-    private String profileMode = "inline"; // overlay | inline
+    private String profileMode = "overlay"; // overlay | inline
     private String menuLayout = "static"; // horizontal | static | overlay
     private boolean compact = false;
 

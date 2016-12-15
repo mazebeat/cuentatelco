@@ -26,6 +26,7 @@
 package cl.intelidata.negocio;
 
 import cl.intelidata.controllers.TelegramUsuarioIntegracionJpaController;
+import cl.intelidata.jpa.FacebookUsuarioIntegracion;
 import cl.intelidata.jpa.TelegramUsuarioIntegracion;
 import cl.intelidata.jpa.Usuarios;
 import cl.intelidata.utils.EntityHelper;
@@ -37,11 +38,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author DFeliu
  */
-public class NegocioTelegram {
+public class NegocioFacebook {
 
-    private static Logger logger = LoggerFactory.getLogger(NegocioRegister.class);
+    private static Logger logger = LoggerFactory.getLogger(NegocioFacebook.class);
 
-    public NegocioTelegram() {
+    public NegocioFacebook() {
     }
 
     public int getCodigoIntegracion(Usuarios user) {
@@ -68,12 +69,12 @@ public class NegocioTelegram {
 
     public int getUserCode(Usuarios user) throws Exception {
         EntityManager em = null;
-        TelegramUsuarioIntegracion t;
+        FacebookUsuarioIntegracion t;
         int code = 0;
 
         try {
             em = EntityHelper.getInstance().getEntityManager();
-            t = em.createNamedQuery("TelegramUsuarioIntegracion.GetUserCode", TelegramUsuarioIntegracion.class)
+            t = em.createNamedQuery("FacebookUsuarioIntegracion.GetUserCode", FacebookUsuarioIntegracion.class)
                     .setParameter("idUsuario", user)
                     .getSingleResult();
             code = t.getCodigo();
