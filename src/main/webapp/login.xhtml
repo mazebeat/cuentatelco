@@ -47,8 +47,7 @@
                         </div>
                         <div class="ui-g-12">
                             <div class="ui-g-6">
-                                <p:commandButton id="loginButton" value="Iniciar Sesion" icon="ui-icon-person" actionListener="#{loginBean.login}" update=":mensajes"
-                                                 oncomplete="managerLogin(xhr, status, args)" />
+                                <p:commandButton id="loginButton" value="Iniciar Sesion" icon="ui-icon-person" actionListener="#{loginBean.login}" update=":mensajes" oncomplete="managerLogin(xhr, status, args)"/>
                             </div>
                             <div class="ui-g-6">
                                 <p:button outcome="/dashboard" value="Recordar Contraseña" icon="ui-icon-help" styleClass="secondary"/>

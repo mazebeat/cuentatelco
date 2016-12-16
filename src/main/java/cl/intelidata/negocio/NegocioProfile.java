@@ -25,9 +25,10 @@
  */
 package cl.intelidata.negocio;
 
+import cl.intelidata.controllers.PersonaJpaController;
+import cl.intelidata.jpa.Persona;
 import cl.intelidata.jpa.Usuarios;
 import cl.intelidata.utils.EntityHelper;
-import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,29 +36,29 @@ import org.slf4j.LoggerFactory;
  *
  * @author DFeliu
  */
-public class NegocioLogin {
+public class NegocioProfile {
 
-    private static Logger logger = LoggerFactory.getLogger(NegocioLogin.class);
-    private Usuarios user;
+    private static Logger logger = LoggerFactory.getLogger(NegocioProfile.class);
 
-    public Usuarios validLogin(String username, String password) throws Exception {
-        EntityManager em = null;
+    public Persona load(Usuarios user) {
+        int id = user.getIdPersona();
 
         try {
-            em = EntityHelper.getInstance().getEntityManager();
-            user = em.createNamedQuery("Usuarios.validLogin", Usuarios.class)
-                    .setParameter("username", username)
-                    .setParameter("password", password)
-                    .getSingleResult();
+            PersonaJpaController pctrl = new PersonaJpaController(EntityHelper.getInstance().getEntityManagerFactory());
+            return pctrl.findPersona(id);
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
-            throw ex;
-        } finally {
-            if (em != null && em.isOpen()) {
-                em.close();
-            }
         }
-        return user;
+
+        return null;
     }
 
+    public void save(Persona p) {
+        try {
+            PersonaJpaController pctrl = new PersonaJpaController(EntityHelper.getInstance().getEntityManagerFactory());
+            pctrl.edit(p);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+        }
+    }
 }

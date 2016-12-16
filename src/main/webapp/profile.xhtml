@@ -6,12 +6,71 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="content">
+        <p:growl id="mensajes" showDetail="true" life="2000" />
+
         <div class="ui-g">
             <div class="ui-g-12">
                 <div class="card">
-                    <h1>Empty Page</h1>
-                    <p>Use this page to start from scratch and place your custom content.</p>
-                    <p:button outcome="dashboard" value="Home" style="display:inline-block;margin-top:5px"/>
+
+                    <h:form id="profileForm">
+
+                        <div class="ui-g">
+                            <!--<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">-->
+                            <div class="ui-g-12">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText value="#{profileBean.address}" />
+                                    <label>Dirección</label>
+                                </h:panelGroup>                                   
+                            </div>
+                            <div class="ui-g-6">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText value="#{profileBean.email}" />
+                                    <label>Teléfono Fijo</label>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-6">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText value="#{profileBean.phone}" />
+                                    <label>Teléfono Celular</label>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-6">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText value="#{profileBean.email}" />
+                                    <label>E-mail</label>
+                                </h:panelGroup>
+                            </div>               
+                            <div class="ui-g-12">
+                                <h:panelGroup  styleClass="md-inputfield">
+                                    <p:inputText value="#{profileBean.twitter}" />
+                                    <label>Twitter</label>
+                                </h:panelGroup>
+                            </div>               
+                            <div class="ui-g-12">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText value="#{profileBean.facebook}" />
+                                    <label>Facebook</label>
+                                </h:panelGroup>
+                            </div>               
+                            <div class="ui-g-12">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText value="#{profileBean.skype}" />
+                                    <label>Skype</label>
+                                </h:panelGroup>
+                            </div>       
+                            <div class="ui-g-12">
+                                <div class="ui-g-6">
+                                    <p:commandButton id="profileButton" value="Guardar" icon="save" actionListener="#{profileBean.save}" update=":mensajes" process="@form" oncomplete="console.log('finish') "/>
+                                </div>
+                                <div class="ui-g-6">
+                                    <p:button outcome="/dashboard" value="Volver" icon="" styleClass="secondary">                        
+                                    </p:button>
+                                </div>
+                            </div>
+                        </div>
+                        <!--</p:panelGrid>-->                        
+                    </h:form>
+
                 </div>
             </div>
         </div>

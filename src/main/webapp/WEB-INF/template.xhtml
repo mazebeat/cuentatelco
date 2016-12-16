@@ -30,11 +30,12 @@
 
             <div class="layout-main">
                 <ui:insert name="content"/>
+
                 <ui:include src="./footer.xhtml" />
             </div>
         </div>
 
-        <p:ajaxStatus style="width:32px;height:32px;position:fixed;right:7px;bottom:7px">
+        <p:ajaxStatus style="width:48px;height:48px;position:fixed;right:7px;bottom:7px">
             <f:facet name="start">
                 <i class="fa fa-circle-o-notch fa-spin ajax-loader" aria-hidden="true"></i>
             </f:facet>
@@ -42,7 +43,7 @@
             <f:facet name="complete">
                 <h:outputText value="" />
             </f:facet>
-        </p:ajaxStatus>
+        </p:ajaxStatus>       
 
         <h:outputStylesheet name="css/nanoscroller.css" library="ultima-layout" />
         <h:outputStylesheet name="css/animate.css" library="ultima-layout" />

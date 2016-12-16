@@ -115,12 +115,12 @@ public class LoginBean implements Serializable {
 
             if (user != null) {
                 loggedin = true;
+
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenid@", username.toUpperCase());
             } else {
                 loggedin = false;
                 msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Login Error", "Credenciales no válidas");
             }
-
             FacesContext.getCurrentInstance().addMessage(null, msg);
             context.addCallbackParam("isLogged", loggedin);
 

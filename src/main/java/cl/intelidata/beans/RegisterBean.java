@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright (c) 2016, Intelidata S.A.
  * All rights reserved.
  *
@@ -25,15 +25,12 @@
  */
 package cl.intelidata.beans;
 
-import cl.intelidata.jpa.Persona;
-import cl.intelidata.jpa.Usuarios;
 import cl.intelidata.negocio.NegocioRegister;
 import java.io.Serializable;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ComponentSystemEvent;
 import org.primefaces.context.RequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
