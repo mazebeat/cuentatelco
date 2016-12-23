@@ -25,12 +25,16 @@
  */
 package cl.intelidata.beans;
 
-import cl.intelidata.negocio.NegocioDashboard;
+import cl.intelidata.negocio.NegocioContact;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,13 +44,23 @@ import org.slf4j.LoggerFactory;
  */
 @ManagedBean
 @SessionScoped
-public class DashboardBean implements Serializable {
+public class ContactBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
-    private static Logger logger = LoggerFactory.getLogger(DashboardBean.class);
+    private static Logger logger = LoggerFactory.getLogger(ContactBean.class);
+
+    private String html;
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
+
+    public String getHtml() {
+        return html;
+    }
+
+    public void setHtml(String html) {
+        this.html = html;
+    }
 
     public LoginBean getLoginbean() {
         return loginbean;
@@ -56,22 +70,49 @@ public class DashboardBean implements Serializable {
         this.loginbean = loginbean;
     }
 
-    public DashboardBean() {
+    public ContactBean() {
     }
 
     @PostConstruct
     public void init() {
-        NegocioDashboard ctrl = new NegocioDashboard();
-        boolean works = false;
+        getQuestions();
+    }
+
+    public void getQuestions() {
         try {
-            if (loginbean.getUser() != null && ctrl.isRegister(loginbean.getUser().getIdCliente())) {
-                works = true;
-            } else {
-                works = false;
-            }
+            NegocioContact nc = new NegocioContact();
+            html = nc.macroQuestions(nc.getQuestions(), loginbean.getClient().getId());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
     }
 
+    public void save() {
+        try {
+            int idClient = loginbean.getClient().getId();
+            NegocioContact nc = new NegocioContact();
+            HashMap<Integer, Integer> oldAnsw = nc.checkList(idClient);
+            HashMap<Integer, Integer> answ = new HashMap<>();
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+
+            if (oldAnsw != null && !oldAnsw.isEmpty()) {
+                for (Integer key : oldAnsw.keySet()) {
+                    int val = Integer.parseInt(ec.getRequestParameterMap().get("formContact:radio" + key));
+                    answ.put(key, val);
+                }
+            } else {
+                Map<String, String> params = ec.getRequestParameterMap();
+                for (Map.Entry<String, String> p : params.entrySet()) {
+                    String key = p.getKey();
+                    String value = p.getValue();
+                    System.out.println(key + " " + value);
+                }
+            }
+
+            nc.save(oldAnsw, answ, idClient);
+            init();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
 }

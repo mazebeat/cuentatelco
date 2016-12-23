@@ -34,7 +34,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import org.primefaces.context.RequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,7 +101,7 @@ public class ProfileBean implements Serializable {
             per.setSkype(skype);
 
             np.save(per);
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenid@", "");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Datos guardados", "");
         } catch (Exception e) {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al guardar", "");
             logger.error(e.getMessage(), e);

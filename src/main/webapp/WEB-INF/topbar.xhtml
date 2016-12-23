@@ -8,10 +8,12 @@
 
     <div class="topbar clearfix">
         <div class="topbar-left">            
-            <div class="logo" style="margin-top: -5px;"></div>
+            <div class="logo" style="margin-top: -5px;"></div>            
         </div>
 
         <div class="topbar-right">
+
+
             <a id="menu-button" href="#">
                 <i></i>                
             </a>
@@ -62,14 +64,16 @@
                                 </h:form>
                             </li>
                             <li role="menuitem">
-                                <p:commandLink id="logout" actionListener="#{loginBean.logout}" style="margin-right:20px;" oncomplete="logout(xhr, status, args)">
-                                    <i class="material-icons">&#xE8AC;</i>
-                                    <span>Logout</span>
-                                </p:commandLink>
+                                <h:form> 
+                                    <p:commandLink id="logout" actionListener="#{loginBean.logout}" style="margin-right:20px;" oncomplete="logout(xhr, status, args)">
+                                        <i class="material-icons">&#xE8AC;</i>
+                                        <span>Logout</span>
+                                    </p:commandLink>
+                                </h:form>
                             </li>
                         </ul>
                     </li>
-                </ui:fragment>
+                </ui:fragment>                
                 <li>
                     <a href="http://www.entel.cl/pagosonline/" target="_blank">
                         <i class="topbar-icon material-icons">payment</i>
@@ -77,44 +81,56 @@
                     </a>
                 </li>
                 <li>
+                    <h:outputLink id="contactBtn" type="button">
+                        <i class="topbar-icon material-icons animated swing">chat_bubble_outline</i>
+                        <span class="topbar-item-name">Contactenos</span>
+                    </h:outputLink>
+                    <p:overlayPanel id="mmenuContact" for="contactBtn" hideEffect="fade">
+                        <ui:include src="./contactbar.xhtml" />                 
+                    </p:overlayPanel>
+                </li>
+                <li>
                     <a href="#">
                         <i class="topbar-icon material-icons animated swing">&#xE0C9;</i>
                         <span class="topbar-badge animated rubberBand">5</span>
                         <span class="topbar-item-name">Messages</span>
                     </a>
-                    <ul class="ultima-menu animated">
-                        <li role="menuitem">
-                            <a href="#" class="topbar-message">
-                                <p:graphicImage name="images/avatar1.png" library="ultima-layout" width="35"/>
-                                <span>Give me a call</span>
-                            </a>
-                        </li>
-                        <li role="menuitem">
-                            <a href="#" class="topbar-message">
-                                <p:graphicImage name="images/avatar2.png" library="ultima-layout" width="35"/>
-                                <span>Sales reports attached</span>
-                            </a>
-                        </li>
-                        <li role="menuitem">
-                            <a href="#" class="topbar-message">
-                                <p:graphicImage name="images/avatar3.png" library="ultima-layout" width="35"/>
-                                <span>About your invoice</span>
-                            </a>
-                        </li>
-                        <li role="menuitem">
-                            <a href="#" class="topbar-message">
-                                <p:graphicImage name="images/avatar2.png" library="ultima-layout" width="35"/>
-                                <span>Meeting today at 10pm</span>
-                            </a>
-                        </li>
-                        <li role="menuitem">
-                            <a href="#" class="topbar-message">
-                                <p:graphicImage name="images/avatar4.png" library="ultima-layout" width="35"/>
-                                <span>Out of office</span>
-                            </a>
-                        </li>
+
+                    <ul class="ultima-menu animated">   
+                        <!--
+                        
+                            <li role="menuitem">
+                                <a href="#" class="topbar-message">
+                                    <p:graphicImage name="images/avatar1.png" library="ultima-layout" width="35"/>
+                                    <span>Give me a call</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="#" class="topbar-message">
+                                    <p:graphicImage name="images/avatar2.png" library="ultima-layout" width="35"/>
+                                    <span>Sales reports attached</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="#" class="topbar-message">
+                                    <p:graphicImage name="images/avatar3.png" library="ultima-layout" width="35"/>
+                                    <span>About your invoice</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="#" class="topbar-message">
+                                    <p:graphicImage name="images/avatar2.png" library="ultima-layout" width="35"/>
+                                    <span>Meeting today at 10pm</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="#" class="topbar-message">
+                                    <p:graphicImage name="images/avatar4.png" library="ultima-layout" width="35"/>
+                                    <span>Out of office</span>
+                                </a>
+                            </li>-->
                     </ul>
-                </li>
+                </li>               
                 <li>
                     <a href="#">
                         <i class="topbar-icon material-icons">&#xE425;</i>
@@ -150,9 +166,11 @@
                 </li>
                 <li class="search-item">
                     <h:panelGroup styleClass="md-inputfield">
-                        <p:inputText />
-                        <label>Buscar</label>
-                        <i class="topbar-icon material-icons">&#xE8B6;</i>
+                        <h:form id="searchTopbar">
+                            <p:inputText />
+                            <label>Buscar</label>
+                            <i class="topbar-icon material-icons">&#xE8B6;</i>
+                        </h:form>
                     </h:panelGroup>
 
                 </li>
