@@ -28,6 +28,7 @@ package cl.intelidata.beans;
 import cl.intelidata.negocio.NegocioDashboard;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.text.NumberFormat;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -72,6 +73,10 @@ public class DashboardBean implements Serializable {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
+    }
+
+    public String totalPay() {
+        return NumberFormat.getIntegerInstance().format(loginbean.getClient().getTotalServiciosList().get(0).getTotalAPagar());
     }
 
 }
