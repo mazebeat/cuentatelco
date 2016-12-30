@@ -9,9 +9,45 @@
         <div class="ui-g">
             <div class="ui-g-12">
                 <div class="card">
-                    <h1>Empty Page</h1>
-                    <p>Use this page to start from scratch and place your custom content.</p>
-                    <p:button outcome="dashboard" value="Inicio" style="display:inline-block;margin-top:5px"/>
+                    <h1>Detalle de su factura/boleta</h1>
+                    <div class="ui-fluid">
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank">
+                            <h:outputText value="HOLA" />
+                            <h:outputText value="QUE PAJOOO!" />
+
+                            <h:outputText value="Servicios contratados" />
+                            <h:outputText value="$17.059.269" />
+
+                            <h:outputText value="Servicios consumidos" />
+                            <h:outputText value="$12.268.782" />
+
+                            <h:outputText value="Servicios pcs no incluidos" />
+                            <h:outputText value="$1.844.098" />
+
+                            <h:outputText value="Servicios de terceros" />
+                            <h:outputText value="$3.405.957" />
+
+                            <h:outputText value="Cobros y descuentos" />
+                            <h:outputText value="$-623.429" />
+
+                            <h:outputText value="Total afecto" />
+                            <h:outputText value="$33.954.677" />
+
+                            <h:outputText value="IVA" />
+                            <h:outputText value="$6.451.389" />
+
+                            <h:outputText value="Monto Bruto" />
+                            <h:outputText value="$40.406.066" />
+                        </p:panelGrid>
+
+                        <h3>Saldos anteriores</h3>
+
+                        <hr />
+
+                        <div class="ui-fluid"><table class="table"><thead><tr><th>Documento</th><th>Folio</th><th>Vencimiento</th><th>$</th></tr></thead><tbody><tr><h:outputText value="Factura" /><h:outputText value="21907740" /><h:outputText value="15/04/2015" /><h:outputText value="$46.952.957" /></tr><tr><h:outputText value="Factura" /><h:outputText value="22062613" /><h:outputText value="15/05/2015" /><h:outputText value="$44.735.541" /></tr></tbody></table></div>
+
+                        <h4><b>Total a pagar: $132.094.564</b></h4>
+                    </div>
                 </div>
             </div>
         </div>
