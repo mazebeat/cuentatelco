@@ -14,13 +14,15 @@
             <div class="ui-g-12">
                 <div class="card">
                     <h1>Bienvenido, #{loginBean.client.personaId.nombre} #{loginBean.client.personaId.apellidos}</h1>
-                    <h4>Cliente Nro: #{loginBean.client.numeroCliente}</h4>
-                    <h5>Aquí podrás revisar tus gastos, extraer gráficos y realizar los pagos de tus servicios contratados</h5>
-                    <h5><b>Cantidad de teléfonos contratados: #{loginBean.client.cantidadNumeros}</b></h5>
-                    <h5><b>Ultima boleta</b></h5>
-                    <h5>Fecha vencimiento:  #{loginBean.client.fechaVencimiento}</h5>
-                    <h5>Monto: $ #{dashboardBean.totalPay()}</h5>
-                    <p:button outcome="dashboard" value="Home" style="display:inline-block;margin-top:5px"/>                    
+                    <p><strong>Cliente Nro:</strong> #{loginBean.client.numeroCliente}</p>
+                    <p>Aquí podrás revisar tus gastos, extraer gráficos y realizar los pagos de tus servicios contratados</p>
+                    <strong>Cantidad de teléfonos contratados: </strong> #{loginBean.client.cantidadNumeros}
+                    <ul class="list-unstyled">
+                        <li><h4><strong>Ultima boleta</strong></h4></li>
+                        <li><strong>Fecha vencimiento: </strong> #{loginBean.client.fechaVencimiento.toGMTString()}</li>
+                        <li><strong>Monto: </strong> $ #{dashboardBean.totalPay()}</li>
+                    </ul>                
+                    <!--<p:button outcome="dashboard" value="Home" style="display:inline-block;margin-top:5px"/>-->                    
                 </div>
             </div>
         </div>
