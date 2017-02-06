@@ -12,41 +12,53 @@
                     <h1>Detalle de su factura/boleta</h1>
                     <div class="ui-fluid">
                         <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank">
-                            <h:outputText value="HOLA" />
-                            <h:outputText value="QUE PAJOOO!" />
+                            <strong>Servicios contratados</strong>
+                            <h:outputText value="#{accountDetailBean.totalServices.get('servContra')}" />
 
-                            <h:outputText value="Servicios contratados" />
-                            <h:outputText value="$17.059.269" />
+                            <strong>Servicios consumidos</strong>
+                            <h:outputText value="#{accountDetailBean.totalServices.get('servConsum')}" />
 
-                            <h:outputText value="Servicios consumidos" />
-                            <h:outputText value="$12.268.782" />
+                            <strong>Servicios pcs no incluidos</strong>
+                            <h:outputText value="#{accountDetailBean.totalServices.get('servPcsNI')}" />
 
-                            <h:outputText value="Servicios pcs no incluidos" />
-                            <h:outputText value="$1.844.098" />
+                            <strong>Servicios de terceros</strong>
+                            <h:outputText value="#{accountDetailBean.totalServices.get('servTerc')}" />
 
-                            <h:outputText value="Servicios de terceros" />
-                            <h:outputText value="$3.405.957" />
+                            <strong>Cobros y descuentos</strong>
+                            <h:outputText value="#{accountDetailBean.totalServices.get('cobdesc')}" />
 
-                            <h:outputText value="Cobros y descuentos" />
-                            <h:outputText value="$-623.429" />
+                            <strong>Total afecto</strong>
+                            <h:outputText value="#{accountDetailBean.totalServices.get('totalAf')}" />
 
-                            <h:outputText value="Total afecto" />
-                            <h:outputText value="$33.954.677" />
+                            <strong>IVA</strong>
+                            <h:outputText value="#{accountDetailBean.totalServices.get('iva')}" />
 
-                            <h:outputText value="IVA" />
-                            <h:outputText value="$6.451.389" />
-
-                            <h:outputText value="Monto Bruto" />
-                            <h:outputText value="$40.406.066" />
+                            <strong>Monto Bruto</strong>
+                            <h:outputText value="#{accountDetailBean.totalServices.get('montoB')}" />
                         </p:panelGrid>
 
-                        <h3>Saldos anteriores</h3>
+                        <h3>Saldos anteriores<hr /></h3>
 
-                        <hr />
+                        <div class="ui-panelgrid ui-widget ui-panelgrid-blank">
+                            <div class="ui-panelgrid-content ui-widget-content ui-grid ui-grid-responsive">
+                                <div class="ui-grid-row">
+                                    <div class="ui-panelgrid-cell ui-grid-col-3"><strong>Documento</strong></div>
+                                    <div class="ui-panelgrid-cell ui-grid-col-3"><strong>Folio</strong></div>
+                                    <div class="ui-panelgrid-cell ui-grid-col-3"><strong>Vencimiento</strong></div>
+                                    <div class="ui-panelgrid-cell ui-grid-col-3"><strong>$</strong></div>                                        
+                                </div>
+                                <ui:repeat var="lv" value="#{accountDetailBean.lastValues}" varStatus="status" >
+                                    <div class="ui-grid-row">
+                                        <div class="ui-panelgrid-cell ui-grid-col-3"><h:outputText value="#{lv.documento}" /></div>
+                                        <div class="ui-panelgrid-cell ui-grid-col-3"><h:outputText value="#{lv.folio}" /></div>
+                                        <div class="ui-panelgrid-cell ui-grid-col-3"><h:outputText value="#{lv.fechaVencimiento}" /></div>
+                                        <div class="ui-panelgrid-cell ui-grid-col-3"><h:outputText value="#{lv.total}" /></div>
+                                    </div>
+                                </ui:repeat>                                                        
+                            </div>
+                        </div>
 
-                        <div class="ui-fluid"><table class="table"><thead><tr><th>Documento</th><th>Folio</th><th>Vencimiento</th><th>$</th></tr></thead><tbody><tr><h:outputText value="Factura" /><h:outputText value="21907740" /><h:outputText value="15/04/2015" /><h:outputText value="$46.952.957" /></tr><tr><h:outputText value="Factura" /><h:outputText value="22062613" /><h:outputText value="15/05/2015" /><h:outputText value="$44.735.541" /></tr></tbody></table></div>
-
-                        <h4><b>Total a pagar: $132.094.564</b></h4>
+                        <!--<h4><b>Total a pagar: ${accountDetailBean.loginbean.client.totalServiciosList.get(0)}</b></h4>-->
                     </div>
                 </div>
             </div>
