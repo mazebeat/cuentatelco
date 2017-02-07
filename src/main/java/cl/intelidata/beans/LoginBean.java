@@ -126,7 +126,16 @@ public class LoginBean implements Serializable {
 
             if (loggedin) {
                 clientData();
-                context.addCallbackParam("view", "dashboard.xhtml");
+
+                if (client == null || person == null) {
+                    context.addCallbackParam("view", "register2.xhtml");
+                } else {
+                    if (nl.gotRegister(person)) {
+                        context.addCallbackParam("view", "dashboard.xhtml");
+                    } else {
+                        context.addCallbackParam("view", "register2.xhtml");
+                    }
+                }
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

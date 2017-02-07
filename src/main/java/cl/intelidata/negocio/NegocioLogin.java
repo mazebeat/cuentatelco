@@ -25,6 +25,7 @@
  */
 package cl.intelidata.negocio;
 
+import cl.intelidata.jpa.Persona;
 import cl.intelidata.jpa.Usuarios;
 import cl.intelidata.utils.EntityHelper;
 import javax.persistence.EntityManager;
@@ -51,13 +52,37 @@ public class NegocioLogin {
                     .getSingleResult();
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
-            throw ex;
         } finally {
             if (em != null && em.isOpen()) {
                 em.close();
             }
         }
         return user;
+    }
+
+    public boolean gotRegister(Persona person) {
+        boolean pass = false;
+        boolean a, b, c, d, e, f, g;
+
+        try {
+            if (person != null) {
+                a = (person.getEmailPersonal() != null && !person.getEmailPersonal().trim().equals(""));
+                b = (person.getDireccionPersonal() != null && !person.getDireccionPersonal().trim().equals(""));
+                c = (person.getTelefonoFijoPersonal() != null && !person.getTelefonoFijoPersonal().trim().equals(""));
+                d = (person.getCelularPersonal() != null && !person.getCelularPersonal().trim().equals(""));
+                e = (person.getFacebook() != null && !person.getFacebook().trim().equals(""));
+                f = (person.getTwitter() != null && !person.getTwitter().trim().equals(""));
+                g = (person.getSkype() != null && !person.getSkype().trim().equals(""));
+
+                if (a || b || c || d || e || f || g) {
+                    pass = true;
+                }
+            }
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+        }
+
+        return pass;
     }
 
 }
