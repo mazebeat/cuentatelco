@@ -30,6 +30,7 @@ import cl.intelidata.jpa.Persona;
 import cl.intelidata.jpa.Usuarios;
 import cl.intelidata.negocio.NegocioClient;
 import cl.intelidata.negocio.NegocioLogin;
+import cl.intelidata.utils.Hash;
 import java.io.Serializable;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
@@ -57,8 +58,7 @@ public class LoginBean implements Serializable {
     private Usuarios user;
     private Cliente client;
     private Persona person;
-    private String username;
-    private String password;
+    private String username, password;
     private boolean loggedin = false;
 
     public boolean isLogged() {
@@ -106,39 +106,43 @@ public class LoginBean implements Serializable {
     }
 
     public void login(ActionEvent actionEvent) {
+        FacesMessage msg = null;
+        RequestContext context = RequestContext.getCurrentInstance();
+
         try {
-            RequestContext context = RequestContext.getCurrentInstance();
-            FacesMessage msg = null;
 
             NegocioLogin nl = new NegocioLogin();
-            user = nl.validLogin(username, password);
+            user = nl.validLogin(username);
 
-            if (user != null) {
+            if (user != null && Hash.checkPassword(password, user.getPassword())) {
+                clientData();
+                if (client == null || person == null) {
+                    msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Información", "Debe registrarse primero");
+                } else {
+                    msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenido", username.toUpperCase());
+                }
                 loggedin = true;
-
-                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenid@", username.toUpperCase());
             } else {
                 loggedin = false;
-                msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Login Error", "Credenciales no válidas");
+                msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Login Error", "Usuario o credenciales no válidas");
             }
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            context.addCallbackParam("isLogged", loggedin);
 
             if (loggedin) {
-                clientData();
-
-                if (client == null || person == null) {
-                    context.addCallbackParam("view", "register2.xhtml");
-                } else {
-                    if (nl.gotRegister(person)) {
-                        context.addCallbackParam("view", "dashboard.xhtml");
+                if (nl.gotRegister(person)) {
+                    if (nl.gotAnswers(client)) {
+                        context.addCallbackParam("view", "contact2.xhtml");
                     } else {
-                        context.addCallbackParam("view", "register2.xhtml");
+                        context.addCallbackParam("view", "dashboard.xhtml");
                     }
+                } else {
+                    context.addCallbackParam("view", "profile2.xhtml");
                 }
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
+        } finally {
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            context.addCallbackParam("isLogged", loggedin);
         }
     }
 
@@ -162,4 +166,5 @@ public class LoginBean implements Serializable {
             nav.performNavigation("access-denied");
         }
     }
+
 }

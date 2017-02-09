@@ -25,7 +25,6 @@
  */
 package cl.intelidata.beans;
 
-import cl.intelidata.negocio.NegocioDashboard;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.text.NumberFormat;
@@ -62,21 +61,17 @@ public class DashboardBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        NegocioDashboard ctrl = new NegocioDashboard();
-        boolean works = false;
-        try {
-            if (loginbean.getUser() != null && ctrl.isRegister(loginbean.getUser().getIdCliente())) {
-                works = true;
-            } else {
-                works = false;
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
     }
 
     public String totalPay() {
-        return NumberFormat.getIntegerInstance().format(loginbean.getClient().getTotalServiciosList().get(0).getTotalAPagar());
+        String total = "0";
+        try {
+            total = NumberFormat.getIntegerInstance().format(loginbean.getClient().getTotalServiciosList().get(0).getTotalAPagar());
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return total;
     }
 
 }

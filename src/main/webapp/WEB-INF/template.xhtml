@@ -35,15 +35,7 @@
             </div>
         </div>
 
-        <p:ajaxStatus style="width:48px;height:48px;position:fixed;right:7px;bottom:7px">
-            <f:facet name="start">
-                <i class="fa fa-circle-o-notch fa-spin ajax-loader" aria-hidden="true"></i>
-            </f:facet>
-
-            <f:facet name="complete">
-                <h:outputText value="" />
-            </f:facet>
-        </p:ajaxStatus>       
+        <ui:include src="../ajaxstatus.xhtml" />
 
         <h:outputStylesheet name="css/nanoscroller.css" library="ultima-layout" />
         <h:outputStylesheet name="css/animate.css" library="ultima-layout" />
@@ -107,6 +99,14 @@
             setTimeout(function () {
                 window.location = 'login.xhtml';
             }, 500);
+        }
+        function manageRegister(xhr, status, args) {
+            console.log(xhr, status, args);
+            if (!args.validationFailed && args.isRegistered) {
+                setTimeout(function () {
+                    window.location = args.view;
+                }, 500);
+            }
         }
         //]]>
     </script>

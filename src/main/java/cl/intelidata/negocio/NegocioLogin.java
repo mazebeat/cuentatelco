@@ -25,7 +25,9 @@
  */
 package cl.intelidata.negocio;
 
+import cl.intelidata.jpa.Cliente;
 import cl.intelidata.jpa.Persona;
+import cl.intelidata.jpa.Preguntas;
 import cl.intelidata.jpa.Usuarios;
 import cl.intelidata.utils.EntityHelper;
 import javax.persistence.EntityManager;
@@ -41,15 +43,15 @@ public class NegocioLogin {
     private static Logger logger = LoggerFactory.getLogger(NegocioLogin.class);
     private Usuarios user;
 
-    public Usuarios validLogin(String username, String password) throws Exception {
+    public Usuarios validLogin(String username) throws Exception {
         EntityManager em = null;
 
         try {
             em = EntityHelper.getInstance().getEntityManager();
             user = em.createNamedQuery("Usuarios.validLogin", Usuarios.class)
                     .setParameter("username", username)
-                    .setParameter("password", password)
                     .getSingleResult();
+
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
         } finally {
@@ -58,6 +60,33 @@ public class NegocioLogin {
             }
         }
         return user;
+    }
+
+    public boolean gotAnswers(Cliente client) {
+        EntityManager em = null;
+        long answers = 0;
+        String query = "SELECT count(id) FROM preguntas \n"
+                + "WHERE id NOT IN (\n"
+                + "\tSELECT id_pregunta FROM pregunta_respuesta pr\n"
+                + "\tJOIN cliente_preguntas cp ON pr.id = cp.id_pregunta_respuesta\n"
+                + "\tWHERE cp.id_cliente = " + client.getId()
+                + ")\n"
+                + "AND estado = 'A'";
+
+        try {
+            em = EntityHelper.getInstance().getEntityManager();
+            answers = (long) em.createNativeQuery(query).getSingleResult();
+            if (answers > 0) {
+                return true;
+            }
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+        } finally {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+        return false;
     }
 
     public boolean gotRegister(Persona person) {

@@ -40,8 +40,8 @@ public class NegocioProfile {
 
     private static Logger logger = LoggerFactory.getLogger(NegocioProfile.class);
 
-    public Persona load(Usuarios user) {
-        int id = user.getIdPersona();
+    public Persona load(Persona person) {
+        int id = person.getId();
 
         try {
             PersonaJpaController pctrl = new PersonaJpaController(EntityHelper.getInstance().getEntityManagerFactory());

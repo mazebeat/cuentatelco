@@ -84,7 +84,7 @@ public class MonthDetailBean implements Serializable {
         try {
             NegocioMonthDetail n = new NegocioMonthDetail();
             List<String> data = n.getDataChart(loginbean.getClient().getId());
-            
+
             chart = new PieChartModel();
 
             chart.set("Brand 1", 540);

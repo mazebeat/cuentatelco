@@ -12,65 +12,53 @@
                     <h1>Registro Usuario</h1>
 
                     <h:form id="registerForm" styleClass="clearfix">
-                        <div class="ui-g-12">
-                            <div class="ui-g-6">
-                                <h:panelGroup styleClass="md-inputfield">
-                                    <p:inputText id="name" value="#{registerBean.name}" required="true" requiredMessage="Ingrese nombre" />
-                                    <label>Nombre</label>
-                                </h:panelGroup>
-                            </div>
-                            <div class="ui-g-6">
-                                <h:panelGroup styleClass="md-inputfield">
-                                    <p:inputText id="lastname" value="#{registerBean.lastname}" required="true" requiredMessage="Ingrese apellidos" />
-                                    <label>Apellidos</label>
-                                </h:panelGroup>
-                            </div>
-                        </div>
-                        <div class="ui-g-12">
-                            <div class="ui-g-6">
-                                <h:panelGroup styleClass="md-inputfield">
-                                    <p:inputText id="email" value="#{registerBean.email}" required="true"                                                  
-                                                 requiredMessage="Please enter your email address."
-                                                 validatorMessage="Invalid email format">
-                                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-                                    </p:inputText>                                    
-                                    <label>Email</label>
-                                </h:panelGroup>
-                            </div>
-                            <div class="ui-g-6">
-                                <h:panelGroup styleClass="md-inputfield">
-                                    <p:inputText id="rut" value="#{registerBean.rut}" required="true" requiredMessage="Ingrese RUT" />
-                                    <label>RUT</label>
-                                </h:panelGroup>
-                            </div>
-                        </div>
-                        <div class="ui-g-12">
-                            <div class="ui-g-6">
-                                <h:panelGroup styleClass="md-inputfield">
-                                    <p:password id="password" value="#{registerBean.password}" required="true"
-                                                requiredMessage="Please enter password">
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="name" value="#{registerBean.name}" required="true" requiredMessage="Ingrese su nombre" />
+                                <h:message for="name" style="color: red;" />
+                                <label>Nombre</label>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="lastname" value="#{registerBean.lastname}" required="true" requiredMessage="Ingrese sus apellidos" />
+                                <h:message for="lastname" style="color: red;" />
+                                <label>Apellidos</label>
+                            </h:panelGroup>
 
-                                        <f:validator validatorId="passwordValidator" />
-                                        <f:attribute name="confirmPassword" value="#{confirmPassword}" />
-                                    </p:password>
-                                    <h:message for="password" style="color: red;" />
-                                    <label>Contraseña</label>
-                                </h:panelGroup>
-                            </div>
-                            <div class="ui-g-6">
-                                <h:panelGroup styleClass="md-inputfield">
-                                    <p:password id="confirmPassword" required="true"
-                                                binding="#{confirmPassword}"
-                                                requiredMessage="Please enter confirm password" />
-                                    <h:message for="confirmPassword" style="color: red;" />
-                                    <label>Repetir contraseña</label>
-                                </h:panelGroup>
-                            </div>
-                        </div>
-                        <div class="ui-g-12">
-                            <p:button outcome="/dashboard" value="Volver" icon="ui-icon-help" styleClass="secondary" />
-                            <p:commandButton id="registerButton" value="Registrarce" icon="ui-icon-person" process="@all" update="registerForm" actionListener="#{registerBean.register()}" />
-                        </div>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="email" value="#{registerBean.email}" required="true" requiredMessage="Ingrese suemail address." validatorMessage="Invalid email format">
+                                    <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                                </p:inputText>                                    
+                                <h:message for="email" style="color: red;" />
+                                <label>Email</label>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="rut" value="#{registerBean.rut}" required="true" requiredMessage="Ingrese RUT" validatorMessage="Invalid RUT">
+                                    <f:validator validatorId="rutValidator" />
+                                </p:inputText>
+                                <h:message for="rut" style="color: red;" />
+                                <label>RUT</label>
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:password id="password" value="#{registerBean.password}" required="true" requiredMessage="Please enter password">
+                                    <f:validator validatorId="passwordValidator" />
+                                    <f:attribute name="confirmPassword" value="#{confirmPassword}" />
+                                </p:password>
+                                <h:message for="password" style="color: red;" />
+                                <label>Contraseña</label>
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:password id="confirmPassword" required="true" binding="#{confirmPassword}" requiredMessage="Please enter confirm password" />
+                                <h:message for="confirmPassword" style="color: red;" />
+                                <label>Repetir contraseña</label>
+                            </h:panelGroup>
+                        </p:panelGrid>
+
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank" style="">
+                            <p:button outcome="/dashboard" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
+                            <p:commandButton id="registerButton" value="Registrarse" icon="ui-icon-person" process="@all" update="registerForm" actionListener="#{registerBean.register()}" />
+                        </p:panelGrid>
                     </h:form>
                 </div>
             </div>

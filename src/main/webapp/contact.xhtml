@@ -13,6 +13,7 @@
                         <h3>Contacto</h3>
                         <h:outputText value="#{contactBean.html}" escape="false" id="htmlValues" />                            
                         <p:commandButton value="Guardar" icon="ui-icon-send" style="width:auto" actionListener="#{contactBean.save}" update="@form" />
+                        <p:button outcome="/dashboard" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
                     </h:form>
                 </div>
             </div>

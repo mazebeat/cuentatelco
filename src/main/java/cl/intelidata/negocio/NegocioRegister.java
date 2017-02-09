@@ -30,6 +30,7 @@ import cl.intelidata.controllers.PersonaJpaController;
 import cl.intelidata.jpa.Cliente;
 import cl.intelidata.jpa.Persona;
 import cl.intelidata.utils.EntityHelper;
+import cl.intelidata.utils.Hash;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -44,9 +45,9 @@ import org.slf4j.LoggerFactory;
  * @author DFeliu
  */
 public class NegocioRegister {
-
+    
     private static Logger logger = LoggerFactory.getLogger(NegocioRegister.class);
-
+    
     public boolean validatePassword2(String pass, String passconf) {
         // TODO Add validation of password and hash
         if (pass.equals(passconf) && true) {
@@ -54,14 +55,15 @@ public class NegocioRegister {
         }
         return false;
     }
-
+    
     public boolean register(String name, String lastname, String email, String rut, String password) {
         boolean response = false;
-
+        
         try {
             ClienteJpaController cctrl = new ClienteJpaController(EntityHelper.getInstance().getEntityManagerFactory());
             PersonaJpaController pctrl = new PersonaJpaController(EntityHelper.getInstance().getEntityManagerFactory());
-
+            Cliente cu = new Cliente();
+            
             Persona p = new Persona();
             p.setNombre(name);
             p.setApellidos(lastname);
@@ -69,33 +71,39 @@ public class NegocioRegister {
             pctrl.create(p);
 
             int idClient = getIdClient(rut);
-            Cliente cu = cctrl.findCliente(idClient);
-            // TODO: Agregar hash a la password
-            cu.setClave(password);
+            if (idClient != -1) {
+                cu = cctrl.findCliente(idClient);
+            } else {
+                cu.setRut(rut);
+            }
+            cu.setClave(Hash.hashPassword(password));
             cu.setPersonaId(p);
+            cu.setNumeroCliente("");
 
+            cctrl.create(cu);
             response = true;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
-
+        
         return response;
     }
-
+    
     public int getIdClient(String rut) throws Exception {
         EntityManager em = null;
         Cliente c;
-        int id;
-
+        int id = -1;
+        
         try {
             em = EntityHelper.getInstance().getEntityManager();
             c = em.createNamedQuery("Cliente.findByRut", Cliente.class)
                     .setParameter("rut", rut)
                     .getSingleResult();
-            id = c.getId();
+            if (c != null) {
+                id = c.getId();
+            }
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
-            throw ex;
         } finally {
             if (em != null && em.isOpen()) {
                 em.close();
@@ -103,28 +111,28 @@ public class NegocioRegister {
         }
         return id;
     }
-
+    
     public void validatePassword(ComponentSystemEvent event) {
-
+        
         FacesContext fc = FacesContext.getCurrentInstance();
-
+        
         UIComponent components = event.getComponent();
-
+        
         UIInput uiInputPassword = (UIInput) components.findComponent("password");
         String password = uiInputPassword.getLocalValue() == null ? ""
                 : uiInputPassword.getLocalValue().toString();
         String passwordId = uiInputPassword.getClientId();
-
+        
         UIInput uiInputConfirmPassword = (UIInput) components.findComponent("confirmPassword");
         String confirmPassword = uiInputConfirmPassword.getLocalValue() == null ? ""
                 : uiInputConfirmPassword.getLocalValue().toString();
-
+        
         if (password.isEmpty() || confirmPassword.isEmpty()) {
             return;
         }
-
+        
         if (!password.equals(confirmPassword)) {
-
+            
             FacesMessage msg = new FacesMessage("Password must match confirm password");
             msg.setSeverity(FacesMessage.SEVERITY_ERROR);
             fc.addMessage(passwordId, msg);

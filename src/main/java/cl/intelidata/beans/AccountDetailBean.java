@@ -32,11 +32,10 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +44,7 @@ import org.slf4j.LoggerFactory;
  * @author DFeliu
  */
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class AccountDetailBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;

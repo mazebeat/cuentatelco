@@ -1,15 +1,31 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui"
-                template="/WEB-INF/template.xhtml">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
 
-    <ui:define name="content">
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>IData</title>
+        <h:outputScript name="js/ripple.js" library="ultima-layout" />
+        <h:outputScript name="js/layout.js" library="ultima-layout" />
+    </h:head>
+
+    <h:body styleClass="login-body">
         <p:growl id="mensajes" showDetail="true" life="2000" />
 
+        <p style="text-align: center">
+            <!--<p:graphicImage name="images/logo-ultima.svg" library="ultima-layout" />-->
+            <img src="http://www.betauser.cl/idataEntel/images/logo-entel-blanco.png" alt="" />
+        </p>
         <div class="ui-g">
-            <div class="ui-g-12">
+            <div class="ui-g-8" style="margin: 0 auto;">
                 <div class="card">
                     <h:form id="profileForm"> 
                         <div class="ui-fluid">
@@ -62,18 +78,32 @@
                 </div>
             </div>
         </div>
-        <script type="text/javascript">
-            //<![CDATA[
-            function managerProfile(xhr, status, args) {
-                if (!args.validationFailed && args.save) {
-                    setTimeout(function () {
-                        window.location = args.view;
-                    }, 500);
-                }
+
+        <div class="login-footer">2016 © Intelidata. Todos los derechos reservados</div>
+
+        <p:ajaxStatus style="width:48px;height:48px;position:fixed;right:7px;bottom:7px">
+            <f:facet name="start">
+                <i class="fa fa-circle-o-notch fa-spin ajax-loader" aria-hidden="true"></i>
+            </f:facet>
+
+            <f:facet name="complete">
+                <i class="fa  fa-spin" aria-hidden="true"></i>
+            </f:facet>
+        </p:ajaxStatus> 
+
+        <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
+        <h:outputStylesheet name="css/layout-#{beanGuestPreferences.theme}.css" library="ultima-layout" />
+    </h:body>
+    <script type="text/javascript">
+        //<![CDATA[
+        function managerProfile(xhr, status, args) {
+            if (!args.validationFailed && args.save) {
+                setTimeout(function () {
+                    window.location = args.view;
+                }, 500);
             }
-            //]]>
-        </script>
+        }
+        //]]>
+    </script>
 
-    </ui:define>
-
-</ui:composition>
+</html>

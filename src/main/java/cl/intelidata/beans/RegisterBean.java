@@ -1,4 +1,4 @@
- /*
+/*
  * Copyright (c) 2016, Intelidata S.A.
  * All rights reserved.
  *
@@ -46,11 +46,7 @@ public class RegisterBean implements Serializable {
     private static final long serialVersionUID = -2152389656664659476L;
     private static Logger logger = LoggerFactory.getLogger(RegisterBean.class);
 
-    private String name;
-    private String lastname;
-    private String email;
-    private String rut;
-    private String password;
+    private String name, lastname, email, rut, password;
     private boolean registered = false;
 
     public RegisterBean() {
@@ -117,14 +113,16 @@ public class RegisterBean implements Serializable {
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Registrad@ Correctamente", name.toUpperCase());
             } else {
                 registered = false;
-                msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Registro Error", "Datos invalidos");
+                msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Registro Error", "Datos inválidos");
             }
 
             FacesContext.getCurrentInstance().addMessage(null, msg);
             context.addCallbackParam("isRegistered", registered);
 
             if (registered) {
+                context.addCallbackParam("view", "dashboard.xhtml");
             }
+
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
