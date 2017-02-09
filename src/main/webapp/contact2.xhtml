@@ -18,47 +18,39 @@
     </h:head>
 
     <h:body styleClass="login-body">
-        <p:growl id="mensajes" showDetail="true" life="2000" />
 
         <p style="text-align: center">
             <!--<p:graphicImage name="images/logo-ultima.svg" library="ultima-layout" />-->
             <img src="http://www.betauser.cl/idataEntel/images/logo-entel-blanco.png" alt="" />
         </p>
         <div class="ui-g">
-            <div class="ui-g-8" style="margin: 0 auto; clear: both">
-                <div class="card">
+            <div class="ui-g-8" style="margin: 0 auto;">
+                <div class="card ">
                     <div class="ui-fluid">
-                        <h:form id="formContact">                        
+                        <h:form id="formContact">                   
+                            <p:growl id="mensajes" showDetail="true" life="2000" />
                             <h3>Contacto</h3>
                             <h:outputText value="#{contactBean.html}" escape="false" id="htmlValues" />                            
-                            <p:commandButton value="Guardar" icon="ui-icon-send" style="width:auto" actionListener="#{contactBean.save}" update="@form" />
-                            <a href="contact2.xhtml"></a>
-                            <p:button outcome="/dashboard" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
+                            
+                            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                                <p:commandButton value="Guardar" icon="ui-icon-send" style="width:auto" actionListener="#{contactBean.save}" update="@form" process="@form" oncomplete="managerContact(xhr, status, args)" /> 
+                                <p:button outcome="/dashboard" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
+                            </h:panelGrid>
                         </h:form>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="login-footer">2016 © Intelidata. Todos los derechos reservados</div>
-
-        <p:ajaxStatus style="width:48px;height:48px;position:fixed;right:7px;bottom:7px">
-            <f:facet name="start">
-                <i class="fa fa-circle-o-notch fa-spin ajax-loader" aria-hidden="true"></i>
-            </f:facet>
-
-            <f:facet name="complete">
-                <i class="fa  fa-spin" aria-hidden="true"></i>
-            </f:facet>
-        </p:ajaxStatus> 
+        <ui:include src="WEB-INF/footerLogin.xhtml" />
+        <ui:include src="ajaxstatus.xhtml" />
 
         <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
         <h:outputStylesheet name="css/layout-#{beanGuestPreferences.theme}.css" library="ultima-layout" />
     </h:body>
     <script type="text/javascript">
         //<![CDATA[
-        function managerRegister(xhr, status, args) {
-            if (!args.validationFailed && args.isLogged) {
+        function managerContact(xhr, status, args) {
+            if (!args.validationFailed && args.save) {
                 setTimeout(function () {
                     window.location = args.view;
                 }, 500);

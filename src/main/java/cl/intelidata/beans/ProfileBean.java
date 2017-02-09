@@ -183,7 +183,7 @@ public class ProfileBean implements Serializable {
 
             NegocioLogin nl = new NegocioLogin();
 
-            if (nl.gotAnswers(loginbean.getClient())) {
+            if (nl.gotAnswers(loginbean.getClient()) > 0) {
                 context.addCallbackParam("view", "contact2.xhtml");
             } else {
                 context.addCallbackParam("view", "dashboard.xhtml");

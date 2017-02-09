@@ -62,7 +62,7 @@ public class NegocioLogin {
         return user;
     }
 
-    public boolean gotAnswers(Cliente client) {
+    public int gotAnswers(Cliente client) {
         EntityManager em = null;
         long answers = 0;
         String query = "SELECT count(id) FROM preguntas \n"
@@ -76,9 +76,6 @@ public class NegocioLogin {
         try {
             em = EntityHelper.getInstance().getEntityManager();
             answers = (long) em.createNativeQuery(query).getSingleResult();
-            if (answers > 0) {
-                return true;
-            }
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
         } finally {
@@ -86,7 +83,7 @@ public class NegocioLogin {
                 em.close();
             }
         }
-        return false;
+        return (int) answers;
     }
 
     public boolean gotRegister(Persona person) {

@@ -114,6 +114,8 @@ public class LoginBean implements Serializable {
             NegocioLogin nl = new NegocioLogin();
             user = nl.validLogin(username);
 
+            System.out.println(Hash.hashPassword(password));
+
             if (user != null && Hash.checkPassword(password, user.getPassword())) {
                 clientData();
                 if (client == null || person == null) {
@@ -129,7 +131,7 @@ public class LoginBean implements Serializable {
 
             if (loggedin) {
                 if (nl.gotRegister(person)) {
-                    if (nl.gotAnswers(client)) {
+                    if (nl.gotAnswers(client) > 0) {
                         context.addCallbackParam("view", "contact2.xhtml");
                     } else {
                         context.addCallbackParam("view", "dashboard.xhtml");

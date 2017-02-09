@@ -6,6 +6,8 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="content">
+        <p:growl id="mensajes" showDetail="true" life="2000" />
+        
         <div class="ui-g">
             <div class="ui-g-12">
                 <div class="card">
@@ -14,18 +16,18 @@
                     <h:form id="registerForm" styleClass="clearfix">
                         <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank">
                             <h:panelGroup styleClass="md-inputfield">
-                                <p:inputText id="name" value="#{registerBean.name}" required="true" requiredMessage="Ingrese su nombre" />
+                                <p:inputText id="name" value="#{registerBean.name}" required="true" requiredMessage="Ingrese Nombre" />
                                 <h:message for="name" style="color: red;" />
                                 <label>Nombre</label>
                             </h:panelGroup>
                             <h:panelGroup styleClass="md-inputfield">
-                                <p:inputText id="lastname" value="#{registerBean.lastname}" required="true" requiredMessage="Ingrese sus apellidos" />
+                                <p:inputText id="lastname" value="#{registerBean.lastname}" required="true" requiredMessage="Ingrese Apellidos" />
                                 <h:message for="lastname" style="color: red;" />
                                 <label>Apellidos</label>
                             </h:panelGroup>
 
                             <h:panelGroup styleClass="md-inputfield">
-                                <p:inputText id="email" value="#{registerBean.email}" required="true" requiredMessage="Ingrese suemail address." validatorMessage="Invalid email format">
+                                <p:inputText id="email" value="#{registerBean.email}" required="true" requiredMessage="Ingrese Email" validatorMessage="Invalid email format">
                                     <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
                                 </p:inputText>                                    
                                 <h:message for="email" style="color: red;" />
@@ -40,7 +42,7 @@
                             </h:panelGroup>
 
                             <h:panelGroup styleClass="md-inputfield">
-                                <p:password id="password" value="#{registerBean.password}" required="true" requiredMessage="Please enter password">
+                                <p:password id="password" value="#{registerBean.password}" required="true" requiredMessage="Ingrese Contraseña">
                                     <f:validator validatorId="passwordValidator" />
                                     <f:attribute name="confirmPassword" value="#{confirmPassword}" />
                                 </p:password>
@@ -49,7 +51,7 @@
                             </h:panelGroup>
 
                             <h:panelGroup styleClass="md-inputfield">
-                                <p:password id="confirmPassword" required="true" binding="#{confirmPassword}" requiredMessage="Please enter confirm password" />
+                                <p:password id="confirmPassword" required="true" binding="#{confirmPassword}" requiredMessage="Confirme Contraseña" />
                                 <h:message for="confirmPassword" style="color: red;" />
                                 <label>Repetir contraseña</label>
                             </h:panelGroup>

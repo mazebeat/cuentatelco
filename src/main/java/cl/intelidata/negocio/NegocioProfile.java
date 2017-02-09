@@ -27,7 +27,6 @@ package cl.intelidata.negocio;
 
 import cl.intelidata.controllers.PersonaJpaController;
 import cl.intelidata.jpa.Persona;
-import cl.intelidata.jpa.Usuarios;
 import cl.intelidata.utils.EntityHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

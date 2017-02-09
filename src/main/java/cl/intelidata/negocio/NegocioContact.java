@@ -110,10 +110,11 @@ public class NegocioContact {
 
                 for (PreguntaRespuesta qa : questAnswers) {
                     out += "<span class='choice'>";
-                    out += "<input type='radio' name='formContact:radio" + q.getId() + "' value='" + qa.getIdRespuesta().getId() + "' " + isChecked(userAnswers, q.getId(), qa.getIdRespuesta().getId()) + " required>";
+                    out += "<input type='radio' name='formContact:radio" + q.getId() + "' value='" + qa.getIdRespuesta().getId() + "' " + isChecked(userAnswers, q.getId(), qa.getIdRespuesta().getId()) + " required='true'>";
                     out += "<label type='text' class=''>" + qa.getIdRespuesta().getRespuesta() + "</label></br>";
                     out += "</span>";
                 }
+                out += "<h:message for='formContact:radio" + q.getId() + "' style='color: red;' />";
                 out += "</div>";
             }
         } catch (Exception e) {
@@ -161,7 +162,7 @@ public class NegocioContact {
 
     private String isChecked(HashMap<Integer, Integer> userAnswers, int idQuestion, int idAnswer) {
         try {
-            if (userAnswers.get(idQuestion) == idAnswer) {
+            if (userAnswers != null && userAnswers.get(idQuestion) == idAnswer) {
                 return "checked";
             }
         } catch (Exception e) {
@@ -173,7 +174,7 @@ public class NegocioContact {
 
     public void save(HashMap<Integer, Integer> oldAnsw, HashMap<Integer, Integer> newAnsw, int idClient) {
         try {
-            if (oldAnsw.equals(newAnsw)) {
+            if (oldAnsw != null && oldAnsw.equals(newAnsw)) {
                 return;
             }
 
@@ -203,6 +204,7 @@ public class NegocioContact {
                     ctrl2.create(cn);
                 }
             }
+
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }

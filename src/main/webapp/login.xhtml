@@ -37,12 +37,14 @@
                                     <f:validateLength minimum="2" />
                                 </p:inputText>
                                 <label>Email o RUT</label>
+                                <h:message for='username' style='color: red;' />
                             </h:panelGroup>
                         </div>
                         <div class="ui-g-12">
                             <h:panelGroup styleClass="md-inputfield">
                                 <p:password id="password" value="#{loginBean.password}" required="true" requiredMessage="Debe ingresar contraseña"/>
                                 <label>Contraseña</label>
+                                <h:message for='password' style='color: red;' />
                             </h:panelGroup>
                         </div>
                         <div class="ui-g-12">
@@ -58,8 +60,7 @@
             </h:form>
         </div>
 
-        <div class="login-footer">2016 © Intelidata. Todos los derechos reservados</div>
-
+        <ui:include src="WEB-INF/footerLogin.xhtml" />
         <ui:include src="ajaxstatus.xhtml" />
 
         <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />

@@ -14,41 +14,54 @@
                     <h:form id="profileForm"> 
                         <div class="ui-fluid">
                             <h3>Información Personal</h3>
+
                             <p:panelGrid columns="2" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank">
                                 <h:panelGroup styleClass="md-inputfield">
-                                    <p:inputText value="#{profileBean.address}"/>
+                                    <p:inputText id="address" value="#{profileBean.address}" required="true" requiredMessage="Ingrese Dirección"/>
+                                    <h:message  for="address" style="color: red;" />
                                     <label>Dirección</label>
                                 </h:panelGroup>
                             </p:panelGrid>
+
                             <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank">
                                 <h:panelGroup styleClass="md-inputfield">
-                                    <p:inputText value="#{profileBean.email}" />
+                                    <p:inputText id="phone" value="#{profileBean.phone}" required="true" requiredMessage="Ingrese Teléfono Fijo"/>
+                                    <h:message  for="phone" style="color: red;" />
                                     <label>Teléfono Fijo</label>
                                 </h:panelGroup>
+
                                 <h:panelGroup styleClass="md-inputfield">
-                                    <p:inputText value="#{profileBean.phone}" />
+                                    <p:inputText id="celphone" value="#{profileBean.celphone}" required="true" requiredMessage="Ingrese Teléfono Celular"/>
+                                    <h:message  for="celphone" style="color: red;" />
                                     <label>Teléfono Celular</label>
                                 </h:panelGroup>
+
                                 <h:panelGroup styleClass="md-inputfield">
-                                    <p:inputText value="#{profileBean.email}" />
-                                    <label>E-mail</label>
+                                    <p:inputText id="email" value="#{profileBean.email}" required="true" requiredMessage="Ingrese Email" validatorMessage="Invalid email format">
+                                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                                    </p:inputText>                                    
+                                    <h:message for="email" style="color: red;" />
+                                    <label>Email</label>
                                 </h:panelGroup>
                             </p:panelGrid>
 
                             <h3>Redes Sociales</h3>
                             <p:panelGrid columns="1" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank">
-                                <h:panelGroup  styleClass="md-inputfield">
-                                    <p:inputText value="#{profileBean.twitter}" />
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="twitter" value="#{profileBean.twitter}"  />
+                                    <h:message for="twitter" style="color: red;" />
                                     <label>Twitter</label>
                                 </h:panelGroup>
 
                                 <h:panelGroup styleClass="md-inputfield">
-                                    <p:inputText value="#{profileBean.facebook}" />
+                                    <p:inputText id="facebook" value="#{profileBean.facebook}" />
+                                    <h:message for="facebook" style="color: red;" />
                                     <label>Facebook</label>
                                 </h:panelGroup>
 
                                 <h:panelGroup styleClass="md-inputfield">
-                                    <p:inputText value="#{profileBean.skype}"/>
+                                    <p:inputText id="skype" value="#{profileBean.skype}"/>
+                                    <h:message for="skype" style="color: red;" />
                                     <label>Skype</label>
                                 </h:panelGroup>
                             </p:panelGrid>

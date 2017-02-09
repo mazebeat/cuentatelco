@@ -25,16 +25,23 @@
  */
 package cl.intelidata.beans;
 
+import cl.intelidata.jpa.Preguntas;
 import cl.intelidata.negocio.NegocioContact;
+import cl.intelidata.negocio.NegocioLogin;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
+import org.primefaces.context.RequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +57,8 @@ public class ContactBean implements Serializable {
     private static Logger logger = LoggerFactory.getLogger(ContactBean.class);
 
     private String html;
+
+    private List<Preguntas> questionList;
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
@@ -70,6 +79,15 @@ public class ContactBean implements Serializable {
         this.loginbean = loginbean;
     }
 
+    public List<Preguntas> getQuestionList() throws Exception {
+        NegocioContact nc = new NegocioContact();
+        return nc.getQuestions();
+    }
+
+    public void setQuestionList(List<Preguntas> questionList) {
+        this.questionList = questionList;
+    }
+
     public ContactBean() {
     }
 
@@ -87,32 +105,63 @@ public class ContactBean implements Serializable {
         }
     }
 
-    public void save() {
+    public void save(ActionEvent actionEvent) throws Exception {
+        FacesMessage msg = null;
+        RequestContext context = RequestContext.getCurrentInstance();
+
         try {
-            int idClient = loginbean.getClient().getId();
             NegocioContact nc = new NegocioContact();
-            HashMap<Integer, Integer> oldAnsw = nc.checkList(idClient);
+            HashMap<Integer, Integer> oldAnsw = nc.checkList(loginbean.getClient().getId());
             HashMap<Integer, Integer> answ = new HashMap<>();
             ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+            int value = 0;
 
             if (oldAnsw != null && !oldAnsw.isEmpty()) {
                 for (Integer key : oldAnsw.keySet()) {
-                    int val = Integer.parseInt(ec.getRequestParameterMap().get("formContact:radio" + key));
-                    answ.put(key, val);
+                    value = Integer.parseInt(ec.getRequestParameterMap().get("formContact:radio" + key));
+                    answ.put(key, value);
+                    System.out.println(key + " " + value);
                 }
             } else {
                 Map<String, String> params = ec.getRequestParameterMap();
                 for (Map.Entry<String, String> p : params.entrySet()) {
-                    String key = p.getKey();
-                    String value = p.getValue();
-                    System.out.println(key + " " + value);
+                    if (p.getKey().startsWith("formContact:radio")) {
+                        value = Integer.parseInt(ec.getRequestParameterMap().get(p.getKey()));
+                        int key = Integer.parseInt(p.getKey().replace("formContact:radio", ""));
+                        answ.put(key, value);
+                        System.out.println(key + " " + value);
+                    }
                 }
             }
 
-            nc.save(oldAnsw, answ, idClient);
-            init();
+            if (answ == null || answ.isEmpty()) {
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No ha contestado\ntodas las preguntas");
+            } else if (!answ.isEmpty()) {
+                NegocioLogin nl = new NegocioLogin();
+                int total = nl.gotAnswers(loginbean.getClient());
+                if (total == answ.size()) {
+                    nc.save(oldAnsw, answ, loginbean.getClient().getId());
+                    msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Información", "Datos guardados");
+                    // init();
+                    context.addCallbackParam("save", true);
+                    context.addCallbackParam("view", "dashboard.xhtml");
+                } else {
+                    msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No ha contestado\ntodas las preguntas");
+                }
+            } else {
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error al procesar");
+            }
+
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
+            context.addCallbackParam("save", false);
+        } finally {
         }
+    }
+
+    public void fillList(ValueChangeEvent e) {
+        //assign new value to localeCode
+        logger.info(e.getNewValue().toString(), e.getSource());
     }
 }
