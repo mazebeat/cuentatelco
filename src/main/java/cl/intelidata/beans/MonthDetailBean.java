@@ -25,13 +25,17 @@
  */
 package cl.intelidata.beans;
 
+import cl.intelidata.jpa.Telefono;
 import cl.intelidata.negocio.NegocioMonthDetail;
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import org.primefaces.model.chart.LegendPlacement;
 import org.primefaces.model.chart.PieChartModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,34 +47,34 @@ import org.slf4j.LoggerFactory;
 @ManagedBean
 @ViewScoped
 public class MonthDetailBean implements Serializable {
-
+    
     private static final long serialVersionUID = -2152389656664659476L;
     private static Logger logger = LoggerFactory.getLogger(MonthDetailBean.class);
-
+    
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
-
+    
     private PieChartModel chart;
-
+    
     public LoginBean getLoginbean() {
         return loginbean;
     }
-
+    
     public void setLoginbean(LoginBean loginbean) {
         this.loginbean = loginbean;
     }
-
+    
     public PieChartModel getChart() {
         return chart;
     }
-
+    
     public void setChart(PieChartModel chart) {
         this.chart = chart;
     }
-
+    
     public MonthDetailBean() {
     }
-
+    
     @PostConstruct
     public void init() {
         try {
@@ -79,24 +83,27 @@ public class MonthDetailBean implements Serializable {
             logger.error(e.getMessage(), e);
         }
     }
-
+    
     private void createPieModel() {
         try {
             NegocioMonthDetail n = new NegocioMonthDetail();
-            List<String> data = n.getDataChart(loginbean.getClient().getId());
-
+            List<Telefono> data = n.getDataChart(loginbean.getClient().getId(), new Date());
+            
             chart = new PieChartModel();
-
-            chart.set("Brand 1", 540);
-            chart.set("Brand 2", 325);
-            chart.set("Brand 3", 702);
-            chart.set("Brand 4", 421);
-
-            chart.setTitle("Simple Pie");
-            chart.setLegendPosition("w");
+            
+            for (Telefono telefono : data) {
+                chart.set(telefono.getNumero(), telefono.getTotalList().get(0).getMontoTotal());
+            }
+            
+            chart.setLegendPosition("s");
+            chart.setShowDataLabels(true);
+            chart.setMouseoverHighlight(true);
+            chart.setLegendPlacement(LegendPlacement.INSIDE);
+            chart.setLegendCols(5);
+            chart.setLegendRows(4);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
     }
-
+    
 }

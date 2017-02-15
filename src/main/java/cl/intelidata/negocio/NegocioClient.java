@@ -29,6 +29,8 @@ import cl.intelidata.controllers.ClienteJpaController;
 import cl.intelidata.jpa.Cliente;
 import cl.intelidata.jpa.Persona;
 import cl.intelidata.utils.EntityHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -38,6 +40,7 @@ public class NegocioClient {
 
     private ClienteJpaController clientCtrl;
     private Cliente client;
+    private static Logger logger = LoggerFactory.getLogger(NegocioClient.class);
 
     public NegocioClient() {
         clientCtrl = new ClienteJpaController(EntityHelper.getInstance().getEntityManagerFactory());

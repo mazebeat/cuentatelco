@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Intelidata S.A.
+ * Copyright (c) 2017, Intelidata S.A.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,10 +25,10 @@
  */
 package cl.intelidata.negocio;
 
-import cl.intelidata.jpa.Cliente;
-import cl.intelidata.jpa.Persona;
+import cl.intelidata.jpa.Preguntas;
 import cl.intelidata.jpa.Telefono;
 import cl.intelidata.utils.EntityHelper;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -39,45 +39,65 @@ import org.slf4j.LoggerFactory;
  *
  * @author DFeliu
  */
-public class NegocioMonthDetail {
+public class NegocioChart {
 
-    private static Logger logger = LoggerFactory.getLogger(NegocioMonthDetail.class);
+    private static Logger logger = LoggerFactory.getLogger(NegocioChart.class);
 
-    public boolean isRegister(int id) throws Exception {
-        EntityManager em = null;
-        Cliente c;
+    public List<Telefono> postTelefonosConServicio(int idClient, Date date) {
+
+        List<Telefono> altosGastos = new ArrayList<>();
 
         try {
-            em = EntityHelper.getInstance().getEntityManager();
-            c = em.createNamedQuery("Cliente.isRegister", Cliente.class)
-                    .setParameter("id", id)
-                    .getSingleResult();
-            if (c == null) {
-                return false;
+            if (date == null) {
+                date = new Date();
+            }
+            altosGastos = getAltosGastos(idClient);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return altosGastos;
+    }
+
+    public void postTelefonosConServicio(int idClient, Date date, String phone) {
+
+        List<Telefono> altosGastos = new ArrayList<>();
+
+        try {
+            if (date == null) {
+                date = new Date();
+            }
+            altosGastos = getAltosGastos(idClient);
+            if (phone != null) {
+            } else {
             }
 
-            Persona p = c.getPersonaId();
-            boolean getEmail = (p.getEmailPersonal() != null && !p.getEmailPersonal().isEmpty());
-            boolean getAddress = (p.getDireccionPersonal() != null && !p.getDireccionPersonal().isEmpty());
-            boolean getPhone = (p.getTelefonoFijoPersonal() != null && !p.getTelefonoFijoPersonal().isEmpty());
-            boolean getCelphone = (p.getCelularPersonal() != null && !p.getCelularPersonal().isEmpty());
-            boolean getFacebook = (p.getFacebook() != null && !p.getFacebook().isEmpty());
-            boolean getTwitter = (p.getTwitter() != null && !p.getTwitter().isEmpty());
-            boolean getSkype = (p.getSkype() != null && !p.getSkype().isEmpty());
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
 
-            return getEmail && getAddress && getPhone && getCelphone && getFacebook && getTwitter && getSkype;
+    private List<Telefono> getAltosGastos(int idClient) {
+        List<Telefono> n = new ArrayList<>();
+        EntityManager em = null;
+
+        try {
+            String query = "SELECT * FROM telefono te\n"
+                    + "INNER JOIN total t ON te.id = t.id_telefono\n"
+                    + "WHERE te.id_cliente = " + idClient + "\n"
+                    + "ORDER BY t.monto_total DESC\n"
+                    + "LIMIT 20;";
+
+            em = EntityHelper.getInstance().getEntityManager();
+            n = em.createNativeQuery(query, Telefono.class).getResultList();
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
-            throw ex;
         } finally {
             if (em != null && em.isOpen()) {
                 em.close();
             }
         }
-    }
 
-    public List<Telefono> getDataChart(int id, Date date) {
-        NegocioChart nc = new NegocioChart();
-        return nc.postTelefonosConServicio(id, date);
+        return n;
     }
 }
