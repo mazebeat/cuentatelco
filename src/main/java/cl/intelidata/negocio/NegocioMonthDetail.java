@@ -25,11 +25,11 @@
  */
 package cl.intelidata.negocio;
 
-import cl.intelidata.jpa.Cliente;
-import cl.intelidata.jpa.Persona;
 import cl.intelidata.jpa.Telefono;
+import cl.intelidata.jpa.TelefonosServicios;
 import cl.intelidata.utils.EntityHelper;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.slf4j.Logger;
@@ -43,41 +43,73 @@ public class NegocioMonthDetail {
 
     private static Logger logger = LoggerFactory.getLogger(NegocioMonthDetail.class);
 
-    public boolean isRegister(int id) throws Exception {
-        EntityManager em = null;
-        Cliente c;
+    public List<Telefono> getDataChart(int idClient, Calendar date) {
+        return postTelefonosConServicio(idClient, date);
+    }
+
+    private List<Telefono> postTelefonosConServicio(int idClient, Calendar date) {
+
+        List<Telefono> altosGastos = new ArrayList<>();
 
         try {
-            em = EntityHelper.getInstance().getEntityManager();
-            c = em.createNamedQuery("Cliente.isRegister", Cliente.class)
-                    .setParameter("id", id)
-                    .getSingleResult();
-            if (c == null) {
-                return false;
+            if (date == null) {
+                date = Calendar.getInstance();
             }
+            altosGastos = getAltosGastos(idClient);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
 
-            Persona p = c.getPersonaId();
-            boolean getEmail = (p.getEmailPersonal() != null && !p.getEmailPersonal().isEmpty());
-            boolean getAddress = (p.getDireccionPersonal() != null && !p.getDireccionPersonal().isEmpty());
-            boolean getPhone = (p.getTelefonoFijoPersonal() != null && !p.getTelefonoFijoPersonal().isEmpty());
-            boolean getCelphone = (p.getCelularPersonal() != null && !p.getCelularPersonal().isEmpty());
-            boolean getFacebook = (p.getFacebook() != null && !p.getFacebook().isEmpty());
-            boolean getTwitter = (p.getTwitter() != null && !p.getTwitter().isEmpty());
-            boolean getSkype = (p.getSkype() != null && !p.getSkype().isEmpty());
+        return altosGastos;
+    }
 
-            return getEmail && getAddress && getPhone && getCelphone && getFacebook && getTwitter && getSkype;
+    private List<Telefono> getAltosGastos(int idClient) {
+        List<Telefono> n = new ArrayList<>();
+        EntityManager em = null;
+
+        try {
+            String query = "SELECT * FROM telefono te\n"
+                    + "INNER JOIN total t ON te.id = t.id_telefono\n"
+                    + "WHERE te.id_cliente = " + idClient + "\n"
+                    + "ORDER BY t.monto_total DESC\n"
+                    + "LIMIT 20;";
+
+            em = EntityHelper.getInstance().getEntityManager();
+            n = em.createNativeQuery(query, Telefono.class).getResultList();
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
-            throw ex;
         } finally {
             if (em != null && em.isOpen()) {
                 em.close();
             }
         }
+
+        return n;
     }
 
-    public List<Telefono> getDataChart(int id, Date date) {
-        NegocioChart nc = new NegocioChart();
-        return nc.postTelefonosConServicio(id, date);
+    public List<TelefonosServicios> getDetail(String phone, Calendar date) {
+        List<TelefonosServicios> n = new ArrayList<>();
+        EntityManager em = null;
+
+        try {
+            String query = "SELECT * FROM telefonos_servicios\n"
+                    + "WHERE id_telefono = (\n"
+                    + "	SELECT id FROM telefono\n"
+                    + "	WHERE telefono.numero = '" + phone + "' \n"
+                    + ")\n"
+                    + "AND YEAR(fecha) = " + date.get(Calendar.YEAR) + " \n"
+                    + "AND MONTH(fecha) = " + (date.get(Calendar.MONTH) + 1) + ";";
+
+            em = EntityHelper.getInstance().getEntityManager();
+            n = em.createNativeQuery(query, TelefonosServicios.class).getResultList();
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+        } finally {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
+        return n;
     }
 }

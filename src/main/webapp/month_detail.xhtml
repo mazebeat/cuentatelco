@@ -5,17 +5,55 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
-    <ui:define name="content">
-        <div class="ui-g">
-            <div class="ui-g-12">
-                <div class="card">
-                    <h1>Detalle Mensual</h1>  
+    <ui:define name="content">        
+        <h:form>
+            <p:growl id="growl" showDetail="true" />
 
-                    <p:chart type="pie" model="#{monthDetailBean.chart}" style="width:100%;height:600px" responsive="true" />                    
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card">
+                        <h1>Detalle Mensual</h1>  
+                        <p:chart type="pie" widgetVar="pieChart" model="#{monthDetailBean.chart}" style="width:100%;min-height:500px; " responsive="true">
+                            <p:ajax event="itemSelect" listener="#{monthDetailBean.itemSelect}" update="detailtable" />
+                        </p:chart> 
+
+                        <p:dataTable id="detailtable" var="det" value="#{monthDetailBean.phoneDetail}" emptyMessage="Seleccione un número" reflow="true">
+                            <f:facet name="header">
+                                Detalle N° <h:outputText value="#{monthDetailBean.phone}" />
+                            </f:facet>
+
+                            <p:column headerText="Servicio" sortBy="#{det.service}">
+                                <h:outputText value="#{det.service}" />
+                            </p:column>
+
+                            <p:column headerText="Porcentaje" sortBy="#{det.porcent}">
+                                <p:progressBar value="#{det.porcent}" labelTemplate="#{det.porcent}%" displayOnly="true" />
+                            </p:column>
+
+                            <p:column headerText="Monto" sortBy="#{det.total}" >
+                                <div  style="text-align:right">
+                                    <h:outputText value="#{det.total}" >
+                                        <f:convertNumber type="currency" currencySymbol="$" locale="es_CL" maxFractionDigits="2"/>
+                                    </h:outputText>
+                                </div>
+                            </p:column>
+
+                            <f:facet name="footer">
+                                <p:column colspan="3" style="text-align:right">
+                                    <h:outputText value="Total: " />
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{monthDetailBean.price}">
+                                        <f:convertNumber type="currency" currencySymbol="$" locale="es_CL" maxFractionDigits="2"/>
+                                    </h:outputText>
+                                </p:column>
+                            </f:facet>
+                        </p:dataTable>                        
+                    </div>
                     <p:button outcome="/dashboard" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
                 </div>
             </div>
-        </div>
+        </h:form>
 
     </ui:define>
 

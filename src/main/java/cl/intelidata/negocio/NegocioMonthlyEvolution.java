@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Intelidata S.A.
+ * Copyright (c) 2016, Intelidata S.A.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,6 +25,12 @@
  */
 package cl.intelidata.negocio;
 
+import cl.intelidata.jpa.ResumenAnualCliente;
+import cl.intelidata.utils.EntityHelper;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,8 +38,40 @@ import org.slf4j.LoggerFactory;
  *
  * @author DFeliu
  */
-public class NegocioChart {
+public class NegocioMonthlyEvolution {
 
-    private static Logger logger = LoggerFactory.getLogger(NegocioChart.class);
+    private static Logger logger = LoggerFactory.getLogger(NegocioMonthlyEvolution.class);
+
+    public List<ResumenAnualCliente> getDataChart(int idCliente) {
+        return dataChart(idCliente);
+    }
+
+    public List<ResumenAnualCliente> dataChart(int idCliente) {
+        List<ResumenAnualCliente> n = new ArrayList<>();
+        EntityManager em = null;
+
+        try {
+            String query = "SELECT * FROM resumen_anual_cliente\n"
+                    + "WHERE id_cliente = " + idCliente + "\n"
+                    + "ORDER BY id DESC;";
+
+            em = EntityHelper.getInstance().getEntityManager();
+            n = em.createNativeQuery(query, ResumenAnualCliente.class).getResultList();
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+        } finally {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
+        return n;
+    }
+
+    public Calendar getMesValido(int idMes) {
+        Calendar a = Calendar.getInstance();
+        a.set(a.get(Calendar.YEAR), idMes - 1, 1, 0, 0);
+        return a;
+    }
 
 }
