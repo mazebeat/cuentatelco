@@ -25,24 +25,21 @@
  */
 package cl.intelidata.beans;
 
-import cl.intelidata.jpa.ResumenAnualCliente;
-import cl.intelidata.negocio.NegocioMonthlyEvolution;
+import cl.intelidata.jpa.Cliente;
+import cl.intelidata.negocio.NegocioHistoricalCategory;
+import cl.intelidata.jpa.HistoricalCategory;
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import org.primefaces.model.chart.LegendPlacement;
+import org.primefaces.model.chart.PieChartModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.primefaces.model.chart.AxisType;
-import org.primefaces.model.chart.LineChartModel;
-import org.primefaces.model.chart.DateAxis;
-import org.primefaces.model.chart.LineChartSeries;
 
 /**
  *
@@ -50,15 +47,34 @@ import org.primefaces.model.chart.LineChartSeries;
  */
 @ManagedBean
 @ViewScoped
-public class MonthlyEvolutionBean implements Serializable {
+public class HistoricalCategoryBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
-    private static Logger logger = LoggerFactory.getLogger(MonthlyEvolutionBean.class);
+    private static Logger logger = LoggerFactory.getLogger(HistoricalCategoryBean.class);
 
-    private LineChartModel chart;
+    private Calendar date;
+    private String month;
+    private PieChartModel chart;
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
+
+    public Calendar getDate() {
+        return date;
+    }
+
+    public void setDate(Calendar date) {
+        this.date = date;
+    }
+
+    public String getMonth() {
+        this.month = new DateFormatSymbols().getMonths()[Calendar.getInstance().get(Calendar.MONTH)];
+        return this.month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
 
     public LoginBean getLoginbean() {
         return loginbean;
@@ -68,60 +84,44 @@ public class MonthlyEvolutionBean implements Serializable {
         this.loginbean = loginbean;
     }
 
-    public LineChartModel getChart() {
+    public PieChartModel getChart() {
         return chart;
     }
 
-    public void setChart(LineChartModel chart) {
+    public void setChart(PieChartModel chart) {
         this.chart = chart;
+    }
+
+    public HistoricalCategoryBean() {
     }
 
     @PostConstruct
     public void init() {
         try {
-            createLineModels();
+            createPieModel();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
     }
 
-    private void createLineModels() {
+    private void createPieModel() {
         try {
-            chart = new LineChartModel();
-            LineChartSeries series = new LineChartSeries();
+            Calendar date = Calendar.getInstance();
+            date.set(2015, 4, 1, 0, 0);
+            chart = new PieChartModel();
+            NegocioHistoricalCategory n = new NegocioHistoricalCategory();
+            List<HistoricalCategory> l = n.getData(loginbean.getClient().getId(), date);
 
-            NegocioMonthlyEvolution m = new NegocioMonthlyEvolution();
-            List<ResumenAnualCliente> n = m.getDataChart(loginbean.getClient().getId());
-
-            series.setLabel(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            int month = 0, year = 0;
-
-            for (ResumenAnualCliente rac : n) {
-                Calendar a = m.getMesValido(rac.getIdMes().getId());
-                if (a.get(Calendar.MONTH) < month && month != 0) {
-                    a.add(Calendar.YEAR, 1);
-                    year = a.get(Calendar.YEAR);
-                }
-
-                if (year != 0) {
-                    a.add(Calendar.YEAR, year - a.get(Calendar.YEAR));
-                }
-
-                month = a.get(Calendar.MONTH);
-                series.set(dateFormat.format(a.getTime()), rac.getMonto().intValue());
+            for (HistoricalCategory hc : l) {
+                chart.set(hc.getName(), hc.getTotal());
             }
 
-            chart.addSeries(series);
-            chart.setZoom(true);
-            chart.setAnimate(true);
-            chart.getAxis(AxisType.Y).setLabel("Total");
-
-            DateAxis axis = new DateAxis("Fechas");
-            axis.setTickAngle(-50);
-            axis.setTickFormat("%b %#d");
-
-            chart.getAxes().put(AxisType.X, axis);
+            chart.setLegendPosition("s");
+            chart.setShowDataLabels(true);
+            chart.setMouseoverHighlight(true);
+            chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
+            chart.setLegendCols(5);
+            chart.setLegendRows(4);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }

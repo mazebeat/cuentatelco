@@ -1,0 +1,33 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">        
+        <h:form>
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card">
+                        <h1>Teléfonos por producto de mes #{phonesByProductBean.month.toUpperCase()}</h1>  
+
+                        <p:outputLabel for="pl" value="Tipo Producto: " />
+                        <p:selectOneMenu id="pl" value="#{phonesByProductBean.product}" style="width:125px">                                
+                            <p:ajax listener="#{phonesByProductBean.onProductChange}" update="pieChart" /> 
+                            <f:selectItem itemLabel="Select Product" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{phonesByProductBean.productList}" var="pp" itemLabel="#{pp.nombre}" itemValue="#{pp.id}"  />
+                        </p:selectOneMenu>
+
+                        <p:chart type="pie" id="pieChart" model="#{phonesByProductBean.chart}" style="width:100%;min-height:500px; " responsive="true" />
+                    </div>
+                    <p:button outcome="/dashboard" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
