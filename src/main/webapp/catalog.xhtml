@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card">
+                    <h1>Linea de Tiempo</h1>
+                    <p:growl id="growl" showSummary="true" showDetail="true" autoUpdate="true"/> 
+
+                    <p:dataTable var="d" value="#{catalogBean.devicesList}" 
+                                 resizeMode="expand" reflow="true" rows="5" paginator="true">
+                        <f:facet name="header">
+                        </f:facet>
+
+                        <p:column headerText="Image">
+                            <p:graphicImage url="#{d.urlImg}" height="45px" width="auto" style="margin: 0 auto;" />
+                        </p:column>
+
+                        <p:column headerText="Modelo" sortBy="#{d.modelo}">
+                            <h:outputText value="#{d.modelo}" />
+                        </p:column>
+
+                        <p:column headerText="Marca" sortBy="#{d.idMarca.marca}">
+                            <h:outputText value="#{d.idMarca.marca}" />
+                        </p:column>
+
+                        <p:column headerText="Número Teléfono">
+                            <h:outputText value="" />
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:button outcome="/dashboard" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

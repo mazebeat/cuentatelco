@@ -31,14 +31,15 @@
                             <p:growl id="mensajes" showDetail="true" life="2000" />
                             <h3>Contacto</h3>
                             <h:outputText value="#{contactBean.html}" escape="false" id="htmlValues" />                            
-                            
+
                             <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
                                 <p:commandButton value="Guardar" icon="ui-icon-send" style="width:auto" actionListener="#{contactBean.save}" update="@form" process="@form" oncomplete="managerContact(xhr, status, args)" /> 
-                                <p:button outcome="/dashboard" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
                             </h:panelGrid>
                         </h:form>
                     </div>
                 </div>
+                <p:button outcome="/dashboard" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
+
             </div>
         </div>
         <ui:include src="WEB-INF/footerLogin.xhtml" />
