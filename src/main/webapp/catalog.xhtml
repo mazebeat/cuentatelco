@@ -17,8 +17,8 @@
                         <f:facet name="header">
                         </f:facet>
 
-                        <p:column headerText="Image">
-                            <p:graphicImage url="#{d.urlImg}" height="45px" width="auto" style="margin: 0 auto;" />
+                        <p:column headerText="">
+                            <p:graphicImage url="resources/images#{d.urlImg}" height="100px" width="auto" />
                         </p:column>
 
                         <p:column headerText="Modelo" sortBy="#{d.modelo}">
@@ -29,9 +29,6 @@
                             <h:outputText value="#{d.idMarca.marca}" />
                         </p:column>
 
-                        <p:column headerText="Número Teléfono">
-                            <h:outputText value="" />
-                        </p:column>
                     </p:dataTable>
 
                     <p:button outcome="/dashboard" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
