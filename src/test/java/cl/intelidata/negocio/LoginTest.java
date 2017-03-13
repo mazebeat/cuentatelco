@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Intelidata S.A.
+ * Copyright (c) 2017, Intelidata S.A.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,61 +23,43 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package cl.intelidata.negocio;
 
-import cl.intelidata.jpa.Usuario;
-import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-
+import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
  *
- * @author Juan
+ * @author Dev-DFeliu
  */
-public class NegocioPruebaTest {
-
-    public NegocioPruebaTest() {
+public class LoginTest {
+    
+    public LoginTest() {
     }
-
+    
     @BeforeClass
     public static void setUpClass() {
     }
-
+    
     @AfterClass
     public static void tearDownClass() {
     }
-
+    
     @Before
     public void setUp() {
     }
-
+    
     @After
     public void tearDown() {
     }
 
-    /**
-     * Test of getUsuarios method, of class NegocioPrueba.
-     */
-    @org.junit.Test
-    public void testGetUsuarios() {
-        System.out.println("getUsuarios");
-//        List<Usuario> result = NegocioPrueba.getUsuarios();
-//        assertNotNull(result);
-    }
-
-    /**
-     * Test of getUsuariosConEM method, of class NegocioPrueba.
-     */
-    @org.junit.Test
-    public void testGetUsuariosConEM() throws Exception {
-        System.out.println("getUsuariosConEM");
-//        List<Usuario> result = NegocioPrueba.getUsuariosConEM();
-//        assertNotNull(result);
-    }
-
+    // TODO add test methods here.
+    // The methods must be annotated with annotation @Test. For example:
+    //
+    // @Test
+    // public void hello() {}
 }

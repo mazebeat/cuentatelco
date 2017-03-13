@@ -12,7 +12,10 @@
             <div class="ui-g">
                 <div class="ui-g-12">
                     <div class="card">
-                        <h1>Detalle Mensual</h1>  
+                        <h1>Detalle Mensual</h1> 
+                        <p:button outcome="configuration" value="CONF" style="float:right;display:inline-block;margin-top:5px"/>
+                        <div class="clearfix" />
+                        
                         <p:chart type="pie" widgetVar="pieChart" model="#{monthDetailBean.chart}" style="width:100%;min-height:500px; " responsive="true">
                             <p:ajax event="itemSelect" listener="#{monthDetailBean.itemSelect}" update="detailtable" />
                         </p:chart> 
@@ -50,7 +53,7 @@
                             </f:facet>
                         </p:dataTable>                        
                     </div>
-                    
+
                     <p:button outcome="/dashboard" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
                 </div>
             </div>

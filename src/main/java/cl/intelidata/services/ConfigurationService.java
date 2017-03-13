@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Intelidata S.A.
+ * Copyright (c) 2017, Intelidata S.A.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,61 +23,79 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
-package cl.intelidata.negocio;
-
-import cl.intelidata.jpa.Usuario;
-import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-
-import static org.junit.Assert.*;
+package cl.intelidata.services;
 
 /**
  *
- * @author Juan
+ * @author Dev-DFeliu
  */
-public class NegocioPruebaTest {
+public class ConfigurationService {
 
-    public NegocioPruebaTest() {
+    private String label1, label2, dimension1, dimension2;
+
+    public ConfigurationService() {
     }
 
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
+    public ConfigurationService(String label1, String label2, String dimesion1, String dimesion2) {
+        this.label1 = label1;
+        this.label2 = label2;
+        this.dimension1 = dimesion1;
+        this.dimension2 = dimesion2;
     }
 
     /**
-     * Test of getUsuarios method, of class NegocioPrueba.
+     * @return the label1
      */
-    @org.junit.Test
-    public void testGetUsuarios() {
-        System.out.println("getUsuarios");
-//        List<Usuario> result = NegocioPrueba.getUsuarios();
-//        assertNotNull(result);
+    public String getLabel1() {
+        return label1;
     }
 
     /**
-     * Test of getUsuariosConEM method, of class NegocioPrueba.
+     * @param label1 the label1 to set
      */
-    @org.junit.Test
-    public void testGetUsuariosConEM() throws Exception {
-        System.out.println("getUsuariosConEM");
-//        List<Usuario> result = NegocioPrueba.getUsuariosConEM();
-//        assertNotNull(result);
+    public void setLabel1(String label1) {
+        this.label1 = label1;
     }
 
+    /**
+     * @return the label2
+     */
+    public String getLabel2() {
+        return label2;
+    }
+
+    /**
+     * @param label2 the label2 to set
+     */
+    public void setLabel2(String label2) {
+        this.label2 = label2;
+    }
+
+    /**
+     * @return the dimension1
+     */
+    public String getDimension1() {
+        return dimension1;
+    }
+
+    /**
+     * @param dimension1 the dimension1 to set
+     */
+    public void setDimension1(String dimension1) {
+        this.dimension1 = dimension1;
+    }
+
+    /**
+     * @return the dimension2
+     */
+    public String getDimension2() {
+        return dimension2;
+    }
+
+    /**
+     * @param dimension2 the dimension2 to set
+     */
+    public void setDimension2(String dimension2) {
+        this.dimension2 = dimension2;
+    }
 }

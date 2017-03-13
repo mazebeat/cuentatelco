@@ -1,0 +1,154 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+    <f:metadata>
+        <f:viewParam name="view" value="#{configurationBean.view}" />
+        <f:viewAction action="#{beanGuestPreferences.checkF5}" onPostback="true" />
+    </f:metadata>
+
+    <ui:define name="content">
+
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <h:form id="configForm">
+                    <div class="card">
+                        <h1>Configurations</h1> 
+
+                        <p:growl id="messages" showDetail="true" life="2000" />
+
+                        <!-- Configuration Table -->
+                        <p:dataTable id="configTable" value="#{configurationBean.configList}" var="c" editable="true">
+                            <f:facet name="header">  
+                                Configuration #{configurationBean.view}
+                            </f:facet>
+                            <p:ajax event="rowEdit" listener="#{configurationBean.edit}" update=":configForm:messages" />  
+                            <p:ajax event="rowEditCancel" listener="#{configurationBean.cancel}" update=":configForm:messages" /> 
+
+                            <p:column>
+                                <f:facet name="header"><h:outputLabel value="Label 1" /></f:facet>
+                                <p:cellEditor>  
+                                    <f:facet name="output">  
+                                        <h:outputText value="#{c.label1}" />  
+                                    </f:facet>  
+                                    <f:facet name="input">  
+                                        <p:inputText value="#{c.label1}" style="width:100%"/>  
+                                    </f:facet>  
+                                </p:cellEditor> 
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header"><h:outputLabel value="Dimension 1" /></f:facet>
+                                <p:cellEditor>  
+                                    <f:facet name="output">  
+                                        <h:outputText value="#{c.dimension1}" />  
+                                    </f:facet>  
+                                    <f:facet name="input">  
+                                        <p:inputText value="#{c.dimension1}" style="width:100%"/>  
+                                    </f:facet>  
+                                </p:cellEditor> 
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header"><h:outputLabel value="Label 2" /></f:facet>
+                                <p:cellEditor>  
+                                    <f:facet name="output">  
+                                        <h:outputText value="#{c.label2}" />  
+                                    </f:facet>  
+                                    <f:facet name="input">  
+                                        <p:inputText value="#{c.label2}" style="width:100%"/>  
+                                    </f:facet>  
+                                </p:cellEditor> 
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header"><h:outputLabel value="Dimension 2" /></f:facet>
+                                <p:cellEditor>  
+                                    <f:facet name="output">  
+                                        <h:outputText value="#{c.dimension2}" />  
+                                    </f:facet>  
+                                    <f:facet name="input">  
+                                        <p:inputText value="#{c.dimension2}" style="width:100%"/>  
+                                    </f:facet>  
+                                </p:cellEditor> 
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header"><h:outputLabel value="Action" /></f:facet>
+                                <!--<p:rowEditor />-->
+                                <h:commandLink id="remove" value="delete" action="#{configurationBean.delete(c)}"
+                                               onclick="return confirm('Are you sure?')">
+                                    <f:ajax render="configForm:configTable configForm:chartdataGrid" />
+                                </h:commandLink>
+                            </p:column>
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Add new" type="button" onclick="PF('addConfigDlg').show();" />
+                            </f:facet>
+                        </p:dataTable>
+
+                        <p:spacer />
+
+                        <!-- Dialog new configuration -->
+                        <p:dialog header="Add Configuration" widgetVar="addConfigDlg" modal="true" focus="lbl1">
+                            <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-3,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank">
+                                <h:outputLabel value="Valor 1" style="font-weight: bold;" />
+
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="lbl1" value="#{configurationBean.label1}" required="true" requiredMessage="Label 1 required" style="width: 100%;"/>
+                                    <p:message for="lbl1" style="color: red;" />
+                                    <p:outputLabel value="Label 1" for="lbl1"/>
+                                </h:panelGroup>                           
+
+                                <h:outputLabel for="dim1" value="Dimension 1" />
+
+                                <p:selectOneMenu id="dim1" value="#{configurationBean.dimension1}" required="true" requiredMessage="Dim 1 required" style="width: 100%;">
+                                    <f:selectItem itemLabel="Select One" itemValue="" />
+                                    <f:selectItem itemLabel="Xbox One" itemValue="Xbox One" />
+                                    <f:selectItem itemLabel="PS4" itemValue="PS4" />
+                                    <f:selectItem itemLabel="Wii U" itemValue="Wii U" />
+                                </p:selectOneMenu>
+
+                                <h:outputLabel value="Valor 2" style="font-weight: bold;"/>
+
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="lbl2" value="#{configurationBean.label2}" required="true" requiredMessage="Label 2 required" style="width: 100%;" />
+                                    <p:message for="lbl2" style="color: red;" />
+                                    <p:outputLabel value="Label 2" for="lbl2"/>
+                                </h:panelGroup>                            
+
+                                <h:outputLabel for="dim2" value="Dimension 2" />
+                                <p:selectOneMenu id="dim2" value="#{configurationBean.dimension2}" required="true" requiredMessage="Dim 2 required" style="width: 100%;">
+                                    <f:selectItem itemLabel="Select One" itemValue="" />
+                                    <f:selectItem itemLabel="Xbox One" itemValue="Xbox One" />
+                                    <f:selectItem itemLabel="PS4" itemValue="PS4" />
+                                    <f:selectItem itemLabel="Wii U" itemValue="Wii U" />
+                                </p:selectOneMenu>
+                            </p:panelGrid> 
+
+                            <p:commandButton action="#{configurationBean.add}" value="Add" update="messages configTable chartdataGrid">
+                                <f:ajax execute="configForm" render="configForm:configTable" />
+                            </p:commandButton>
+                        </p:dialog>   
+
+                    </div>
+
+                    <!-- Dynamic charts -->
+                    <div class="card">                                                
+                        <p:dataGrid id="chartdataGrid" var="list" value="#{configurationBean.chartList}" columns="#{configurationBean.columns}" style="border:none;">
+                            <p:chart type="pie" model="#{list}" style="width:100%;height:300px" />
+                        </p:dataGrid>
+                    </div>
+                </h:form> 
+
+                <p:button outcome="dashboard" value="Inicio" style="display:inline-block;margin-top:5px"/>
+            </div>
+        </div>
+    </ui:define>
+
+    <script type="text/javascript" language="javascript">
+    </script>
+
+</ui:composition>
