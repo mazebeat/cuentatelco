@@ -34,7 +34,7 @@
                                         <h:outputText value="#{c.label1}" />  
                                     </f:facet>  
                                     <f:facet name="input">  
-                                        <p:inputText value="#{c.label1}" style="width:100%"/>  
+                                        <p:inputText readonly="true" value="#{c.label1}" style="width:100%"/>  
                                     </f:facet>  
                                 </p:cellEditor> 
                             </p:column>
@@ -46,7 +46,10 @@
                                         <h:outputText value="#{c.dimension1}" />  
                                     </f:facet>  
                                     <f:facet name="input">  
-                                        <p:inputText value="#{c.dimension1}" style="width:100%"/>  
+                                        <p:selectOneMenu id="d" value="#{configurationBean.dimension1}">
+                                            <f:selectItem itemLabel="Select One" itemValue="" />
+                                            <f:selectItems value="#{configurationBean.dimensions1}" />
+                                        </p:selectOneMenu>
                                     </f:facet>  
                                 </p:cellEditor> 
                             </p:column>
@@ -58,7 +61,7 @@
                                         <h:outputText value="#{c.label2}" />  
                                     </f:facet>  
                                     <f:facet name="input">  
-                                        <p:inputText value="#{c.label2}" style="width:100%"/>  
+                                        <p:inputText readonly="true" value="#{c.label2}" style="width:100%"/>                                          
                                     </f:facet>  
                                 </p:cellEditor> 
                             </p:column>
@@ -70,7 +73,10 @@
                                         <h:outputText value="#{c.dimension2}" />  
                                     </f:facet>  
                                     <f:facet name="input">  
-                                        <p:inputText value="#{c.dimension2}" style="width:100%"/>  
+                                        <p:selectOneMenu id="d" value="#{configurationBean.dimension2}">
+                                            <f:selectItem itemLabel="Select One" itemValue="" />
+                                            <f:selectItems value="#{configurationBean.dimensions2}" />
+                                        </p:selectOneMenu>
                                     </f:facet>  
                                 </p:cellEditor> 
                             </p:column>

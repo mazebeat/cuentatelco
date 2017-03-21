@@ -43,11 +43,11 @@ public class NegocioMonthDetail {
 
     private static Logger logger = LoggerFactory.getLogger(NegocioMonthDetail.class);
 
-    public List<Telefono> getDataChart(int idClient, Calendar date) {
-        return postTelefonosConServicio(idClient, date);
+    public List<Telefono> getDataChart(int idClient, Calendar date, String groupby) {
+        return postTelefonosConServicio(idClient, date, groupby);
     }
 
-    private List<Telefono> postTelefonosConServicio(int idClient, Calendar date) {
+    private List<Telefono> postTelefonosConServicio(int idClient, Calendar date, String groupby) {
 
         List<Telefono> altosGastos = new ArrayList<>();
 
@@ -55,7 +55,7 @@ public class NegocioMonthDetail {
             if (date == null) {
                 date = Calendar.getInstance();
             }
-            altosGastos = getAltosGastos(idClient);
+            altosGastos = getAltosGastos(idClient, date, groupby);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -63,14 +63,28 @@ public class NegocioMonthDetail {
         return altosGastos;
     }
 
-    private List<Telefono> getAltosGastos(int idClient) {
+    private List<Telefono> getAltosGastos(int idClient, Calendar date, String groupby) {
         List<Telefono> n = new ArrayList<>();
         EntityManager em = null;
 
+        if (groupby.equals("")) {
+            groupby = "te.numero";
+        }
+
         try {
-            String query = "SELECT * FROM telefono te\n"
+//            String query = "SELECT * FROM telefono te\n"
+//                    + "INNER JOIN total t ON te.id = t.id_telefono\n"
+//                    + "WHERE te.id_cliente = " + idClient + "\n"
+//                    
+//                    + "ORDER BY t.monto_total DESC\n"
+//                    + "LIMIT 20;";
+            String query = "SELECT *, SUM(t.monto_total) AS total FROM telefono te\n"
                     + "INNER JOIN total t ON te.id = t.id_telefono\n"
+                    + "INNER JOIN producto p ON te.id_producto = p.id\n"
                     + "WHERE te.id_cliente = " + idClient + "\n"
+                    + "AND MONTH(fecha) = " + (date.get(Calendar.MONTH) + 1) + "\n"
+                    + "GROUP BY " + groupby + "\n"
+                    + "GROUP BY p.id\n"
                     + "ORDER BY t.monto_total DESC\n"
                     + "LIMIT 20;";
 

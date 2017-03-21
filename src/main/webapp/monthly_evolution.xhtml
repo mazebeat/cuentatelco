@@ -12,7 +12,12 @@
             <div class="ui-g">
                 <div class="ui-g-12">
                     <div class="card">
-                        <h1>Evolución gasto total mensual</h1>  
+                        <div class="clearfix">
+                            <h1 style="float: left;">Evolución gasto total mensual</h1>  
+                            <p:commandButton style="float: right" icon="fa fa-cog" action="configuration?faces-redirect=true">
+                                <f:param name="view" value="monthy_evolution" />
+                            </p:commandButton>
+                        </div>
 
                         <p:chart type="line" model="#{monthlyEvolutionBean.chart}" style="width:100%;min-height:500px;" 
                                  responsive="true"/>

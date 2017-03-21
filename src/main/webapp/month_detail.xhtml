@@ -12,10 +12,12 @@
             <div class="ui-g">
                 <div class="ui-g-12">
                     <div class="card">
-                        <h1>Detalle Mensual</h1> 
-                        <p:button outcome="configuration" value="CONF" style="float:right;display:inline-block;margin-top:5px"/>
-                        <div class="clearfix" />
-                        
+                        <div class="clearfix">
+                            <h1 style="float: left;">Detalle Mensual</h1> 
+                            <p:commandButton style="float: right" icon="fa fa-cog" action="configuration?faces-redirect=true">
+                                <f:param name="view" value="monthy_detail" />
+                            </p:commandButton>
+                        </div>
                         <p:chart type="pie" widgetVar="pieChart" model="#{monthDetailBean.chart}" style="width:100%;min-height:500px; " responsive="true">
                             <p:ajax event="itemSelect" listener="#{monthDetailBean.itemSelect}" update="detailtable" />
                         </p:chart> 

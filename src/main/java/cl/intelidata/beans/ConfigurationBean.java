@@ -25,15 +25,19 @@
  */
 package cl.intelidata.beans;
 
+import cl.intelidata.negocio.NegocioConfiguration;
+import cl.intelidata.negocio.NegocioMonthDetail;
 import cl.intelidata.services.ConfigurationService;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.context.RequestContext;
@@ -47,20 +51,18 @@ import org.slf4j.LoggerFactory;
  * @author DFeliu
  */
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class ConfigurationBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
     private static Logger logger = LoggerFactory.getLogger(ConfigurationBean.class);
 
-    private String view;
-
-    private String label1, label2, dimension1, dimension2;
-    private static final List<ConfigurationService> configList = new ArrayList<>();
-
-    private List<PieChartModel> chartList;
     private int columns;
-
+//    private static String view;
+    private String label1, label2, dimension1, dimension2, view;
+    private static final List<ConfigurationService> configList = new ArrayList<>();
+    private List<PieChartModel> chartList;
+    private List<String> dimensions1, dimensions2;
     public FacesMessage msg = null;
 
     @ManagedProperty(value = "#{loginBean}")
@@ -136,10 +138,35 @@ public class ConfigurationBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        if (view == null || view.equals("")) {
-            HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-            view = cleanURI(req.getHeader("Referer"));
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String action = params.get("view");
+
+        HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        view = NegocioConfiguration.cleanURI(req.getHeader("Referer"));
+
+        List<?> list = new ArrayList<>();
+
+        switch (view) {
+            case "month_detail":
+//                NegocioMonthDetail nm = new NegocioMonthDetail();
+//                list = nm.getDataChart(loginbean.getClient().getId(), Calendar.getInstance(), "");
+                
+                break;
+            case "monthly_evolution":
+                break;
+            case "historical_category":
+                break;
+            case "phones_product":
+                break;
+            default:
+                System.out.println("cl.intelidata.beans.ConfigurationBean.init() CLASS");
+                break;
         }
+
+        if (list.size() > 0) {
+            NegocioConfiguration.fillDimensions(list);
+        }
+
         columns = 1;
         genCharts();
     }
@@ -149,11 +176,6 @@ public class ConfigurationBean implements Serializable {
             if (configList.size() < 3) {
                 ConfigurationService con = new ConfigurationService(label1, label2, dimension1, dimension2);
                 configList.add(con);
-
-                label1 = "";
-                label2 = "";
-                dimension1 = "";
-                dimension2 = "";
 
                 msg = new FacesMessage("Item Added", label1);
                 RequestContext.getCurrentInstance().execute("PF('addConfigDlg').hide()");
@@ -181,10 +203,11 @@ public class ConfigurationBean implements Serializable {
     public void cancel(RowEditEvent event) {
         try {
             msg = new FacesMessage("Item Cancelled");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
             configList.remove((ConfigurationService) event.getObject());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
+        } finally {
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
 
@@ -192,58 +215,64 @@ public class ConfigurationBean implements Serializable {
         try {
             configList.remove(conf);
             msg = new FacesMessage("Item Deleted", conf.getLabel1());
+
             if (columns > 1) {
                 columns = configList.size();
             }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
             FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+
+    public void genCharts() {
+        try {
+            if (!configList.isEmpty()) {
+                chartList = new ArrayList<>();
+
+                for (ConfigurationService cs : configList) {
+                    PieChartModel pieModel = new PieChartModel();
+
+                    pieModel.set(cs.getLabel1(), Math.random());
+                    pieModel.set(cs.getLabel2(), Math.random());
+
+                    pieModel.setTitle(cs.getDimension1() + "/" + cs.getDimension2());
+                    pieModel.setLegendPosition("w");
+
+                    chartList.add(pieModel);
+                }
+            }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
     }
 
-    private String cleanURI(String view) {
-        String[] a = view.split("/");
-        String b = toTitleCase(a[a.length - 1].replace(".xhtml", ""));
-
-        return b;
+    /**
+     * @return the dimensions1
+     */
+    public List<String> getDimensions1() {
+        return dimensions1;
     }
 
-    public static String toTitleCase(String s) {
-        String d = "";
-
-        if (s.isEmpty()) {
-            return s;
-        }
-
-        if (s.contains("_") || s.contains("-") || s.contains("/") || s.contains("\\.")) {
-            String[] b = s.split("-|_|/|\\.");
-            for (String c : b) {
-                d += toTitleCase(c);
-            }
-        } else {
-            d = s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
-        }
-
-        return d;
+    /**
+     * @param dimensions1 the dimensions1 to set
+     */
+    public void setDimensions1(List<String> dimensions1) {
+        this.dimensions1 = dimensions1;
     }
 
-    public void genCharts() {
-        if (!configList.isEmpty()) {
-
-            chartList = new ArrayList<>();
-
-            for (ConfigurationService cs : configList) {
-                PieChartModel pieModel = new PieChartModel();
-
-                pieModel.set(cs.getLabel1(), Math.random());
-                pieModel.set(cs.getLabel2(), Math.random());
-
-                pieModel.setTitle(cs.getDimension1());
-                pieModel.setLegendPosition("w");
-
-                chartList.add(pieModel);
-            }
-        }
+    /**
+     * @return the dimensions2
+     */
+    public List<String> getDimensions2() {
+        return dimensions2;
     }
 
+    /**
+     * @param dimensions2 the dimensions2 to set
+     */
+    public void setDimensions2(List<String> dimensions2) {
+        this.dimensions2 = dimensions2;
+    }
 }

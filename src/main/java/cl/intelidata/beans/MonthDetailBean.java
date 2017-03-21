@@ -159,6 +159,10 @@ public class MonthDetailBean implements Serializable {
         return chart;
     }
 
+    /**
+     *
+     * @param chart
+     */
     public void setChart(PieChartModel chart) {
         this.chart = chart;
     }
@@ -181,10 +185,14 @@ public class MonthDetailBean implements Serializable {
         }
     }
 
+    /**
+     * @param int monto_total, String numero (telefono), String inicio_fac,
+     * String nombre (plan)
+     */
     private void createPieModel() {
         try {
             NegocioMonthDetail n = new NegocioMonthDetail();
-            phoneList = n.getDataChart(loginbean.getClient().getId(), Calendar.getInstance());
+            phoneList = n.getDataChart(loginbean.getClient().getId(), date, "");
 
             chart = new PieChartModel();
 
