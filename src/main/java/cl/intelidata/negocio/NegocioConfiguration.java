@@ -26,9 +26,12 @@
 package cl.intelidata.negocio;
 
 import cl.intelidata.jpa.Modelo;
+import cl.intelidata.services.ConfigurationService;
 import cl.intelidata.utils.EntityHelper;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +43,10 @@ import org.slf4j.LoggerFactory;
 public class NegocioConfiguration {
 
     private static Logger logger = LoggerFactory.getLogger(NegocioConfiguration.class);
+
+    public static Map<String, List<ConfigurationService>> defaultSettings() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     public List<Modelo> getDevicesList() throws Exception {
         EntityManager em = null;
@@ -102,24 +109,27 @@ public class NegocioConfiguration {
         return d;
     }
 
-    public static FillInputs fillDimensions(List<?> list) {
-        List<?> dim1 = new ArrayList<>();
-        List<?> dim2 = new ArrayList<>();
+    public static Map<String, List<ConfigurationService>> getSettings(int idCliente) {
+        Map<String, List<ConfigurationService>> set = new HashMap<>();
 
-        Object o = list.get(0);
-        
-//        for (? o : list) {
-//            String c = o.getClass().getName();
-//            Class<?> a = o.getClass();
-//            
-//            if (isInteger(o.toString())) {
-//                
-//            } else {
-//                
-//            }
-//        }
+        try {
+            // TODO: Cambiar por BBDD
+            ConfigurationService cs = new ConfigurationService();
 
-        return new FillInputs(dim1, dim2);
+            cs.setLabel1("Monto Total");
+            cs.setDimension1("t.monto_total");
+            cs.setLabel2("Teléfono");
+            cs.setDimension2("te.numero");
+
+            List<ConfigurationService> lcs = new ArrayList<>();
+            lcs.add(cs);
+
+            set.put("month_detail", lcs);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return set;
     }
 }
 

@@ -26,18 +26,17 @@
 package cl.intelidata.beans;
 
 import cl.intelidata.negocio.NegocioConfiguration;
-import cl.intelidata.negocio.NegocioMonthDetail;
 import cl.intelidata.services.ConfigurationService;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.context.RequestContext;
@@ -51,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * @author DFeliu
  */
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class ConfigurationBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
@@ -60,10 +59,12 @@ public class ConfigurationBean implements Serializable {
     private int columns;
 //    private static String view;
     private String label1, label2, dimension1, dimension2, view;
-    private static final List<ConfigurationService> configList = new ArrayList<>();
+//    private static final List<ConfigurationService> configList = new ArrayList<>();
+    private static List<ConfigurationService> configList = new ArrayList<>();
     private List<PieChartModel> chartList;
     private List<String> dimensions1, dimensions2;
     public FacesMessage msg = null;
+    public static Map<String, List<ConfigurationService>> settingsChart = new HashMap<>();
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
@@ -136,21 +137,65 @@ public class ConfigurationBean implements Serializable {
         this.columns = columns;
     }
 
+    public List<String> getDimensions1() {
+        return dimensions1;
+    }
+
+    public void setDimensions1(List<String> dimensions1) {
+        this.dimensions1 = dimensions1;
+    }
+
+    public List<String> getDimensions2() {
+        return dimensions2;
+    }
+
+    public void setDimensions2(List<String> dimensions2) {
+        this.dimensions2 = dimensions2;
+    }
+
+    public Map<String, List<ConfigurationService>> getSettingsChart() {
+        return settingsChart;
+    }
+
+    public void setSettingsChart(Map<String, List<ConfigurationService>> settingsChart) {
+        this.settingsChart = settingsChart;
+    }
+
     @PostConstruct
     public void init() {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        String action = params.get("view");
+        try {
+            HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            view = NegocioConfiguration.cleanURI(req.getHeader("Referer"));
 
-        HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        view = NegocioConfiguration.cleanURI(req.getHeader("Referer"));
+            if (settingsChart.isEmpty()) {
+                settingsChart = NegocioConfiguration.getSettings(loginbean.getClient().getId());
+            }
 
-        List<?> list = new ArrayList<>();
+            if (!view.equals("")) {
+                if (!settingsChart.isEmpty()) {
+                    configList = settingsChart.get(view);
+                }
+
+                generateDimensions(view);
+            } else {
+                logger.warn("Variable 'view' no encontrada");
+            }
+            columns = 1;
+            genCharts();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    private void generateDimensions(String view) {
+        dimensions1 = new ArrayList<>();
+        dimensions2 = new ArrayList<>();
 
         switch (view) {
             case "month_detail":
-//                NegocioMonthDetail nm = new NegocioMonthDetail();
-//                list = nm.getDataChart(loginbean.getClient().getId(), Calendar.getInstance(), "");
-                
+                dimensions1.add("t.monto_total");
+                dimensions2.add("te.numero");
+                dimensions2.add("p.id");
                 break;
             case "monthly_evolution":
                 break;
@@ -162,13 +207,6 @@ public class ConfigurationBean implements Serializable {
                 System.out.println("cl.intelidata.beans.ConfigurationBean.init() CLASS");
                 break;
         }
-
-        if (list.size() > 0) {
-            NegocioConfiguration.fillDimensions(list);
-        }
-
-        columns = 1;
-        genCharts();
     }
 
     public void add() {
@@ -176,6 +214,9 @@ public class ConfigurationBean implements Serializable {
             if (configList.size() < 3) {
                 ConfigurationService con = new ConfigurationService(label1, label2, dimension1, dimension2);
                 configList.add(con);
+
+                settingsChart.remove(view);
+                settingsChart.put(view, configList);
 
                 msg = new FacesMessage("Item Added", label1);
                 RequestContext.getCurrentInstance().execute("PF('addConfigDlg').hide()");
@@ -185,7 +226,7 @@ public class ConfigurationBean implements Serializable {
             }
 
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            genCharts();
+            // genCharts();            
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -214,6 +255,10 @@ public class ConfigurationBean implements Serializable {
     public void delete(ConfigurationService conf) {
         try {
             configList.remove(conf);
+
+            settingsChart.remove(view);
+            settingsChart.put(view, configList);
+
             msg = new FacesMessage("Item Deleted", conf.getLabel1());
 
             if (columns > 1) {
@@ -248,31 +293,8 @@ public class ConfigurationBean implements Serializable {
         }
     }
 
-    /**
-     * @return the dimensions1
-     */
-    public List<String> getDimensions1() {
-        return dimensions1;
-    }
-
-    /**
-     * @param dimensions1 the dimensions1 to set
-     */
-    public void setDimensions1(List<String> dimensions1) {
-        this.dimensions1 = dimensions1;
-    }
-
-    /**
-     * @return the dimensions2
-     */
-    public List<String> getDimensions2() {
-        return dimensions2;
-    }
-
-    /**
-     * @param dimensions2 the dimensions2 to set
-     */
-    public void setDimensions2(List<String> dimensions2) {
-        this.dimensions2 = dimensions2;
+    public static Map<String, List<ConfigurationService>> getSettings(int idCliente) {
+        settingsChart = NegocioConfiguration.getSettings(idCliente);
+        return settingsChart;
     }
 }

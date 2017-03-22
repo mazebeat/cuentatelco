@@ -25,9 +25,14 @@
  */
 package cl.intelidata.beans;
 
+import cl.intelidata.negocio.NegocioConfiguration;
+import cl.intelidata.services.ConfigurationService;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.text.NumberFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -56,11 +61,31 @@ public class DashboardBean implements Serializable {
         this.loginbean = loginbean;
     }
 
-    public DashboardBean() {
+    @ManagedProperty(value = "#{configurationBean}")
+    private ConfigurationBean configurationBean;
+
+    public ConfigurationBean getConfigurationBean() {
+        return configurationBean;
+    }
+
+    public void setConfigurationBean(ConfigurationBean configurationBean) {
+        this.configurationBean = configurationBean;
     }
 
     @PostConstruct
     public void init() {
+        try {
+            Map<String, List<ConfigurationService>> settingsChart = new HashMap<>();
+            settingsChart = NegocioConfiguration.getSettings(loginbean.getClient().getId());
+
+            if (settingsChart.isEmpty()) {
+                settingsChart = NegocioConfiguration.defaultSettings();
+            }
+
+            // configurationBean.setSettingsChart(settingsChart);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     public String totalPay() {

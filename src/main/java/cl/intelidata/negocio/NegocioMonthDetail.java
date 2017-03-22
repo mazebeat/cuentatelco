@@ -84,7 +84,7 @@ public class NegocioMonthDetail {
                     + "WHERE te.id_cliente = " + idClient + "\n"
                     + "AND MONTH(fecha) = " + (date.get(Calendar.MONTH) + 1) + "\n"
                     + "GROUP BY " + groupby + "\n"
-                    + "GROUP BY p.id\n"
+                    + "-- GROUP BY p.id\n"
                     + "ORDER BY t.monto_total DESC\n"
                     + "LIMIT 20;";
 

@@ -28,7 +28,7 @@ import javax.faces.context.FacesContext;
 @SessionScoped
 public class BeanGuestPreferences implements Serializable {
 
-    private Map<String, String> themeColors;
+    private Map<String, String> themeColors;    
     private String theme = "indigo";
     private String menuClass = null;
     private String profileMode = "overlay"; // overlay | inline
@@ -37,6 +37,7 @@ public class BeanGuestPreferences implements Serializable {
 
     private String previousPage = null;
 
+    
     @PostConstruct
     public void init() {
         themeColors = new HashMap<String, String>();
@@ -49,7 +50,7 @@ public class BeanGuestPreferences implements Serializable {
         themeColors.put("purple-amber", "#673AB7");
         themeColors.put("purple-cyan", "#673AB7");
         themeColors.put("teal", "#009688");
-        themeColors.put("grey", "grey");
+        themeColors.put("grey", "grey");        
     }
 
     public String getMenuClass() {
@@ -117,6 +118,4 @@ public class BeanGuestPreferences implements Serializable {
         }
         previousPage = id;
     }
-
-    
 }

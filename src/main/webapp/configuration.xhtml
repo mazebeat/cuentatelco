@@ -46,7 +46,7 @@
                                         <h:outputText value="#{c.dimension1}" />  
                                     </f:facet>  
                                     <f:facet name="input">  
-                                        <p:selectOneMenu id="d" value="#{configurationBean.dimension1}">
+                                        <p:selectOneMenu id="dim1" value="#{configurationBean.dimension1}">
                                             <f:selectItem itemLabel="Select One" itemValue="" />
                                             <f:selectItems value="#{configurationBean.dimensions1}" />
                                         </p:selectOneMenu>
@@ -73,7 +73,7 @@
                                         <h:outputText value="#{c.dimension2}" />  
                                     </f:facet>  
                                     <f:facet name="input">  
-                                        <p:selectOneMenu id="d" value="#{configurationBean.dimension2}">
+                                        <p:selectOneMenu id="dim2" value="#{configurationBean.dimension2}">
                                             <f:selectItem itemLabel="Select One" itemValue="" />
                                             <f:selectItems value="#{configurationBean.dimensions2}" />
                                         </p:selectOneMenu>
@@ -110,11 +110,9 @@
 
                                 <h:outputLabel for="dim1" value="Dimension 1" />
 
-                                <p:selectOneMenu id="dim1" value="#{configurationBean.dimension1}" required="true" requiredMessage="Dim 1 required" style="width: 100%;">
+                                <p:selectOneMenu id="dim1" value="#{configurationBean.dimension1}">
                                     <f:selectItem itemLabel="Select One" itemValue="" />
-                                    <f:selectItem itemLabel="Xbox One" itemValue="Xbox One" />
-                                    <f:selectItem itemLabel="PS4" itemValue="PS4" />
-                                    <f:selectItem itemLabel="Wii U" itemValue="Wii U" />
+                                    <f:selectItems value="#{configurationBean.dimensions1}" />
                                 </p:selectOneMenu>
 
                                 <h:outputLabel value="Valor 2" style="font-weight: bold;"/>
@@ -126,11 +124,9 @@
                                 </h:panelGroup>                            
 
                                 <h:outputLabel for="dim2" value="Dimension 2" />
-                                <p:selectOneMenu id="dim2" value="#{configurationBean.dimension2}" required="true" requiredMessage="Dim 2 required" style="width: 100%;">
+                                <p:selectOneMenu id="dim2" value="#{configurationBean.dimension2}">
                                     <f:selectItem itemLabel="Select One" itemValue="" />
-                                    <f:selectItem itemLabel="Xbox One" itemValue="Xbox One" />
-                                    <f:selectItem itemLabel="PS4" itemValue="PS4" />
-                                    <f:selectItem itemLabel="Wii U" itemValue="Wii U" />
+                                    <f:selectItems value="#{configurationBean.dimensions2}" />
                                 </p:selectOneMenu>
                             </p:panelGrid> 
 

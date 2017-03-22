@@ -64,6 +64,17 @@ public class MonthDetailBean implements Serializable {
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
+    
+    @ManagedProperty(value = "#{configurationBean}")
+    private ConfigurationBean configurationBean;
+
+    public ConfigurationBean getConfigurationBean() {
+        return configurationBean;
+    }
+
+    public void setConfigurationBean(ConfigurationBean configurationBean) {
+        this.configurationBean = configurationBean;
+    }
 
     private PieChartModel chart;
 
@@ -190,7 +201,7 @@ public class MonthDetailBean implements Serializable {
      * String nombre (plan)
      */
     private void createPieModel() {
-        try {
+        try {            
             NegocioMonthDetail n = new NegocioMonthDetail();
             phoneList = n.getDataChart(loginbean.getClient().getId(), date, "");
 

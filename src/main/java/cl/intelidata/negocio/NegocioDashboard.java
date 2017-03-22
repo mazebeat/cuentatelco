@@ -33,6 +33,5 @@ import org.slf4j.LoggerFactory;
  * @author DFeliu
  */
 public class NegocioDashboard {
-
     private static Logger logger = LoggerFactory.getLogger(NegocioDashboard.class);
 }
