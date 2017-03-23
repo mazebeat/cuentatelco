@@ -131,47 +131,8 @@ public class NegocioConfiguration {
 
         return set;
     }
-}
 
-class FillInputs {
-
-    private List<?> dimension1;
-    private List<?> dimension2;
-
-    public FillInputs() {
+    public static List<ConfigurationService> getSettingByView(Map<String, List<ConfigurationService>> map, String view) {
+        return map.get(view);
     }
-
-    public FillInputs(List<?> dimension1, List<?> dimension2) {
-        this.dimension1 = dimension1;
-        this.dimension2 = dimension2;
-    }
-
-    /**
-     * @return the dimension1
-     */
-    public List<?> getDimension1() {
-        return dimension1;
-    }
-
-    /**
-     * @param dimension1 the dimension1 to set
-     */
-    public void setDimension1(List<?> dimension1) {
-        this.dimension1 = dimension1;
-    }
-
-    /**
-     * @return the dimension2
-     */
-    public List<?> getDimension2() {
-        return dimension2;
-    }
-
-    /**
-     * @param dimension2 the dimension2 to set
-     */
-    public void setDimension2(List<?> dimension2) {
-        this.dimension2 = dimension2;
-    }
-
 }

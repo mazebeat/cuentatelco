@@ -86,7 +86,7 @@
                                 <!--<p:rowEditor />-->
                                 <h:commandLink id="remove" value="delete" action="#{configurationBean.delete(c)}"
                                                onclick="return confirm('Are you sure?')">
-                                    <f:ajax render="configForm:configTable configForm:chartdataGrid" />
+                                    <f:ajax render="configForm:configTable" />
                                 </h:commandLink>
                             </p:column>
 
@@ -130,19 +130,14 @@
                                 </p:selectOneMenu>
                             </p:panelGrid> 
 
-                            <p:commandButton action="#{configurationBean.add}" value="Add" update="messages configTable chartdataGrid">
+                            <p:commandButton action="#{configurationBean.add}" value="Add" update="messages configTable">
                                 <f:ajax execute="configForm" render="configForm:configTable" />
                             </p:commandButton>
                         </p:dialog>   
 
                     </div>
 
-                    <!-- Dynamic charts -->
-                    <div class="card">                                                
-                        <p:dataGrid id="chartdataGrid" var="list" value="#{configurationBean.chartList}" columns="#{configurationBean.columns}" style="border:none;">
-                            <p:chart type="pie" model="#{list}" style="width:100%;height:300px" />
-                        </p:dataGrid>
-                    </div>
+                   
                 </h:form> 
 
                 <p:button outcome="dashboard" value="Inicio" style="display:inline-block;margin-top:5px"/>

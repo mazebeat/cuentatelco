@@ -36,7 +36,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.context.RequestContext;
@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * @author DFeliu
  */
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class ConfigurationBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
@@ -161,11 +161,23 @@ public class ConfigurationBean implements Serializable {
         this.settingsChart = settingsChart;
     }
 
+//    public ConfigurationBean() {
+//        HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+//        view = NegocioConfiguration.cleanURI(req.getHeader("Referer"));
+//
+//        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+//        view = params.get("view");
+//    }
     @PostConstruct
     public void init() {
         try {
             HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
             view = NegocioConfiguration.cleanURI(req.getHeader("Referer"));
+
+            Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+            if (params.containsKey("view")) {
+                view = params.get("view");
+            }
 
             if (settingsChart.isEmpty()) {
                 settingsChart = NegocioConfiguration.getSettings(loginbean.getClient().getId());
@@ -181,7 +193,6 @@ public class ConfigurationBean implements Serializable {
                 logger.warn("Variable 'view' no encontrada");
             }
             columns = 1;
-            genCharts();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -271,30 +282,12 @@ public class ConfigurationBean implements Serializable {
         }
     }
 
-    public void genCharts() {
-        try {
-            if (!configList.isEmpty()) {
-                chartList = new ArrayList<>();
-
-                for (ConfigurationService cs : configList) {
-                    PieChartModel pieModel = new PieChartModel();
-
-                    pieModel.set(cs.getLabel1(), Math.random());
-                    pieModel.set(cs.getLabel2(), Math.random());
-
-                    pieModel.setTitle(cs.getDimension1() + "/" + cs.getDimension2());
-                    pieModel.setLegendPosition("w");
-
-                    chartList.add(pieModel);
-                }
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-    }
-
     public static Map<String, List<ConfigurationService>> getSettings(int idCliente) {
         settingsChart = NegocioConfiguration.getSettings(idCliente);
         return settingsChart;
+    }
+
+    public static List<ConfigurationService> getSettingByView(String view) {
+        return NegocioConfiguration.getSettingByView(settingsChart, view);
     }
 }

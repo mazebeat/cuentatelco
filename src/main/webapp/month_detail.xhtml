@@ -6,7 +6,7 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="content">        
-        <h:form>
+        <h:form id="formMonthDetail">
             <p:growl id="growl" showDetail="true" />
 
             <div class="ui-g">
@@ -18,11 +18,17 @@
                                 <f:param name="view" value="monthy_detail" />
                             </p:commandButton>
                         </div>
-                        <p:chart type="pie" widgetVar="pieChart" model="#{monthDetailBean.chart}" style="width:100%;min-height:500px; " responsive="true">
-                            <p:ajax event="itemSelect" listener="#{monthDetailBean.itemSelect}" update="detailtable" />
-                        </p:chart> 
 
-                        <p:dataTable id="detailtable" var="det" value="#{monthDetailBean.phoneDetail}" emptyMessage="Seleccione un número" reflow="true">
+                        <!-- Dynamic charts -->
+                        <p:dataGrid id="chartdataGrid" var="list" value="#{monthDetailBean.chartList}" columns="#{monthDetailBean.columns}" style="border:none !important;">
+                            <p:chart type="pie" widgetVar="pieChart" model="#{list}" style="width:100%; min-height:300px; border:none !important;" responsive="true">
+                                <p:ajax event="itemSelect" listener="#{monthDetailBean.itemSelect}" update=":formMonthDetail:detailtable" />
+                            </p:chart> 
+                        </p:dataGrid>
+                    </div>
+
+                    <div class="card">
+                        <p:dataTable id="detailtable" widgetVar="detailtables" var="det" value="#{monthDetailBean.phoneDetail}" emptyMessage="Seleccione un número" reflow="true">
                             <f:facet name="header">
                                 Detalle N° <h:outputText value="#{monthDetailBean.phone}" />
                             </f:facet>

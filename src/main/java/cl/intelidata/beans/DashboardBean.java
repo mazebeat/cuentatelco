@@ -49,6 +49,7 @@ public class DashboardBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
     private static Logger logger = LoggerFactory.getLogger(DashboardBean.class);
+    private Map<String, List<ConfigurationService>> settingsChart;
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
@@ -75,7 +76,7 @@ public class DashboardBean implements Serializable {
     @PostConstruct
     public void init() {
         try {
-            Map<String, List<ConfigurationService>> settingsChart = new HashMap<>();
+            settingsChart = new HashMap<>();
             settingsChart = NegocioConfiguration.getSettings(loginbean.getClient().getId());
 
             if (settingsChart.isEmpty()) {
@@ -97,6 +98,20 @@ public class DashboardBean implements Serializable {
         }
 
         return total;
+    }
+
+    /**
+     * @return the settingsChart
+     */
+    public Map<String, List<ConfigurationService>> getSettingsChart() {
+        return settingsChart;
+    }
+
+    /**
+     * @param settingsChart the settingsChart to set
+     */
+    public void setSettingsChart(Map<String, List<ConfigurationService>> settingsChart) {
+        this.settingsChart = settingsChart;
     }
 
 }

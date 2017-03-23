@@ -29,9 +29,11 @@ import cl.intelidata.services.PhoneDetailService;
 import cl.intelidata.jpa.Telefono;
 import cl.intelidata.jpa.TelefonosServicios;
 import cl.intelidata.negocio.NegocioMonthDetail;
+import cl.intelidata.services.ConfigurationService;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,7 +42,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import org.primefaces.event.ItemSelectEvent;
-import org.primefaces.model.chart.LegendPlacement;
 import org.primefaces.model.chart.PieChartModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,9 +63,12 @@ public class MonthDetailBean implements Serializable {
     private List<PhoneDetailService> phoneDetail;
     private Calendar date;
 
+    private int columns;
+    private List<PieChartModel> chartList;
+
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
-    
+
     @ManagedProperty(value = "#{configurationBean}")
     private ConfigurationBean configurationBean;
 
@@ -170,15 +174,8 @@ public class MonthDetailBean implements Serializable {
         return chart;
     }
 
-    /**
-     *
-     * @param chart
-     */
     public void setChart(PieChartModel chart) {
         this.chart = chart;
-    }
-
-    public MonthDetailBean() {
     }
 
     @PostConstruct
@@ -196,27 +193,40 @@ public class MonthDetailBean implements Serializable {
         }
     }
 
-    /**
-     * @param int monto_total, String numero (telefono), String inicio_fac,
-     * String nombre (plan)
-     */
     private void createPieModel() {
-        try {            
-            NegocioMonthDetail n = new NegocioMonthDetail();
-            phoneList = n.getDataChart(loginbean.getClient().getId(), date, "");
+        try {
+            List<ConfigurationService> configList = new ArrayList<>();
+            configList = configurationBean.getSettingByView("month_detail");
 
-            chart = new PieChartModel();
+            if (configList.size() > 0) {
+                columns = 1;
 
-            for (Telefono telefono : phoneList) {
-                chart.set(telefono.getNumero(), telefono.getTotalList().get(0).getMontoTotal());
+                if (configList.size() > 1) {
+                    columns = 2;
+                }
+
+                chartList = new ArrayList<>();
+                NegocioMonthDetail n = new NegocioMonthDetail();
+
+                for (ConfigurationService cs : configList) {
+                    phoneList = n.getDataChart(loginbean.getClient().getId(), date, cs.getDimension2());
+
+                    chart = new PieChartModel();
+
+                    for (Telefono telefono : phoneList) {
+                        chart.set(telefono.getNumero(), telefono.getTotalList().get(0).getMontoTotal());
+                    }
+
+                    chart.setLegendPosition("w");
+                    chart.setShowDataLabels(true);
+                    chart.setMouseoverHighlight(true);
+//                    chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
+                    chart.setLegendCols(5);
+                    chart.setLegendRows(4);
+                    chartList.add(chart);
+                }
             }
 
-            chart.setLegendPosition("s");
-            chart.setShowDataLabels(true);
-            chart.setMouseoverHighlight(true);
-            chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
-            chart.setLegendCols(5);
-            chart.setLegendRows(4);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -248,5 +258,33 @@ public class MonthDetailBean implements Serializable {
         }
         NegocioMonthDetail n = new NegocioMonthDetail();
         return n.getDetail(phone, date);
+    }
+
+    /**
+     * @return the columns
+     */
+    public int getColumns() {
+        return columns;
+    }
+
+    /**
+     * @param columns the columns to set
+     */
+    public void setColumns(int columns) {
+        this.columns = columns;
+    }
+
+    /**
+     * @return the chartList
+     */
+    public List<PieChartModel> getChartList() {
+        return chartList;
+    }
+
+    /**
+     * @param chartList the chartList to set
+     */
+    public void setChartList(List<PieChartModel> chartList) {
+        this.chartList = chartList;
     }
 }
