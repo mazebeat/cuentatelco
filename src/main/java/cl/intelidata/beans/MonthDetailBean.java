@@ -40,7 +40,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.RequestScoped;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.model.chart.PieChartModel;
 import org.slf4j.Logger;
@@ -51,7 +52,7 @@ import org.slf4j.LoggerFactory;
  * @author DFeliu
  */
 @ManagedBean
-@ViewScoped
+@RequestScoped
 public class MonthDetailBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
@@ -181,11 +182,12 @@ public class MonthDetailBean implements Serializable {
     @PostConstruct
     public void init() {
         try {
+            RequestContext.getCurrentInstance().update("formMonthDetail:chartdataGrid");
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             String dateInString = "2015-05-01";
             date = Calendar.getInstance();
             date.setTime(formatter.parse(dateInString));
-            createPieModel();
+            createPieModel();            
         } catch (ParseException e) {
             logger.error(e.getMessage(), e);
         } catch (Exception e) {
@@ -216,17 +218,18 @@ public class MonthDetailBean implements Serializable {
                     for (Telefono telefono : phoneList) {
                         chart.set(telefono.getNumero(), telefono.getTotalList().get(0).getMontoTotal());
                     }
-
-                    chart.setLegendPosition("w");
+                    
+                    chart.setTitle(cs.getLabel1() + "/" + cs.getLabel2());
+                    chart.setLegendPosition("s");
                     chart.setShowDataLabels(true);
                     chart.setMouseoverHighlight(true);
 //                    chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
                     chart.setLegendCols(5);
-                    chart.setLegendRows(4);
+                    chart.setLegendRows(2);
                     chartList.add(chart);
                 }
             }
-
+            
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
