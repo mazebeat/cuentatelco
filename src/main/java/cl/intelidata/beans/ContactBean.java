@@ -88,9 +88,6 @@ public class ContactBean implements Serializable {
         this.questionList = questionList;
     }
 
-    public ContactBean() {
-    }
-
     @PostConstruct
     public void init() {
         getQuestions();

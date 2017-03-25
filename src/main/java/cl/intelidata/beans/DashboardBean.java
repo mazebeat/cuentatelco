@@ -54,24 +54,8 @@ public class DashboardBean implements Serializable {
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
 
-    public LoginBean getLoginbean() {
-        return loginbean;
-    }
-
-    public void setLoginbean(LoginBean loginbean) {
-        this.loginbean = loginbean;
-    }
-
     @ManagedProperty(value = "#{configurationBean}")
     private ConfigurationBean configurationBean;
-
-    public ConfigurationBean getConfigurationBean() {
-        return configurationBean;
-    }
-
-    public void setConfigurationBean(ConfigurationBean configurationBean) {
-        this.configurationBean = configurationBean;
-    }
 
     @PostConstruct
     public void init() {
@@ -100,18 +84,28 @@ public class DashboardBean implements Serializable {
         return total;
     }
 
-    /**
-     * @return the settingsChart
-     */
     public Map<String, List<ConfigurationService>> getSettingsChart() {
         return settingsChart;
     }
 
-    /**
-     * @param settingsChart the settingsChart to set
-     */
     public void setSettingsChart(Map<String, List<ConfigurationService>> settingsChart) {
         this.settingsChart = settingsChart;
+    }
+
+    public LoginBean getLoginbean() {
+        return loginbean;
+    }
+
+    public void setLoginbean(LoginBean loginbean) {
+        this.loginbean = loginbean;
+    }
+
+    public ConfigurationBean getConfigurationBean() {
+        return configurationBean;
+    }
+
+    public void setConfigurationBean(ConfigurationBean configurationBean) {
+        this.configurationBean = configurationBean;
     }
 
 }

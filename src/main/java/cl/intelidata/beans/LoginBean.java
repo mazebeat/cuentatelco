@@ -61,50 +61,6 @@ public class LoginBean implements Serializable {
     private String username, password;
     private boolean loggedin = false;
 
-    public boolean isLogged() {
-        return loggedin;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Usuarios getUser() {
-        return user;
-    }
-
-    public void setUser(Usuarios user) {
-        this.user = user;
-    }
-
-    public Cliente getClient() {
-        return client;
-    }
-
-    public void setClient(Cliente client) {
-        this.client = client;
-    }
-
-    public Persona getPerson() {
-        return person;
-    }
-
-    public void setPerson(Persona person) {
-        this.person = person;
-    }
-
     public void login(ActionEvent actionEvent) {
         FacesMessage msg = null;
         RequestContext context = RequestContext.getCurrentInstance();
@@ -167,6 +123,50 @@ public class LoginBean implements Serializable {
             ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication().getNavigationHandler();
             nav.performNavigation("access-denied");
         }
+    }
+
+    public boolean isLogged() {
+        return loggedin;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Usuarios getUser() {
+        return user;
+    }
+
+    public void setUser(Usuarios user) {
+        this.user = user;
+    }
+
+    public Cliente getClient() {
+        return client;
+    }
+
+    public void setClient(Cliente client) {
+        this.client = client;
+    }
+
+    public Persona getPerson() {
+        return person;
+    }
+
+    public void setPerson(Persona person) {
+        this.person = person;
     }
 
 }

@@ -35,7 +35,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.RequestScoped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +49,7 @@ import org.primefaces.model.chart.LineChartSeries;
  * @author DFeliu
  */
 @ManagedBean
-@ViewScoped
+@RequestScoped
 public class MonthlyEvolutionBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;

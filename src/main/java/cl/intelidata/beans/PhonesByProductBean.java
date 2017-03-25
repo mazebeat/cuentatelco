@@ -37,7 +37,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import org.primefaces.model.chart.LegendPlacement;
 import org.primefaces.model.chart.PieChartModel;
@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  * @author DFeliu
  */
 @ManagedBean
-@ViewScoped
+@RequestScoped
 public class PhonesByProductBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
@@ -63,6 +63,63 @@ public class PhonesByProductBean implements Serializable {
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
+
+    @PostConstruct
+    public void init() {
+        try {
+            fillProductList();
+            createPieModel();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    private void createPieModel() {
+        try {
+            date = Calendar.getInstance();
+            date.set(2015, 4, 1, 0, 0);
+            chart = new PieChartModel();
+
+            NegocioPhonesByProduct n = new NegocioPhonesByProduct();
+            List<PhonesByProduct> l = n.getData(loginbean.getClient().getId(), product, date);
+
+            for (PhonesByProduct pp : l) {
+                chart.set(pp.getNumero(), pp.getMontoTotal());
+            }
+
+            chart.setLegendPosition("s");
+            chart.setShowDataLabels(true);
+            chart.setMouseoverHighlight(true);
+            chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
+            chart.setLegendCols(5);
+            chart.setLegendRows(4);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    private void fillProductList() {
+        try {
+            productList = new ArrayList<>();
+            NegocioPhonesByProduct n = new NegocioPhonesByProduct();
+            productList = n.getProductList(loginbean.getClient().getId());
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    public void onProductChange() {
+        try {
+            FacesMessage msg = new FacesMessage("Selected", Integer.toString(product));
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+
+            if (product >= 0) {
+                createPieModel();
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
 
     public Calendar getDate() {
         return date;
@@ -111,66 +168,6 @@ public class PhonesByProductBean implements Serializable {
 
     public void setChart(PieChartModel chart) {
         this.chart = chart;
-    }
-
-    public PhonesByProductBean() {
-    }
-
-    @PostConstruct
-    public void init() {
-        try {
-            fillProductList();
-            createPieModel();
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-    }
-
-    private void createPieModel() {
-        try {
-            date = Calendar.getInstance();
-            date.set(2015, 4, 1, 0, 0);
-            chart = new PieChartModel();
-
-            NegocioPhonesByProduct n = new NegocioPhonesByProduct();
-            List<PhonesByProduct> l = n.getData(loginbean.getClient().getId(), product, date);
-
-            for (PhonesByProduct pp : l) {
-                chart.set(pp.getNumero(), pp.getMontoTotal());
-            }
-            
-            chart.setLegendPosition("s");
-            chart.setShowDataLabels(true);
-            chart.setMouseoverHighlight(true);
-            chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
-            chart.setLegendCols(5);
-            chart.setLegendRows(4);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-    }
-
-    private void fillProductList() {
-        try {
-            productList = new ArrayList<>();
-            NegocioPhonesByProduct n = new NegocioPhonesByProduct();
-            productList = n.getProductList(loginbean.getClient().getId());
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-    }
-
-    public void onProductChange() {
-        try {
-            FacesMessage msg = new FacesMessage("Selected", Integer.toString(product));
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-
-            if (product >= 0) {
-                createPieModel();
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
     }
 
 }

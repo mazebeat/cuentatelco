@@ -263,30 +263,18 @@ public class MonthDetailBean implements Serializable {
         return n.getDetail(phone, date);
     }
 
-    /**
-     * @return the columns
-     */
     public int getColumns() {
         return columns;
     }
 
-    /**
-     * @param columns the columns to set
-     */
     public void setColumns(int columns) {
         this.columns = columns;
     }
 
-    /**
-     * @return the chartList
-     */
     public List<PieChartModel> getChartList() {
         return chartList;
     }
 
-    /**
-     * @param chartList the chartList to set
-     */
     public void setChartList(List<PieChartModel> chartList) {
         this.chartList = chartList;
     }

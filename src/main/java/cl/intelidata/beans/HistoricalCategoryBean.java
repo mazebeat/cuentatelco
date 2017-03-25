@@ -25,7 +25,6 @@
  */
 package cl.intelidata.beans;
 
-import cl.intelidata.jpa.Cliente;
 import cl.intelidata.negocio.NegocioHistoricalCategory;
 import cl.intelidata.jpa.HistoricalCategory;
 import java.io.Serializable;
@@ -35,7 +34,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.RequestScoped;
 import org.primefaces.model.chart.LegendPlacement;
 import org.primefaces.model.chart.PieChartModel;
 import org.slf4j.Logger;
@@ -46,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * @author DFeliu
  */
 @ManagedBean
-@ViewScoped
+@RequestScoped
 public class HistoricalCategoryBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
@@ -58,6 +57,38 @@ public class HistoricalCategoryBean implements Serializable {
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
+
+    @PostConstruct
+    public void init() {
+        try {
+            createPieModel();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    private void createPieModel() {
+        try {
+            Calendar date = Calendar.getInstance();
+            date.set(2015, 4, 1, 0, 0);
+            chart = new PieChartModel();
+            NegocioHistoricalCategory n = new NegocioHistoricalCategory();
+            List<HistoricalCategory> l = n.getData(loginbean.getClient().getId(), date);
+
+            for (HistoricalCategory hc : l) {
+                chart.set(hc.getName(), hc.getTotal());
+            }
+
+            chart.setLegendPosition("s");
+            chart.setShowDataLabels(true);
+            chart.setMouseoverHighlight(true);
+            chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
+            chart.setLegendCols(5);
+            chart.setLegendRows(4);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
 
     public Calendar getDate() {
         return date;
@@ -90,41 +121,6 @@ public class HistoricalCategoryBean implements Serializable {
 
     public void setChart(PieChartModel chart) {
         this.chart = chart;
-    }
-
-    public HistoricalCategoryBean() {
-    }
-
-    @PostConstruct
-    public void init() {
-        try {
-            createPieModel();
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-    }
-
-    private void createPieModel() {
-        try {
-            Calendar date = Calendar.getInstance();
-            date.set(2015, 4, 1, 0, 0);
-            chart = new PieChartModel();
-            NegocioHistoricalCategory n = new NegocioHistoricalCategory();
-            List<HistoricalCategory> l = n.getData(loginbean.getClient().getId(), date);
-
-            for (HistoricalCategory hc : l) {
-                chart.set(hc.getName(), hc.getTotal());
-            }
-
-            chart.setLegendPosition("s");
-            chart.setShowDataLabels(true);
-            chart.setMouseoverHighlight(true);
-            chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
-            chart.setLegendCols(5);
-            chart.setLegendRows(4);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
     }
 
 }

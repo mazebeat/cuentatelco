@@ -57,13 +57,69 @@ public class ProfileBean implements Serializable {
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
 
-    public ProfileBean() {
-    }
-
     @PostConstruct
     public void init() {
         if (per == null) {
             load();
+        }
+    }
+
+    public String load() {
+        NegocioProfile np = new NegocioProfile();
+
+        try {
+            if (loginbean.getPerson() != null) {
+                per = np.load(loginbean.getPerson());
+
+                if (per != null) {
+                    address = per.getDireccionPersonal();
+                    phone = per.getTelefonoFijoPersonal();
+                    celphone = per.getCelularPersonal();
+                    email = per.getEmailPersonal();
+                    facebook = per.getFacebook();
+                    skype = per.getSkype();
+                    twitter = per.getTwitter();
+                } else {
+                    per = new Persona();
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return "profile?faces-redirect=true";
+    }
+
+    public void save(ActionEvent actionEvent) {
+        FacesMessage msg = null;
+        RequestContext context = RequestContext.getCurrentInstance();
+        try {
+            NegocioProfile np = new NegocioProfile();
+            per.setDireccionPersonal(address);
+            per.setTelefonoFijoPersonal(phone);
+            per.setCelularPersonal(celphone);
+            per.setEmailPersonal(email);
+            per.setFacebook(facebook);
+            per.setTwitter(twitter);
+            per.setSkype(skype);
+
+            np.save(per);
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Información", "Datos guardados");
+
+            NegocioLogin nl = new NegocioLogin();
+
+            if (nl.gotAnswers(loginbean.getClient()) > 0) {
+                context.addCallbackParam("view", "contact2.xhtml");
+            } else {
+                context.addCallbackParam("view", "dashboard.xhtml");
+            }
+        } catch (Exception e) {
+            context.addCallbackParam("save", false);
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al guardar", "");
+            logger.error(e.getMessage(), e);
+        } finally {
+            context.addCallbackParam("save", true);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
 
@@ -137,64 +193,5 @@ public class ProfileBean implements Serializable {
 
     public void setPer(Persona per) {
         this.per = per;
-    }
-
-    public String load() {
-        NegocioProfile np = new NegocioProfile();
-
-        try {
-            if (loginbean.getPerson() != null) {
-                per = np.load(loginbean.getPerson());
-
-                if (per != null) {
-                    address = per.getDireccionPersonal();
-                    phone = per.getTelefonoFijoPersonal();
-                    celphone = per.getCelularPersonal();
-                    email = per.getEmailPersonal();
-                    facebook = per.getFacebook();
-                    skype = per.getSkype();
-                    twitter = per.getTwitter();
-                } else {
-                    per = new Persona();
-                }
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-
-        return "profile?faces-redirect=true";
-    }
-
-    public void save(ActionEvent actionEvent) {
-        FacesMessage msg = null;
-        RequestContext context = RequestContext.getCurrentInstance();
-        try {
-            NegocioProfile np = new NegocioProfile();
-            per.setDireccionPersonal(address);
-            per.setTelefonoFijoPersonal(phone);
-            per.setCelularPersonal(celphone);
-            per.setEmailPersonal(email);
-            per.setFacebook(facebook);
-            per.setTwitter(twitter);
-            per.setSkype(skype);
-
-            np.save(per);
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Información", "Datos guardados");
-
-            NegocioLogin nl = new NegocioLogin();
-
-            if (nl.gotAnswers(loginbean.getClient()) > 0) {
-                context.addCallbackParam("view", "contact2.xhtml");
-            } else {
-                context.addCallbackParam("view", "dashboard.xhtml");
-            }
-        } catch (Exception e) {
-            context.addCallbackParam("save", false);
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al guardar", "");
-            logger.error(e.getMessage(), e);
-        } finally {
-            context.addCallbackParam("save", true);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        }
     }
 }

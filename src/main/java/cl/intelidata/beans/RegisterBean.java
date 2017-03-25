@@ -49,8 +49,31 @@ public class RegisterBean implements Serializable {
     private String name, lastname, email, rut, password;
     private boolean registered = false;
 
-    public RegisterBean() {
-        System.out.println("enter");
+    public void register() {
+        try {
+            RequestContext context = RequestContext.getCurrentInstance();
+            FacesMessage msg;
+
+            NegocioRegister nr = new NegocioRegister();
+
+            if (nr.register(name, lastname, email, rut, password)) {
+                registered = true;
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Registrad@ Correctamente", name.toUpperCase());
+            } else {
+                registered = false;
+                msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Registro Error", "Datos inválidos");
+            }
+
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            context.addCallbackParam("isRegistered", registered);
+
+            if (registered) {
+                context.addCallbackParam("view", "dashboard.xhtml");
+            }
+
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     public String getName() {
@@ -99,33 +122,6 @@ public class RegisterBean implements Serializable {
 
     public void setRegistered(boolean registered) {
         this.registered = registered;
-    }
-
-    public void register() {
-        try {
-            RequestContext context = RequestContext.getCurrentInstance();
-            FacesMessage msg;
-
-            NegocioRegister nr = new NegocioRegister();
-
-            if (nr.register(name, lastname, email, rut, password)) {
-                registered = true;
-                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Registrad@ Correctamente", name.toUpperCase());
-            } else {
-                registered = false;
-                msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Registro Error", "Datos inválidos");
-            }
-
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            context.addCallbackParam("isRegistered", registered);
-
-            if (registered) {
-                context.addCallbackParam("view", "dashboard.xhtml");
-            }
-
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
     }
 
 }

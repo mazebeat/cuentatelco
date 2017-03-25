@@ -55,34 +55,6 @@ public class CatalogBean implements Serializable {
         loadList();
     }
 
-    /**
-     * @return the loginbean
-     */
-    public LoginBean getLoginbean() {
-        return loginbean;
-    }
-
-    /**
-     * @param loginbean the loginbean to set
-     */
-    public void setLoginbean(LoginBean loginbean) {
-        this.loginbean = loginbean;
-    }
-
-    /**
-     * @return the devicesList
-     */
-    public List<Modelo> getDevicesList() {
-        return devicesList;
-    }
-
-    /**
-     * @param devicesList the devicesList to set
-     */
-    public void setDevicesList(List<Modelo> devicesList) {
-        this.devicesList = devicesList;
-    }
-
     private void loadList() {
         try {
             NegocioCatalog n = new NegocioCatalog();
@@ -90,5 +62,21 @@ public class CatalogBean implements Serializable {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
+    }
+
+    public LoginBean getLoginbean() {
+        return loginbean;
+    }
+
+    public void setLoginbean(LoginBean loginbean) {
+        this.loginbean = loginbean;
+    }
+
+    public List<Modelo> getDevicesList() {
+        return devicesList;
+    }
+
+    public void setDevicesList(List<Modelo> devicesList) {
+        this.devicesList = devicesList;
     }
 }

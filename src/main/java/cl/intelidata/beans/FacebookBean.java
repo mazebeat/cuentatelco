@@ -50,6 +50,11 @@ public class FacebookBean implements Serializable {
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
 
+    @PostConstruct
+    public void init() {
+        System.out.println("Init" + FacebookBean.class);
+    }
+
     public NegocioFacebook getCtrl() {
         return ctrl;
     }
@@ -70,11 +75,6 @@ public class FacebookBean implements Serializable {
         this.ctrl = new NegocioFacebook();
     }
 
-    @PostConstruct
-    public void init() {
-        System.out.println("Init" + FacebookBean.class);
-    }
-
     public String load() {
         Usuarios user = loginbean.getUser();
 
@@ -85,16 +85,10 @@ public class FacebookBean implements Serializable {
         return "facebook?faces-redirect=true";
     }
 
-    /**
-     * @return the loginbean
-     */
     public LoginBean getLoginbean() {
         return loginbean;
     }
 
-    /**
-     * @param loginbean the loginbean to set
-     */
     public void setLoginbean(LoginBean loginbean) {
         this.loginbean = loginbean;
     }

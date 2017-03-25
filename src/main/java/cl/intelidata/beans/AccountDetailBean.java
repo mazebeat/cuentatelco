@@ -55,33 +55,6 @@ public class AccountDetailBean implements Serializable {
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
 
-    public LoginBean getLoginbean() {
-        return loginbean;
-    }
-
-    public void setLoginbean(LoginBean loginbean) {
-        this.loginbean = loginbean;
-    }
-
-    public HashMap<String, String> getTotalServices() {
-        return totalServices;
-    }
-
-    public void setTotalServices(HashMap<String, String> totalServices) {
-        this.totalServices = totalServices;
-    }
-
-    public List<SaldosAnteriores> getLastValues() {
-        return lastValues;
-    }
-
-    public void setLastValues(List<SaldosAnteriores> lastValues) {
-        this.lastValues = lastValues;
-    }
-
-    public AccountDetailBean() {
-    }
-
     @PostConstruct
     public void init() {
         fillTotalServices();
@@ -112,5 +85,29 @@ public class AccountDetailBean implements Serializable {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
+    }
+
+    public LoginBean getLoginbean() {
+        return loginbean;
+    }
+
+    public void setLoginbean(LoginBean loginbean) {
+        this.loginbean = loginbean;
+    }
+
+    public HashMap<String, String> getTotalServices() {
+        return totalServices;
+    }
+
+    public void setTotalServices(HashMap<String, String> totalServices) {
+        this.totalServices = totalServices;
+    }
+
+    public List<SaldosAnteriores> getLastValues() {
+        return lastValues;
+    }
+
+    public void setLastValues(List<SaldosAnteriores> lastValues) {
+        this.lastValues = lastValues;
     }
 }
