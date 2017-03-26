@@ -19,10 +19,12 @@
                             </p:commandButton>
                         </div>
 
-                        <p:chart type="line" model="#{monthlyEvolutionBean.chart}" style="width:100%;min-height:500px;" 
-                                 responsive="true"/>
+                        <!-- Dynamic charts -->
+                        <p:dataGrid id="chartdataGrid" var="list" value="#{monthlyEvolutionBean.chartList}" columns="#{monthlyEvolutionBean.columns}" style="border:none !important;">
+                            <p:chart type="line" model="#{list}" style="width:100%; min-height:300px; border:none !important;" responsive="true"/>
+                        </p:dataGrid>
                     </div>
-                    
+
                     <p:button outcome="/dashboard" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
                 </div>
             </div>

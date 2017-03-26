@@ -63,6 +63,9 @@ public class PhonesByProductBean implements Serializable {
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
+    
+    private int columns;
+    private List<PieChartModel> chartList;
 
     @PostConstruct
     public void init() {

@@ -38,6 +38,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 import org.slf4j.Logger;
@@ -69,7 +70,8 @@ public class ConfigurationBean implements Serializable {
         try {
             configList = new ArrayList();
 
-            generateDimensions(view);
+            HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            view = NegocioConfiguration.cleanURI(req.getHeader("Referer"));
 
             Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
             if (params.containsKey("view")) {
@@ -81,6 +83,8 @@ public class ConfigurationBean implements Serializable {
             }
 
             if (!view.equals("")) {
+                generateDimensions(view);
+
                 if (!settingsChart.isEmpty()) {
                     configList = settingsChart.get(view);
                 }
@@ -93,6 +97,10 @@ public class ConfigurationBean implements Serializable {
         }
     }
 
+    /**
+     * 
+     * @param view 
+     */
     private void generateDimensions(String view) {
         dimensions1 = new ArrayList<>();
         dimensions2 = new ArrayList<>();
@@ -105,7 +113,10 @@ public class ConfigurationBean implements Serializable {
                 dimensions2.add("p.id");
                 break;
             case "monthly_evolution":
+                dimensions1.add("t.monto_total");
 
+                dimensions2.add("te.numero");
+                dimensions2.add("p.id");
                 break;
             case "historical_category":
                 break;
@@ -117,10 +128,13 @@ public class ConfigurationBean implements Serializable {
         }
     }
 
+    /**
+     * 
+     */
     public void add() {
         try {
             if (configList.size() < 3) {
-                ConfigurationService con = new ConfigurationService(label1, label2, dimension1, dimension2);
+                ConfigurationService con = new ConfigurationService(label1, label2, dimension1, dimension2, view, loginbean.getClient().getId());
                 configList.add(con);
 
                 settingsChart.remove(view);
@@ -139,6 +153,10 @@ public class ConfigurationBean implements Serializable {
         }
     }
 
+    /**
+     * 
+     * @param event 
+     */
     public void edit(RowEditEvent event) {
         try {
             msg = new FacesMessage("Item Edited", ((ConfigurationService) event.getObject()).getLabel1());
@@ -148,6 +166,10 @@ public class ConfigurationBean implements Serializable {
         }
     }
 
+    /**
+     * 
+     * @param event 
+     */
     public void cancel(RowEditEvent event) {
         try {
             msg = new FacesMessage("Item Cancelled");
@@ -159,6 +181,10 @@ public class ConfigurationBean implements Serializable {
         }
     }
 
+    /**
+     * 
+     * @param conf 
+     */
     public void delete(ConfigurationService conf) {
         try {
             configList.remove(conf);
@@ -178,11 +204,21 @@ public class ConfigurationBean implements Serializable {
         }
     }
 
+    /**
+     * 
+     * @param idCliente
+     * @return 
+     */
     public static Map<String, List<ConfigurationService>> getSettings(int idCliente) {
         settingsChart = NegocioConfiguration.getSettings(idCliente);
         return settingsChart;
     }
 
+    /**
+     * 
+     * @param view
+     * @return 
+     */
     public static List<ConfigurationService> getSettingByView(String view) {
         return NegocioConfiguration.getSettingByView(settingsChart, view);
     }
@@ -257,5 +293,13 @@ public class ConfigurationBean implements Serializable {
 
     public void setDimensions2(List<String> dimensions2) {
         this.dimensions2 = dimensions2;
+    }
+
+    public LoginBean getLoginbean() {
+        return loginbean;
+    }
+
+    public void setLoginbean(LoginBean loginbean) {
+        this.loginbean = loginbean;
     }
 }

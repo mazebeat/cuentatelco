@@ -27,21 +27,23 @@ package cl.intelidata.beans;
 
 import cl.intelidata.jpa.ResumenAnualCliente;
 import cl.intelidata.negocio.NegocioMonthlyEvolution;
+import cl.intelidata.services.ConfigurationService;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.DateAxis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.LineChartModel;
-import org.primefaces.model.chart.DateAxis;
 import org.primefaces.model.chart.LineChartSeries;
 
 /**
@@ -56,9 +58,87 @@ public class MonthlyEvolutionBean implements Serializable {
     private static Logger logger = LoggerFactory.getLogger(MonthlyEvolutionBean.class);
 
     private LineChartModel chart;
+    private int columns;
+
+    private List<LineChartModel> chartList;
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
+
+    @ManagedProperty(value = "#{configurationBean}")
+    private ConfigurationBean configurationBean;
+
+    @PostConstruct
+    public void init() {
+        try {
+            createLineModels();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Create line chart list from the user settings
+     */
+    private void createLineModels() {
+        try {
+            List<ConfigurationService> configList = new ArrayList<>();
+            configList = configurationBean.getSettingByView("monthly_evolution");
+            chartList = new ArrayList<>();
+
+//            if (!configList.isEmpty()) {
+                if (configList.size() > 0) {
+                    columns = 1;
+
+                    if (configList.size() > 1) {
+                        columns = 2;
+                    }
+                }
+
+                for (ConfigurationService cs : configList) {
+                    chart = new LineChartModel();
+                    LineChartSeries series = new LineChartSeries();
+
+                    NegocioMonthlyEvolution n = new NegocioMonthlyEvolution();
+                    List<ResumenAnualCliente> l = n.getDataChart(loginbean.getClient().getId());
+
+                    series.setLabel(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    int month = 0, year = 0;
+
+                    for (ResumenAnualCliente rac : l) {
+                        Calendar a = n.getMesValido(rac.getIdMes().getId());
+                        if (a.get(Calendar.MONTH) < month && month != 0) {
+                            a.add(Calendar.YEAR, 1);
+                            year = a.get(Calendar.YEAR);
+                        }
+
+                        if (year != 0) {
+                            a.add(Calendar.YEAR, year - a.get(Calendar.YEAR));
+                        }
+
+                        month = a.get(Calendar.MONTH);
+                        series.set(dateFormat.format(a.getTime()), rac.getMonto().intValue());
+                    }
+
+                    chart.addSeries(series);
+                    chart.setZoom(true);
+                    chart.setAnimate(true);
+                    chart.getAxis(AxisType.Y).setLabel("Total");
+
+                    DateAxis axis = new DateAxis("Fechas");
+                    axis.setTickAngle(-50);
+                    axis.setTickFormat("%b %#d");
+
+                    chart.getAxes().put(AxisType.X, axis);
+
+                    chartList.add(chart);
+                }
+//            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
 
     public LoginBean getLoginbean() {
         return loginbean;
@@ -76,55 +156,28 @@ public class MonthlyEvolutionBean implements Serializable {
         this.chart = chart;
     }
 
-    @PostConstruct
-    public void init() {
-        try {
-            createLineModels();
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
+    public int getColumns() {
+        return columns;
     }
 
-    private void createLineModels() {
-        try {
-            chart = new LineChartModel();
-            LineChartSeries series = new LineChartSeries();
+    public void setColumns(int columns) {
+        this.columns = columns;
+    }
 
-            NegocioMonthlyEvolution m = new NegocioMonthlyEvolution();
-            List<ResumenAnualCliente> n = m.getDataChart(loginbean.getClient().getId());
+    public List<LineChartModel> getChartList() {
+        return chartList;
+    }
 
-            series.setLabel(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            int month = 0, year = 0;
+    public void setChartList(List<LineChartModel> chartList) {
+        this.chartList = chartList;
+    }
 
-            for (ResumenAnualCliente rac : n) {
-                Calendar a = m.getMesValido(rac.getIdMes().getId());
-                if (a.get(Calendar.MONTH) < month && month != 0) {
-                    a.add(Calendar.YEAR, 1);
-                    year = a.get(Calendar.YEAR);
-                }
+    public ConfigurationBean getConfigurationBean() {
+        return configurationBean;
+    }
 
-                if (year != 0) {
-                    a.add(Calendar.YEAR, year - a.get(Calendar.YEAR));
-                }
-
-                month = a.get(Calendar.MONTH);
-                series.set(dateFormat.format(a.getTime()), rac.getMonto().intValue());
-            }
-
-            chart.addSeries(series);
-            chart.setZoom(true);
-            chart.setAnimate(true);
-            chart.getAxis(AxisType.Y).setLabel("Total");
-
-            DateAxis axis = new DateAxis("Fechas");
-            axis.setTickAngle(-50);
-            axis.setTickFormat("%b %#d");
-
-            chart.getAxes().put(AxisType.X, axis);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
+    public void setConfigurationBean(ConfigurationBean configurationBean) {
+        this.configurationBean = configurationBean;
     }
 
 }

@@ -31,11 +31,19 @@ package cl.intelidata.services;
  */
 public class ConfigurationService {
 
-    private String label1, label2, dimension1, dimension2;
+    private int idClient;
+    private String label1, label2, dimension1, dimension2, view;
 
     public ConfigurationService() {
     }
 
+    /**
+     *
+     * @param label1
+     * @param label2
+     * @param dimesion1
+     * @param dimesion2
+     */
     public ConfigurationService(String label1, String label2, String dimesion1, String dimesion2) {
         this.label1 = label1;
         this.label2 = label2;
@@ -44,58 +52,84 @@ public class ConfigurationService {
     }
 
     /**
-     * @return the label1
+     *
+     * @param label1
+     * @param label2
+     * @param dimesion1
+     * @param dimesion2
+     * @param view
      */
+    public ConfigurationService(String label1, String label2, String dimesion1, String dimesion2, String view) {
+        this.label1 = label1;
+        this.label2 = label2;
+        this.dimension1 = dimesion1;
+        this.dimension2 = dimesion2;
+        this.view = view;
+    }
+
+    /**
+     *
+     * @param label1
+     * @param label2
+     * @param dimesion1
+     * @param dimesion2
+     * @param view
+     * @param idClient
+     */
+    public ConfigurationService(String label1, String label2, String dimesion1, String dimesion2, String view, int idClient) {
+        this.label1 = label1;
+        this.label2 = label2;
+        this.dimension1 = dimesion1;
+        this.dimension2 = dimesion2;
+        this.view = view;
+        this.idClient = idClient;
+    }
+
     public String getLabel1() {
         return label1;
     }
 
-    /**
-     * @param label1 the label1 to set
-     */
     public void setLabel1(String label1) {
         this.label1 = label1;
     }
 
-    /**
-     * @return the label2
-     */
     public String getLabel2() {
         return label2;
     }
 
-    /**
-     * @param label2 the label2 to set
-     */
     public void setLabel2(String label2) {
         this.label2 = label2;
     }
 
-    /**
-     * @return the dimension1
-     */
     public String getDimension1() {
         return dimension1;
     }
 
-    /**
-     * @param dimension1 the dimension1 to set
-     */
     public void setDimension1(String dimension1) {
         this.dimension1 = dimension1;
     }
 
-    /**
-     * @return the dimension2
-     */
     public String getDimension2() {
         return dimension2;
     }
 
-    /**
-     * @param dimension2 the dimension2 to set
-     */
     public void setDimension2(String dimension2) {
         this.dimension2 = dimension2;
+    }
+
+    public int getIdClient() {
+        return idClient;
+    }
+
+    public void setIdClient(int idClient) {
+        this.idClient = idClient;
+    }
+
+    public String getView() {
+        return view;
+    }
+
+    public void setView(String view) {
+        this.view = view;
     }
 }

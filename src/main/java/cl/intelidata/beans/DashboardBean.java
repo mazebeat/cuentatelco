@@ -67,12 +67,16 @@ public class DashboardBean implements Serializable {
                 settingsChart = NegocioConfiguration.defaultSettings();
             }
 
-            // configurationBean.setSettingsChart(settingsChart);
+            //configurationBean.setSettingsChart(settingsChart);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public String totalPay() {
         String total = "0";
         try {

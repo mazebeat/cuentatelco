@@ -42,11 +42,21 @@ public class NegocioMonthlyEvolution {
 
     private static Logger logger = LoggerFactory.getLogger(NegocioMonthlyEvolution.class);
 
+    /**
+     *
+     * @param idCliente
+     * @return
+     */
     public List<ResumenAnualCliente> getDataChart(int idCliente) {
         return dataChart(idCliente);
     }
 
-    public List<ResumenAnualCliente> dataChart(int idCliente) {
+    /**
+     *
+     * @param idCliente
+     * @return
+     */
+    private List<ResumenAnualCliente> dataChart(int idCliente) {
         List<ResumenAnualCliente> n = new ArrayList<>();
         EntityManager em = null;
 
@@ -68,6 +78,11 @@ public class NegocioMonthlyEvolution {
         return n;
     }
 
+    /**
+     *
+     * @param idMes
+     * @return
+     */
     public Calendar getMesValido(int idMes) {
         Calendar a = Calendar.getInstance();
         a.set(a.get(Calendar.YEAR), idMes - 1, 1, 0, 0);

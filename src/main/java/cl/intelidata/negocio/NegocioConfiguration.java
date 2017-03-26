@@ -44,10 +44,6 @@ public class NegocioConfiguration {
 
     private static Logger logger = LoggerFactory.getLogger(NegocioConfiguration.class);
 
-    public static Map<String, List<ConfigurationService>> defaultSettings() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     public List<Modelo> getDevicesList() throws Exception {
         EntityManager em = null;
         List<Modelo> m = new ArrayList<>();
@@ -114,22 +110,49 @@ public class NegocioConfiguration {
 
         try {
             // TODO: Cambiar por BBDD
-            ConfigurationService cs = new ConfigurationService();
-
-            cs.setLabel1("Monto Total");
-            cs.setDimension1("t.monto_total");
-            cs.setLabel2("Teléfono");
-            cs.setDimension2("te.numero");
-
-            List<ConfigurationService> lcs = new ArrayList<>();
-            lcs.add(cs);
-
-            set.put("month_detail", lcs);
+            set.put("month_detail", monthlyDetailSettings());
+            set.put("monthly_evolution", monthlyEvolutionSettings());
+            set.put("historical_category", historicalCategorySettings());
+            set.put("phones_product", phonesProductSettings());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
 
         return set;
+    }
+
+    public static List<ConfigurationService> monthlyDetailSettings() {
+        List<ConfigurationService> lcs = new ArrayList<>();
+
+        try {
+            ConfigurationService cs = new ConfigurationService();
+            cs.setLabel1("Monto Total");
+            cs.setDimension1("t.monto_total");
+            cs.setLabel2("Teléfono");
+            cs.setDimension2("te.numero");
+
+            lcs.add(cs);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return lcs;
+    }
+
+    public static Map<String, List<ConfigurationService>> defaultSettings() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private static List<ConfigurationService> phonesProductSettings() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private static List<ConfigurationService> historicalCategorySettings() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private static List<ConfigurationService> monthlyEvolutionSettings() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public static List<ConfigurationService> getSettingByView(Map<String, List<ConfigurationService>> map, String view) {

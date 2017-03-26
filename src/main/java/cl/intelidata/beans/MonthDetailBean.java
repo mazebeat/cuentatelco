@@ -69,9 +69,120 @@ public class MonthDetailBean implements Serializable {
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
+    private PieChartModel chart;
 
     @ManagedProperty(value = "#{configurationBean}")
     private ConfigurationBean configurationBean;
+
+    @PostConstruct
+    public void init() {
+        try {
+            RequestContext.getCurrentInstance().update("formMonthDetail:chartdataGrid");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+            String dateInString = "2015-05-01";
+            date = Calendar.getInstance();
+            date.setTime(formatter.parse(dateInString));
+
+            createPieModel();
+        } catch (ParseException e) {
+            logger.error(e.getMessage(), e);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 
+     */
+    private void createPieModel() {
+        try {
+            List<ConfigurationService> configList = new ArrayList<>();
+            configList = configurationBean.getSettingByView("month_detail");
+
+            if (configList.size() > 0) {
+                columns = 1;
+
+                if (configList.size() > 1) {
+                    columns = 2;
+                }
+
+                chartList = new ArrayList<>();
+                NegocioMonthDetail n = new NegocioMonthDetail();
+
+                for (ConfigurationService cs : configList) {
+                    phoneList = n.getDataChart(loginbean.getClient().getId(), date, cs.getDimension2());
+
+                    chart = new PieChartModel();
+
+                    for (Telefono telefono : phoneList) {
+                        chart.set(telefono.getNumero(), telefono.getTotalList().get(0).getMontoTotal());
+                    }
+
+                    chart.setTitle(cs.getLabel1() + "/" + cs.getLabel2());
+                    chart.setLegendPosition("s");
+                    chart.setShowDataLabels(true);
+                    chart.setMouseoverHighlight(true);
+//                    chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
+                    chart.setLegendCols(5);
+                    chart.setLegendRows(2);
+                    chartList.add(chart);
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 
+     * @param event 
+     */
+    public void itemSelect(ItemSelectEvent event) {
+        try {
+            LinkedHashMap<String, Number> m = (LinkedHashMap<String, Number>) chart.getData();
+            int i = event.getItemIndex();
+            phone = (String) getPhoneElement(m, i);
+            price = (Number) getPriceElement(m, i);
+            phoneDetail = PhoneDetailService.convertList(fillDatatable(phone), (int) price);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 
+     * @param map
+     * @param index
+     * @return 
+     */
+    public Object getPriceElement(LinkedHashMap map, int index) {
+        return map.get((map.keySet().toArray())[index]);
+    }
+
+    /**
+     * 
+     * @param map
+     * @param index
+     * @return 
+     */
+    public Object getPhoneElement(LinkedHashMap map, int index) {
+        return map.keySet().toArray()[index];
+    }
+
+    /**
+     * 
+     * @param phone
+     * @return 
+     */
+    private List<TelefonosServicios> fillDatatable(String phone) {
+        if (date == null) {
+            date = Calendar.getInstance();
+        }
+        NegocioMonthDetail n = new NegocioMonthDetail();
+        return n.getDetail(phone, date);
+    }
 
     public ConfigurationBean getConfigurationBean() {
         return configurationBean;
@@ -80,8 +191,6 @@ public class MonthDetailBean implements Serializable {
     public void setConfigurationBean(ConfigurationBean configurationBean) {
         this.configurationBean = configurationBean;
     }
-
-    private PieChartModel chart;
 
     public String getPhone() {
         return phone;
@@ -177,90 +286,6 @@ public class MonthDetailBean implements Serializable {
 
     public void setChart(PieChartModel chart) {
         this.chart = chart;
-    }
-
-    @PostConstruct
-    public void init() {
-        try {
-            RequestContext.getCurrentInstance().update("formMonthDetail:chartdataGrid");
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            String dateInString = "2015-05-01";
-            date = Calendar.getInstance();
-            date.setTime(formatter.parse(dateInString));
-            createPieModel();            
-        } catch (ParseException e) {
-            logger.error(e.getMessage(), e);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-    }
-
-    private void createPieModel() {
-        try {
-            List<ConfigurationService> configList = new ArrayList<>();
-            configList = configurationBean.getSettingByView("month_detail");
-
-            if (configList.size() > 0) {
-                columns = 1;
-
-                if (configList.size() > 1) {
-                    columns = 2;
-                }
-
-                chartList = new ArrayList<>();
-                NegocioMonthDetail n = new NegocioMonthDetail();
-
-                for (ConfigurationService cs : configList) {
-                    phoneList = n.getDataChart(loginbean.getClient().getId(), date, cs.getDimension2());
-
-                    chart = new PieChartModel();
-
-                    for (Telefono telefono : phoneList) {
-                        chart.set(telefono.getNumero(), telefono.getTotalList().get(0).getMontoTotal());
-                    }
-                    
-                    chart.setTitle(cs.getLabel1() + "/" + cs.getLabel2());
-                    chart.setLegendPosition("s");
-                    chart.setShowDataLabels(true);
-                    chart.setMouseoverHighlight(true);
-//                    chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
-                    chart.setLegendCols(5);
-                    chart.setLegendRows(2);
-                    chartList.add(chart);
-                }
-            }
-            
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-    }
-
-    public void itemSelect(ItemSelectEvent event) {
-        try {
-            LinkedHashMap<String, Number> m = (LinkedHashMap<String, Number>) chart.getData();
-            int i = event.getItemIndex();
-            phone = (String) getPhoneElement(m, i);
-            price = (Number) getPriceElement(m, i);
-            phoneDetail = PhoneDetailService.convertList(fillDatatable(phone), (int) price);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-    }
-
-    public Object getPriceElement(LinkedHashMap map, int index) {
-        return map.get((map.keySet().toArray())[index]);
-    }
-
-    public Object getPhoneElement(LinkedHashMap map, int index) {
-        return map.keySet().toArray()[index];
-    }
-
-    private List<TelefonosServicios> fillDatatable(String phone) {
-        if (date == null) {
-            date = Calendar.getInstance();
-        }
-        NegocioMonthDetail n = new NegocioMonthDetail();
-        return n.getDetail(phone, date);
     }
 
     public int getColumns() {
