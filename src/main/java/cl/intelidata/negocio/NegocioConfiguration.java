@@ -44,6 +44,10 @@ public class NegocioConfiguration {
 
     private static Logger logger = LoggerFactory.getLogger(NegocioConfiguration.class);
 
+    /**
+     *
+     * @return @throws Exception
+     */
     public List<Modelo> getDevicesList() throws Exception {
         EntityManager em = null;
         List<Modelo> m = new ArrayList<>();
@@ -63,6 +67,11 @@ public class NegocioConfiguration {
         return m;
     }
 
+    /**
+     *
+     * @param s
+     * @return
+     */
     public static boolean isInteger(String s) {
         try {
             Integer.parseInt(s);
@@ -80,12 +89,22 @@ public class NegocioConfiguration {
         return true;
     }
 
+    /**
+     *
+     * @param view
+     * @return
+     */
     public static String cleanURI(String view) {
         String[] a = view.split("/");
         //return NegocioConfiguration.toTitleCase(a[a.length - 1].replace(".xhtml", ""));
         return a[a.length - 1].replace(".xhtml", "");
     }
 
+    /**
+     *
+     * @param s
+     * @return
+     */
     public static String toTitleCase(String s) {
         String d = "";
 
@@ -105,6 +124,11 @@ public class NegocioConfiguration {
         return d;
     }
 
+    /**
+     *
+     * @param idCliente
+     * @return
+     */
     public static Map<String, List<ConfigurationService>> getSettings(int idCliente) {
         Map<String, List<ConfigurationService>> set = new HashMap<>();
 
@@ -121,17 +145,15 @@ public class NegocioConfiguration {
         return set;
     }
 
+    /**
+     *
+     * @return
+     */
     public static List<ConfigurationService> monthlyDetailSettings() {
         List<ConfigurationService> lcs = new ArrayList<>();
 
         try {
-            ConfigurationService cs = new ConfigurationService();
-            cs.setLabel1("Monto Total");
-            cs.setDimension1("t.monto_total");
-            cs.setLabel2("Teléfono");
-            cs.setDimension2("te.numero");
-
-            lcs.add(cs);
+            lcs.add(new ConfigurationService("Monto Total", "Teléfono", "t.monto_total", "te.numero"));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -139,22 +161,62 @@ public class NegocioConfiguration {
         return lcs;
     }
 
+    /**
+     *
+     * @return
+     */
     public static Map<String, List<ConfigurationService>> defaultSettings() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     *
+     * @return
+     */
     private static List<ConfigurationService> phonesProductSettings() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     *
+     * @return
+     */
     private static List<ConfigurationService> historicalCategorySettings() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<ConfigurationService> lcs = new ArrayList<>();
+
+        try {
+            // TODO: Cambiar por BBDD
+            lcs.add(new ConfigurationService("Monto Total", "Producto", "t.monto_total", "te.id_producto"));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return lcs;
     }
 
+    /**
+     *
+     * @return
+     */
     private static List<ConfigurationService> monthlyEvolutionSettings() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<ConfigurationService> lcs = new ArrayList<>();
+
+        try {
+            // TODO: Cambiar por BBDD
+            lcs.add(new ConfigurationService("Periodo", "Cliente", "*", "id"));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return lcs;
     }
 
+    /**
+     *
+     * @param map
+     * @param view
+     * @return
+     */
     public static List<ConfigurationService> getSettingByView(Map<String, List<ConfigurationService>> map, String view) {
         return map.get(view);
     }

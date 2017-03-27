@@ -28,11 +28,13 @@ package cl.intelidata.beans;
 import cl.intelidata.jpa.ResumenAnualCliente;
 import cl.intelidata.negocio.NegocioMonthlyEvolution;
 import cl.intelidata.services.ConfigurationService;
+import cl.intelidata.utils.Utils;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -86,13 +88,11 @@ public class MonthlyEvolutionBean implements Serializable {
             configList = configurationBean.getSettingByView("monthly_evolution");
             chartList = new ArrayList<>();
 
-//            if (!configList.isEmpty()) {
-                if (configList.size() > 0) {
-                    columns = 1;
+            columns = 1;
 
-                    if (configList.size() > 1) {
-                        columns = 2;
-                    }
+            if (!configList.isEmpty()) {
+                if (configList.size() > 1) {
+                    columns = 2;
                 }
 
                 for (ConfigurationService cs : configList) {
@@ -100,9 +100,9 @@ public class MonthlyEvolutionBean implements Serializable {
                     LineChartSeries series = new LineChartSeries();
 
                     NegocioMonthlyEvolution n = new NegocioMonthlyEvolution();
-                    List<ResumenAnualCliente> l = n.getDataChart(loginbean.getClient().getId());
+                    List<ResumenAnualCliente> l = n.getDataChart(loginbean.getClient().getId(), cs.getDimension2());
 
-                    series.setLabel(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
+                    series.setLabel(Integer.toString(GregorianCalendar.getInstance(Utils.LOCAL_ES).get(Calendar.YEAR)));
                     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     int month = 0, year = 0;
 
@@ -134,7 +134,7 @@ public class MonthlyEvolutionBean implements Serializable {
 
                     chartList.add(chart);
                 }
-//            }
+            }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }

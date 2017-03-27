@@ -28,11 +28,14 @@ package cl.intelidata.beans;
 import cl.intelidata.jpa.PhonesByProduct;
 import cl.intelidata.jpa.Producto;
 import cl.intelidata.negocio.NegocioPhonesByProduct;
+import cl.intelidata.utils.Utils;
 import java.io.Serializable;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -63,7 +66,7 @@ public class PhonesByProductBean implements Serializable {
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
-    
+
     private int columns;
     private List<PieChartModel> chartList;
 
@@ -79,7 +82,7 @@ public class PhonesByProductBean implements Serializable {
 
     private void createPieModel() {
         try {
-            date = Calendar.getInstance();
+            date = GregorianCalendar.getInstance(Utils.LOCAL_ES);
             date.set(2015, 4, 1, 0, 0);
             chart = new PieChartModel();
 
@@ -93,7 +96,7 @@ public class PhonesByProductBean implements Serializable {
             chart.setLegendPosition("s");
             chart.setShowDataLabels(true);
             chart.setMouseoverHighlight(true);
-            chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
+//            chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
             chart.setLegendCols(5);
             chart.setLegendRows(4);
         } catch (Exception e) {

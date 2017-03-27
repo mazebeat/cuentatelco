@@ -15,12 +15,14 @@
                         <div class="clearfix">
                             <h1 style="float: left;">Histórico por productos #{historicalCategoryBean.month.toUpperCase()}</h1>  
                             <p:commandButton style="float: right" icon="fa fa-cog" action="configuration" >
-                                 <f:param name="view" value="historical_category" />
+                                <f:param name="view" value="historical_category" />
                             </p:commandButton>
                         </div>
 
-
-                        <p:chart type="pie" widgetVar="pieChart" model="#{historicalCategoryBean.chart}" style="width:100%;min-height:500px; " responsive="true" />
+                        <!-- Dynamic charts -->
+                        <p:dataGrid id="chartdataGrid" var="list" value="#{historicalCategoryBean.chartList}" columns="#{monthlyEvolutionBean.columns}" style="border:none !important;">
+                            <p:chart type="pie" model="#{list}" style="width:100%; min-height:300px; border:none !important;" responsive="true"/>
+                        </p:dataGrid>
                     </div>
 
                     <p:button outcome="/dashboard" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />

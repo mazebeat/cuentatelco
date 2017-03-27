@@ -27,15 +27,19 @@ package cl.intelidata.beans;
 
 import cl.intelidata.negocio.NegocioHistoricalCategory;
 import cl.intelidata.jpa.HistoricalCategory;
+import cl.intelidata.services.ConfigurationService;
+import cl.intelidata.utils.Utils;
 import java.io.Serializable;
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import org.primefaces.model.chart.LegendPlacement;
 import org.primefaces.model.chart.PieChartModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,10 +57,17 @@ public class HistoricalCategoryBean implements Serializable {
 
     private Calendar date;
     private String month;
+
     private PieChartModel chart;
+    private int columns;
+
+    private List<PieChartModel> chartList;
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
+
+    @ManagedProperty(value = "#{configurationBean}")
+    private ConfigurationBean configurationBean;
 
     @PostConstruct
     public void init() {
@@ -69,22 +80,40 @@ public class HistoricalCategoryBean implements Serializable {
 
     private void createPieModel() {
         try {
-            Calendar date = Calendar.getInstance();
+            Calendar date = GregorianCalendar.getInstance(Utils.LOCAL_ES);
             date.set(2015, 4, 1, 0, 0);
-            chart = new PieChartModel();
-            NegocioHistoricalCategory n = new NegocioHistoricalCategory();
-            List<HistoricalCategory> l = n.getData(loginbean.getClient().getId(), date);
 
-            for (HistoricalCategory hc : l) {
-                chart.set(hc.getName(), hc.getTotal());
+            List<ConfigurationService> configList = new ArrayList<>();
+            configList = configurationBean.getSettingByView("historical_category");
+            chartList = new ArrayList<>();
+
+            columns = 1;
+
+            if (!configList.isEmpty()) {
+                if (configList.size() > 1) {
+                    columns = 2;
+                }
+
+                for (ConfigurationService cs : configList) {
+                    chart = new PieChartModel();
+                    NegocioHistoricalCategory n = new NegocioHistoricalCategory();
+                    List<HistoricalCategory> l = n.getData(loginbean.getClient().getId(), date, cs.getDimension2());
+
+                    for (HistoricalCategory hc : l) {
+                        chart.set(hc.getName(), hc.getTotal());
+
+                    }
+
+                    chart.setLegendPosition("s");
+                    chart.setShowDataLabels(true);
+                    chart.setMouseoverHighlight(true);
+//                    chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
+                    chart.setLegendCols(3);
+                    chart.setLegendRows(4);
+
+                    chartList.add(chart);
+                }
             }
-
-            chart.setLegendPosition("s");
-            chart.setShowDataLabels(true);
-            chart.setMouseoverHighlight(true);
-            chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
-            chart.setLegendCols(5);
-            chart.setLegendRows(4);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -99,8 +128,7 @@ public class HistoricalCategoryBean implements Serializable {
     }
 
     public String getMonth() {
-        this.month = new DateFormatSymbols().getMonths()[Calendar.getInstance().get(Calendar.MONTH)];
-        return this.month;
+        return this.month = Utils.calendarToString(Calendar.getInstance(), "MMMMM");
     }
 
     public void setMonth(String month) {
@@ -121,6 +149,30 @@ public class HistoricalCategoryBean implements Serializable {
 
     public void setChart(PieChartModel chart) {
         this.chart = chart;
+    }
+
+    public int getColumns() {
+        return columns;
+    }
+
+    public void setColumns(int columns) {
+        this.columns = columns;
+    }
+
+    public List<PieChartModel> getChartList() {
+        return chartList;
+    }
+
+    public void setChartList(List<PieChartModel> chartList) {
+        this.chartList = chartList;
+    }
+
+    public ConfigurationBean getConfigurationBean() {
+        return configurationBean;
+    }
+
+    public void setConfigurationBean(ConfigurationBean configurationBean) {
+        this.configurationBean = configurationBean;
     }
 
 }

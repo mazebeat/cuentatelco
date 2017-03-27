@@ -42,11 +42,16 @@ public class NegocioHistoricalCategory {
 
     private static Logger logger = LoggerFactory.getLogger(NegocioHistoricalCategory.class);
 
-    private List<HistoricalCategory> data(int idClient, Calendar date) {
+    private List<HistoricalCategory> data(int idClient, Calendar date, String groupby) {
         List<HistoricalCategory> n = new ArrayList<>();
         EntityManager em = null;
 
         try {
+
+            if (groupby.isEmpty()) {
+                groupby = "te.id_producto";
+            }
+
             String query = "SELECT p.id AS id, p.nombre AS name, SUM(t.monto_total) AS total FROM cliente c\n"
                     + "INNER JOIN telefono te ON c.id = te.id_cliente\n"
                     + "INNER JOIN total t ON te.id = t.id_telefono\n"
@@ -54,7 +59,7 @@ public class NegocioHistoricalCategory {
                     + "WHERE c.id = " + idClient + "\n"
                     + "AND YEAR(t.fecha) = " + date.get(Calendar.YEAR) + " \n"
                     + "AND MONTH(t.fecha) = " + (date.get(Calendar.MONTH) + 1) + " \n"
-                    + "GROUP BY te.id_producto;";
+                    + "GROUP BY " + groupby + ";";
 
             em = EntityHelper.getInstance().getEntityManager();
             n = em.createNativeQuery(query, HistoricalCategory.class).getResultList();
@@ -69,12 +74,12 @@ public class NegocioHistoricalCategory {
         return n;
     }
 
-    public List<HistoricalCategory> getData(Integer idCliente, Calendar date) {
-        List<HistoricalCategory> l = data(idCliente, date);
+    public List<HistoricalCategory> getData(Integer idCliente, Calendar date, String groupby) {
+        List<HistoricalCategory> l = data(idCliente, date, groupby);
 
         if (l.size() <= 0) {
             date.add(Calendar.MONTH, -1);
-            return getData(idCliente, date);
+            return getData(idCliente, date, groupby);
         }
 
         return l;

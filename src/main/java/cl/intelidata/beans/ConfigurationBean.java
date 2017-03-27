@@ -27,29 +27,47 @@ package cl.intelidata.beans;
 
 import cl.intelidata.negocio.NegocioConfiguration;
 import cl.intelidata.services.ConfigurationService;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.RowEditEvent;
+import org.primefaces.model.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
  * @author DFeliu
  */
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class ConfigurationBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
@@ -61,6 +79,8 @@ public class ConfigurationBean implements Serializable {
     private List<ConfigurationService> configList;
     private List<String> dimensions1, dimensions2;
     public static Map<String, List<ConfigurationService>> settingsChart = new HashMap<>();
+    private UploadedFile file;
+    private File tempfile;
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
@@ -74,7 +94,7 @@ public class ConfigurationBean implements Serializable {
             view = NegocioConfiguration.cleanURI(req.getHeader("Referer"));
 
             Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-            if (params.containsKey("view")) {
+            if (view == null && params.containsKey("view")) {
                 view = params.get("view");
             }
 
@@ -98,8 +118,8 @@ public class ConfigurationBean implements Serializable {
     }
 
     /**
-     * 
-     * @param view 
+     *
+     * @param view
      */
     private void generateDimensions(String view) {
         dimensions1 = new ArrayList<>();
@@ -113,12 +133,13 @@ public class ConfigurationBean implements Serializable {
                 dimensions2.add("p.id");
                 break;
             case "monthly_evolution":
-                dimensions1.add("t.monto_total");
-
-                dimensions2.add("te.numero");
-                dimensions2.add("p.id");
+                dimensions1.add("*");
+                
+                dimensions2.add("id");
                 break;
             case "historical_category":
+                dimensions1.add("t.monto_total");                
+                dimensions2.add("te.id_producto");
                 break;
             case "phones_product":
                 break;
@@ -129,11 +150,11 @@ public class ConfigurationBean implements Serializable {
     }
 
     /**
-     * 
+     *
      */
     public void add() {
         try {
-            if (configList.size() < 3) {
+            if (!configList.isEmpty() && configList.size() < 3) {
                 ConfigurationService con = new ConfigurationService(label1, label2, dimension1, dimension2, view, loginbean.getClient().getId());
                 configList.add(con);
 
@@ -154,8 +175,8 @@ public class ConfigurationBean implements Serializable {
     }
 
     /**
-     * 
-     * @param event 
+     *
+     * @param event
      */
     public void edit(RowEditEvent event) {
         try {
@@ -167,8 +188,8 @@ public class ConfigurationBean implements Serializable {
     }
 
     /**
-     * 
-     * @param event 
+     *
+     * @param event
      */
     public void cancel(RowEditEvent event) {
         try {
@@ -182,8 +203,8 @@ public class ConfigurationBean implements Serializable {
     }
 
     /**
-     * 
-     * @param conf 
+     *
+     * @param conf
      */
     public void delete(ConfigurationService conf) {
         try {
@@ -205,9 +226,9 @@ public class ConfigurationBean implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param idCliente
-     * @return 
+     * @return
      */
     public static Map<String, List<ConfigurationService>> getSettings(int idCliente) {
         settingsChart = NegocioConfiguration.getSettings(idCliente);
@@ -215,12 +236,135 @@ public class ConfigurationBean implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param view
-     * @return 
+     * @return
      */
     public static List<ConfigurationService> getSettingByView(String view) {
         return NegocioConfiguration.getSettingByView(settingsChart, view);
+    }
+
+    /**
+     *
+     * @param event
+     */
+    public void handleFileUpload(FileUploadEvent event) {
+        try {
+            copyFile(event.getFile().getFileName() + "_" + view, event.getFile().getInputstream());
+            if (tempfile.exists()) {
+                readFile(tempfile);
+                msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is loaded.");
+            } else {
+                msg = new FacesMessage("Process Error", event.getFile().getFileName());
+            }
+
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     *
+     * @param fileName
+     * @param in
+     */
+    private void copyFile(String fileName, InputStream in) {
+        try {
+            if (view != null) {
+                tempfile = File.createTempFile(fileName, ".tmp");
+                logger.info("Temp file : " + tempfile.getAbsolutePath());
+
+                OutputStream out = new FileOutputStream(tempfile);
+
+                int read = 0;
+                byte[] bytes = new byte[1024];
+
+                while ((read = in.read(bytes)) != -1) {
+                    out.write(bytes, 0, read);
+                }
+
+                in.close();
+                out.flush();
+                out.close();
+
+                logger.info("New file created! (" + tempfile.getAbsolutePath() + ")");
+            }
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     *
+     * @param file
+     */
+    private void readFile(File file) {
+        try {
+            FileInputStream excelFile = new FileInputStream(file);
+            Workbook workbook = new XSSFWorkbook(excelFile);
+
+            for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+                Sheet sheet = workbook.getSheetAt(i);
+                Iterator<Row> rowIterator = sheet.iterator();
+
+                while (rowIterator.hasNext()) {
+                    Row row = rowIterator.next();
+
+                    Iterator<Cell> cellIterator = row.cellIterator();
+                    while (cellIterator.hasNext()) {
+
+                        Cell cell = cellIterator.next();
+
+                        switch (cell.getCellType()) {
+                            case Cell.CELL_TYPE_STRING:
+                                logger.info(cell.getStringCellValue() + "\t");
+                                break;
+                            case Cell.CELL_TYPE_NUMERIC:
+                                logger.info(cell.getNumericCellValue() + "\t");
+                                break;
+                            case Cell.CELL_TYPE_BOOLEAN:
+                                logger.info(cell.getBooleanCellValue() + "\t");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    logger.info("");
+                }
+            }
+        } catch (FileNotFoundException e) {
+            logger.error(e.getMessage(), e);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    //***///
+    private void getVersion() {
+        try {
+            Process p = Runtime.getRuntime().exec(new String[]{"cmd.exe", "/c", "assoc", ".xls"});
+            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String extensionType = input.readLine();
+            input.close();
+            // extract type
+            if (extensionType == null) {
+                System.out.println("no office installed ?");
+                System.exit(1);
+            }
+            String fileType[] = extensionType.split("=");
+
+            p = Runtime.getRuntime().exec(new String[]{"cmd.exe", "/c", "ftype", fileType[1]});
+            input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String fileAssociation = input.readLine();
+            // extract path
+            String officePath = fileAssociation.split("=")[1];
+            System.out.println(officePath);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     public int getColumns() {
@@ -301,5 +445,21 @@ public class ConfigurationBean implements Serializable {
 
     public void setLoginbean(LoginBean loginbean) {
         this.loginbean = loginbean;
+    }
+
+    public UploadedFile getFile() {
+        return file;
+    }
+
+    public void setFile(UploadedFile file) {
+        this.file = file;
+    }
+
+    public File getTempfile() {
+        return tempfile;
+    }
+
+    public void setTempfile(File tempfile) {
+        this.tempfile = tempfile;
     }
 }

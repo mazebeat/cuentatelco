@@ -47,8 +47,8 @@ public class NegocioMonthlyEvolution {
      * @param idCliente
      * @return
      */
-    public List<ResumenAnualCliente> getDataChart(int idCliente) {
-        return dataChart(idCliente);
+    public List<ResumenAnualCliente> getDataChart(int idCliente, String groupby) {
+        return dataChart(idCliente, groupby);
     }
 
     /**
@@ -56,13 +56,14 @@ public class NegocioMonthlyEvolution {
      * @param idCliente
      * @return
      */
-    private List<ResumenAnualCliente> dataChart(int idCliente) {
+    private List<ResumenAnualCliente> dataChart(int idCliente, String groupby) {
         List<ResumenAnualCliente> n = new ArrayList<>();
         EntityManager em = null;
 
         try {
             String query = "SELECT * FROM resumen_anual_cliente\n"
                     + "WHERE id_cliente = " + idCliente + "\n"
+                    + "GROUP BY " + groupby + "\n"
                     + "ORDER BY id DESC;";
 
             em = EntityHelper.getInstance().getEntityManager();

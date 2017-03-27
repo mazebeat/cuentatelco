@@ -26,9 +26,11 @@
 package cl.intelidata.beans;
 
 import cl.intelidata.jpa.Hitos;
+import cl.intelidata.utils.Utils;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -85,7 +87,7 @@ public class TimelineBean implements Serializable {
             List<Hitos> h = loginbean.getClient().getHitosList();
 
             for (Hitos hitos : h) {
-                Calendar cal = Calendar.getInstance();
+                Calendar cal = GregorianCalendar.getInstance(Utils.LOCAL_ES);
                 cal.setTime(hitos.getFecha());
                 model.add(new TimelineEvent(hitos.getHito(), cal.getTime()));
             }

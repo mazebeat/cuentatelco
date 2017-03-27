@@ -19,10 +19,11 @@
 
                         <p:growl id="messages" showDetail="true" life="2000" />
 
+
                         <!-- Configuration Table -->
                         <p:dataTable id="configTable" value="#{configurationBean.configList}" var="c" editable="true">
                             <f:facet name="header">  
-                                Configuration #{configurationBean.view}
+                                Configuration #{configurationBean.view}                                
                             </f:facet>
                             <p:ajax event="rowEdit" listener="#{configurationBean.edit}" update=":configForm:messages" />  
                             <p:ajax event="rowEditCancel" listener="#{configurationBean.cancel}" update=":configForm:messages" /> 
@@ -110,7 +111,7 @@
 
                                 <h:outputLabel for="dim1" value="Dimension 1" />
 
-                                <p:selectOneMenu id="dim1" value="#{configurationBean.dimension1}">
+                                <p:selectOneMenu id="dim1" value="#{configurationBean.dimension1}" required="true" requiredMessage="Dimension 1 required">
                                     <f:selectItem itemLabel="Select One" itemValue="" />
                                     <f:selectItems value="#{configurationBean.dimensions1}" />
                                 </p:selectOneMenu>
@@ -124,7 +125,7 @@
                                 </h:panelGroup>                            
 
                                 <h:outputLabel for="dim2" value="Dimension 2" />
-                                <p:selectOneMenu id="dim2" value="#{configurationBean.dimension2}">
+                                <p:selectOneMenu id="dim2" value="#{configurationBean.dimension2}" required="true" requiredMessage="Dimension 2 required">
                                     <f:selectItem itemLabel="Select One" itemValue="" />
                                     <f:selectItems value="#{configurationBean.dimensions2}" />
                                 </p:selectOneMenu>
@@ -137,10 +138,17 @@
 
                     </div>
 
-                   
+                    <p:fileUpload value="#{configurationBean.file}" 
+                                  skinSimple="true"
+                                  mode="advanced"
+                                  update=":configForm:messages" 
+                                  auto="true" 
+                                  sizeLimit="100000" 
+                                  allowTypes="/(\.|\/)(xls|xlsx)$/" />
+
                 </h:form> 
 
-                <p:button outcome="dashboard" value="Inicio" style="display:inline-block;margin-top:5px"/>
+                <p:button outcome="/#{configurationBean.view}" value="Volver" style="display:inline-block;margin-top:5px"/>
             </div>
         </div>
     </ui:define>

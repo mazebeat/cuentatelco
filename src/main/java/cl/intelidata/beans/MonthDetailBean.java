@@ -30,13 +30,16 @@ import cl.intelidata.jpa.Telefono;
 import cl.intelidata.jpa.TelefonosServicios;
 import cl.intelidata.negocio.NegocioMonthDetail;
 import cl.intelidata.services.ConfigurationService;
+import cl.intelidata.utils.Utils;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -81,7 +84,7 @@ public class MonthDetailBean implements Serializable {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
             String dateInString = "2015-05-01";
-            date = Calendar.getInstance();
+            date = GregorianCalendar.getInstance(Utils.LOCAL_ES);
             date.setTime(formatter.parse(dateInString));
 
             createPieModel();

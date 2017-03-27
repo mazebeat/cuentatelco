@@ -27,12 +27,18 @@ package cl.intelidata.beans;
 
 import cl.intelidata.negocio.NegocioConfiguration;
 import cl.intelidata.services.ConfigurationService;
+import cl.intelidata.utils.Utils;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -50,6 +56,7 @@ public class DashboardBean implements Serializable {
     private static final long serialVersionUID = -2152389656664659476L;
     private static Logger logger = LoggerFactory.getLogger(DashboardBean.class);
     private Map<String, List<ConfigurationService>> settingsChart;
+    private Calendar date;
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
@@ -96,6 +103,16 @@ public class DashboardBean implements Serializable {
         this.settingsChart = settingsChart;
     }
 
+    public Calendar getDate() {
+        Calendar c = GregorianCalendar.getInstance(TimeZone.getTimeZone("America/Santiago"));
+        c.setTime(this.loginbean.getClient().getFechaVencimiento());
+        return c;
+    }
+
+    public void setDate(Calendar date) {
+        this.date = date;
+    }
+
     public LoginBean getLoginbean() {
         return loginbean;
     }
@@ -112,4 +129,7 @@ public class DashboardBean implements Serializable {
         this.configurationBean = configurationBean;
     }
 
+    public String getFormatDate() {
+        return Utils.calendarToString(this.getDate());
+    }
 }

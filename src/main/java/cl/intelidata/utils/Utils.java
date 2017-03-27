@@ -23,67 +23,37 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package cl.intelidata.negocio;
+package cl.intelidata.utils;
 
-import cl.intelidata.utils.Utils;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import java.util.TimeZone;
 
 /**
  *
  * @author Dev-DFeliu
  */
-public class DashboardTest {
+public class Utils {
 
-    public DashboardTest() {
+    public static final Locale LOCAL_ES = new Locale("es", "ES");
+    public static final TimeZone TIMEZONE_ES = TimeZone.getTimeZone("America/Santiago");
+    public static final String FORMAT_PATTERN = "MMMMM d, yyyy";
+
+    public static String dateToString(Date date) {
+        return (new SimpleDateFormat(FORMAT_PATTERN, LOCAL_ES)).format(date);
     }
 
-    @BeforeClass
-    public static void setUpClass() {
+    public static String dateToString(Date date, String pattern) {
+        return (new SimpleDateFormat(pattern, LOCAL_ES)).format(date);
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    public static String calendarToString(Calendar calendar) {
+        return (new SimpleDateFormat(FORMAT_PATTERN, LOCAL_ES)).format(calendar.getTime());
     }
 
-    @Before
-    public void setUp() {
+    public static String calendarToString(Calendar calendar, String pattern) {
+        return (new SimpleDateFormat(pattern, LOCAL_ES)).format(calendar.getTime());
     }
-
-    @After
-    public void tearDown() {
-    }
-
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    @Test
-    public void hello() {
-        // en_GB = 34
-        // en_US = 36
-        // sv_SV = 34
-        // en_SV = 36 --> wrong
-
-        printTest("es", "ES", 34);
-        printTest("en", "GB", 34);
-        printTest("en", "US", 36);
-        printTest("sv", "SV", 34);
-        printTest("en", "SV", 34);
-    }
-
-    private static void printTest(String language, String country, int expected) {
-        Locale locale = new Locale(language, country);
-
-        Calendar cal = Calendar.getInstance(locale);
-
-        System.err.println(Utils.calendarToString(cal));
-        System.err.println(Utils.dateToString(new Date()));
-    }
-
 }
