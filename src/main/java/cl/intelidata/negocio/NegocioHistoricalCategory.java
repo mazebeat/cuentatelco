@@ -42,6 +42,13 @@ public class NegocioHistoricalCategory {
 
     private static Logger logger = LoggerFactory.getLogger(NegocioHistoricalCategory.class);
 
+    /**
+     * 
+     * @param idClient
+     * @param date
+     * @param groupby
+     * @return 
+     */
     private List<HistoricalCategory> data(int idClient, Calendar date, String groupby) {
         List<HistoricalCategory> n = new ArrayList<>();
         EntityManager em = null;
@@ -74,6 +81,13 @@ public class NegocioHistoricalCategory {
         return n;
     }
 
+    /**
+     * 
+     * @param idCliente
+     * @param date
+     * @param groupby
+     * @return 
+     */
     public List<HistoricalCategory> getData(Integer idCliente, Calendar date, String groupby) {
         List<HistoricalCategory> l = data(idCliente, date, groupby);
 

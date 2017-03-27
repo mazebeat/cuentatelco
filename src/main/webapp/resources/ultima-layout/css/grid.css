@@ -10,13 +10,13 @@
     display: flex;
     flex-wrap: wrap;
 }
-            
+
 .ui-g:after {
     clear: both;
     content: "";
     display: table;
 }
-            
+
 .ui-g-1,
 .ui-g-2,
 .ui-g-3,

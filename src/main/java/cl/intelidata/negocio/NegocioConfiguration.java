@@ -149,10 +149,31 @@ public class NegocioConfiguration {
      *
      * @return
      */
+    public static Map<String, List<ConfigurationService>> defaultSettings() {
+        Map<String, List<ConfigurationService>> set = new HashMap<>();
+
+        try {
+            // TODO: Cambiar por BBDD
+            set.put("month_detail", monthlyDetailDefaultSettings());
+            set.put("monthly_evolution", monthlyEvolutionDefaultSettings());
+            set.put("historical_category", historicalCategoryDefaultSettings());
+            set.put("phones_product", phonesProductDefaultSettings());
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return set;
+    }
+
+    /**
+     *
+     * @return
+     */
     public static List<ConfigurationService> monthlyDetailSettings() {
         List<ConfigurationService> lcs = new ArrayList<>();
 
         try {
+            // XXX: Change for DDBB
             lcs.add(new ConfigurationService("Monto Total", "Teléfono", "t.monto_total", "te.numero"));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -165,16 +186,17 @@ public class NegocioConfiguration {
      *
      * @return
      */
-    public static Map<String, List<ConfigurationService>> defaultSettings() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /**
-     *
-     * @return
-     */
     private static List<ConfigurationService> phonesProductSettings() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<ConfigurationService> lcs = new ArrayList<>();
+
+        try {
+            // XXX: Change for DDBB
+            lcs.add(new ConfigurationService("", "", "", ""));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return lcs;
     }
 
     /**
@@ -185,7 +207,7 @@ public class NegocioConfiguration {
         List<ConfigurationService> lcs = new ArrayList<>();
 
         try {
-            // TODO: Cambiar por BBDD
+            // XXX: Change for DDBB
             lcs.add(new ConfigurationService("Monto Total", "Producto", "t.monto_total", "te.id_producto"));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -202,7 +224,71 @@ public class NegocioConfiguration {
         List<ConfigurationService> lcs = new ArrayList<>();
 
         try {
-            // TODO: Cambiar por BBDD
+            // XXX: Change for DDBB
+            lcs.add(new ConfigurationService("Periodo", "Cliente", "*", "id"));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return lcs;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static List<ConfigurationService> monthlyDetailDefaultSettings() {
+        List<ConfigurationService> lcs = new ArrayList<>();
+
+        try {
+            lcs.add(new ConfigurationService("Monto Total", "Teléfono", "t.monto_total", "te.numero"));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return lcs;
+    }
+
+    /**
+     *
+     * @return
+     */
+    private static List<ConfigurationService> phonesProductDefaultSettings() {
+        List<ConfigurationService> lcs = new ArrayList<>();
+
+        try {
+            lcs.add(new ConfigurationService("", "", "", ""));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return lcs;
+    }
+
+    /**
+     *
+     * @return
+     */
+    private static List<ConfigurationService> historicalCategoryDefaultSettings() {
+        List<ConfigurationService> lcs = new ArrayList<>();
+
+        try {
+            lcs.add(new ConfigurationService("Monto Total", "Producto", "t.monto_total", "te.id_producto"));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return lcs;
+    }
+
+    /**
+     *
+     * @return
+     */
+    private static List<ConfigurationService> monthlyEvolutionDefaultSettings() {
+        List<ConfigurationService> lcs = new ArrayList<>();
+
+        try {
             lcs.add(new ConfigurationService("Periodo", "Cliente", "*", "id"));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

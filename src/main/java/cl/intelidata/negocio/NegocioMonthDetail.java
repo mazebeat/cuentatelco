@@ -43,10 +43,24 @@ public class NegocioMonthDetail {
 
     private static Logger logger = LoggerFactory.getLogger(NegocioMonthDetail.class);
 
+    /**
+     * 
+     * @param idClient
+     * @param date
+     * @param groupby
+     * @return 
+     */
     public List<Telefono> getDataChart(int idClient, Calendar date, String groupby) {
         return postTelefonosConServicio(idClient, date, groupby);
     }
 
+    /**
+     * 
+     * @param idClient
+     * @param date
+     * @param groupby
+     * @return 
+     */
     private List<Telefono> postTelefonosConServicio(int idClient, Calendar date, String groupby) {
 
         List<Telefono> altosGastos = new ArrayList<>();
@@ -63,6 +77,13 @@ public class NegocioMonthDetail {
         return altosGastos;
     }
 
+    /**
+     * 
+     * @param idClient
+     * @param date
+     * @param groupby
+     * @return 
+     */
     private List<Telefono> getAltosGastos(int idClient, Calendar date, String groupby) {
         List<Telefono> n = new ArrayList<>();
         EntityManager em = null;
@@ -95,6 +116,12 @@ public class NegocioMonthDetail {
         return n;
     }
 
+    /**
+     * 
+     * @param phone
+     * @param date
+     * @return 
+     */
     public List<TelefonosServicios> getDetail(String phone, Calendar date) {
         List<TelefonosServicios> n = new ArrayList<>();
         EntityManager em = null;

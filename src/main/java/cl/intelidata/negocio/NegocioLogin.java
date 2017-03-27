@@ -27,7 +27,6 @@ package cl.intelidata.negocio;
 
 import cl.intelidata.jpa.Cliente;
 import cl.intelidata.jpa.Persona;
-import cl.intelidata.jpa.Preguntas;
 import cl.intelidata.jpa.Usuarios;
 import cl.intelidata.utils.EntityHelper;
 import javax.persistence.EntityManager;
@@ -43,6 +42,12 @@ public class NegocioLogin {
     private static Logger logger = LoggerFactory.getLogger(NegocioLogin.class);
     private Usuarios user;
 
+    /**
+     * 
+     * @param username
+     * @return
+     * @throws Exception 
+     */
     public Usuarios validLogin(String username) throws Exception {
         EntityManager em = null;
 
@@ -62,6 +67,11 @@ public class NegocioLogin {
         return user;
     }
 
+    /**
+     * 
+     * @param client
+     * @return 
+     */
     public int gotAnswers(Cliente client) {
         EntityManager em = null;
         long answers = 0;
@@ -86,6 +96,11 @@ public class NegocioLogin {
         return (int) answers;
     }
 
+    /**
+     * 
+     * @param person
+     * @return 
+     */
     public boolean gotRegister(Persona person) {
         boolean pass = false;
         boolean a, b, c, d, e, f, g;

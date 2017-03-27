@@ -35,14 +35,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import org.primefaces.model.chart.LegendPlacement;
 import org.primefaces.model.chart.PieChartModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +80,7 @@ public class PhonesByProductBean implements Serializable {
 
     private void createPieModel() {
         try {
+            // XXX: Finish this method
             date = GregorianCalendar.getInstance(Utils.LOCAL_ES);
             date.set(2015, 4, 1, 0, 0);
             chart = new PieChartModel();

@@ -90,12 +90,14 @@ public class ConfigurationBean implements Serializable {
         try {
             configList = new ArrayList();
 
-            HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-            view = NegocioConfiguration.cleanURI(req.getHeader("Referer"));
-
             Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-            if (view == null && params.containsKey("view")) {
+            if (view.isEmpty() && params.containsKey("view")) {
                 view = params.get("view");
+            }
+
+            if (view.isEmpty()) {
+                HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+                view = NegocioConfiguration.cleanURI(req.getHeader("Referer"));
             }
 
             if (settingsChart.isEmpty()) {
@@ -109,7 +111,7 @@ public class ConfigurationBean implements Serializable {
                     configList = settingsChart.get(view);
                 }
             } else {
-                logger.warn("Variable 'view' no encontrada");
+                logger.info("Variable 'view' no encontrada");
             }
             columns = 1;
         } catch (Exception e) {
@@ -134,14 +136,15 @@ public class ConfigurationBean implements Serializable {
                 break;
             case "monthly_evolution":
                 dimensions1.add("*");
-                
+
                 dimensions2.add("id");
                 break;
             case "historical_category":
-                dimensions1.add("t.monto_total");                
+                dimensions1.add("t.monto_total");
                 dimensions2.add("te.id_producto");
                 break;
             case "phones_product":
+                // XXX: Add dimensions
                 break;
             default:
 //                System.out.println("cl.intelidata.beans.ConfigurationBean.init() CLASS");
@@ -154,7 +157,9 @@ public class ConfigurationBean implements Serializable {
      */
     public void add() {
         try {
-            if (!configList.isEmpty() && configList.size() < 3) {
+            configList = settingsChart.get(view);
+
+            if (!configList.isEmpty() && configList.size() < 4) {
                 ConfigurationService con = new ConfigurationService(label1, label2, dimension1, dimension2, view, loginbean.getClient().getId());
                 configList.add(con);
 

@@ -45,6 +45,11 @@ public class NegocioFacebook {
     public NegocioFacebook() {
     }
 
+    /**
+     * 
+     * @param user
+     * @return 
+     */
     public int getCodigoIntegracion(Usuarios user) {
         int code = 0;
 
@@ -67,6 +72,12 @@ public class NegocioFacebook {
         return code;
     }
 
+    /**
+     * 
+     * @param user
+     * @return
+     * @throws Exception 
+     */
     public int getUserCode(Usuarios user) throws Exception {
         EntityManager em = null;
         FacebookUsuarioIntegracion t;
@@ -89,6 +100,10 @@ public class NegocioFacebook {
         return code;
     }
 
+    /**
+     * 
+     * @return 
+     */
     private int genCodeIntegration() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

@@ -50,6 +50,11 @@ public class NegocioContact {
 
     private static Logger logger = LoggerFactory.getLogger(NegocioContact.class);
 
+    /**
+     * 
+     * @return
+     * @throws Exception 
+     */
     public List<Preguntas> getQuestions() throws Exception {
         EntityManager em = null;
         List<Preguntas> p = new ArrayList<>();
@@ -71,6 +76,11 @@ public class NegocioContact {
         return p;
     }
 
+    /**
+     * 
+     * @return
+     * @throws Exception 
+     */
     public int countQuestions() throws Exception {
         EntityManager em = null;
         List<Preguntas> p = new ArrayList<>();
@@ -95,6 +105,12 @@ public class NegocioContact {
         return count;
     }
 
+    /**
+     * 
+     * @param lq
+     * @param idClient
+     * @return 
+     */
     public String macroQuestions(List<Preguntas> lq, int idClient) {
         int cont = 1;
         String out = "";
@@ -124,6 +140,12 @@ public class NegocioContact {
         return out;
     }
 
+    /**
+     * 
+     * @param idCliente
+     * @return
+     * @throws Exception 
+     */
     public HashMap<Integer, Integer> checkList(int idCliente) throws Exception {
         EntityManager em = null;
         HashMap<Integer, Integer> cklist = new HashMap<Integer, Integer>();
@@ -160,6 +182,13 @@ public class NegocioContact {
         return cklist;
     }
 
+    /**
+     * 
+     * @param userAnswers
+     * @param idQuestion
+     * @param idAnswer
+     * @return 
+     */
     private String isChecked(HashMap<Integer, Integer> userAnswers, int idQuestion, int idAnswer) {
         try {
             if (userAnswers != null && userAnswers.get(idQuestion) == idAnswer) {
@@ -172,6 +201,12 @@ public class NegocioContact {
         return "";
     }
 
+    /**
+     * 
+     * @param oldAnsw
+     * @param newAnsw
+     * @param idClient 
+     */
     public void save(HashMap<Integer, Integer> oldAnsw, HashMap<Integer, Integer> newAnsw, int idClient) {
         try {
             if (oldAnsw != null && oldAnsw.equals(newAnsw)) {
@@ -210,6 +245,12 @@ public class NegocioContact {
         }
     }
 
+    /**
+     * 
+     * @param idQuestion
+     * @param idAnswer
+     * @return 
+     */
     public int getPreguntaRespuesta(int idQuestion, int idAnswer) {
         int id = 0;
         EntityManager em = null;

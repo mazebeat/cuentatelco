@@ -2,8 +2,7 @@
  * PrimeFaces Ultima Layout
  */
 PrimeFaces.widget.Ultima = PrimeFaces.widget.BaseWidget.extend({
-    
-    init: function(cfg) {
+    init: function (cfg) {
         this._super(cfg);
         this.wrapper = $(document.body).children('.layout-wrapper');
         this.topbar = $('body > .layout-wrapper > .topbar');
@@ -22,46 +21,42 @@ PrimeFaces.widget.Ultima = PrimeFaces.widget.BaseWidget.extend({
         this.topbarMenuClick = false;
 
         this._bindEvents();
-        
-        if(!this.wrapper.hasClass('menu-layout-horizontal')) {
+
+        if (!this.wrapper.hasClass('menu-layout-horizontal')) {
             this.restoreMenuState();
         }
-        
-        this.menuWrapper.children('.nano').nanoScroller({flash:true});
+
+        this.menuWrapper.children('.nano').nanoScroller({flash: true});
     },
-    
-    _bindEvents: function() {
+    _bindEvents: function () {
         var $this = this;
-        
-        this.menuButton.on('click', function(e) {
+
+        this.menuButton.on('click', function (e) {
             $this.menuButton.toggleClass('menu-button-rotate');
             $this.topbarItems.removeClass('topbar-items-visible');
-            
+
             //overlay
-            if($this.wrapper.hasClass('menu-layout-overlay')) {
+            if ($this.wrapper.hasClass('menu-layout-overlay')) {
                 $this.wrapper.toggleClass('layout-menu-overlay-active');
-                
-                if($this.wrapper.hasClass('layout-menu-overlay-active')) {
+
+                if ($this.wrapper.hasClass('layout-menu-overlay-active')) {
                     $this.enableModal();
                     $this.enableSwipe();
-                }
-                else {
+                } else {
                     $this.disableModal();
                     $this.disableSwipe();
                 }
             }
             //static
             else {
-                if($this.isDesktop()) {
+                if ($this.isDesktop()) {
                     $this.wrapper.toggleClass('layout-menu-static-inactive')
-                }
-                else {
-                    if($this.wrapper.hasClass('layout-menu-static-active')) {
+                } else {
+                    if ($this.wrapper.hasClass('layout-menu-static-active')) {
                         $this.wrapper.removeClass('layout-menu-static-active');
                         $this.disableModal();
                         $this.disableSwipe();
-                    }
-                    else {
+                    } else {
                         $this.wrapper.addClass('layout-menu-static-active');
                         $this.wrapper.removeClass('layout-menu-static-inactive');
                         $this.enableModal();
@@ -69,279 +64,261 @@ PrimeFaces.widget.Ultima = PrimeFaces.widget.BaseWidget.extend({
                     }
                 }
             }
-            
+
             e.preventDefault();
         });
-        
-        this.topbarMenuButton.on('click', function(e) {
+
+        this.topbarMenuButton.on('click', function (e) {
             $this.topbarMenuClick = true;
             $this.topbarItems.find('ul').removeClass('fadeInDown fadeOutUp');
-            
-            if($this.wrapper.hasClass('layout-menu-overlay-active')||$this.wrapper.hasClass('layout-menu-static-active')) {
+
+            if ($this.wrapper.hasClass('layout-menu-overlay-active') || $this.wrapper.hasClass('layout-menu-static-active')) {
                 $this.menuButton.removeClass('menu-button-rotate');
                 $this.wrapper.removeClass('layout-menu-overlay-active layout-menu-static-active');
                 $this.disableModal();
             }
 
-            if($this.topbarItems.hasClass('topbar-items-visible')) {
+            if ($this.topbarItems.hasClass('topbar-items-visible')) {
                 $this.topbarItems.addClass('fadeOutUp');
-                
-                setTimeout(function() {
+
+                setTimeout(function () {
                     $this.topbarItems.removeClass('fadeOutUp topbar-items-visible');
-                },500);
-            }
-            else {
+                }, 500);
+            } else {
                 $this.topbarItems.addClass('topbar-items-visible fadeInDown');
             }
-            
+
             e.preventDefault();
         });
-        
-        this.menulinks.off('click').on('click', function(e) {
+
+        this.menulinks.off('click').on('click', function (e) {
             var link = $(this),
-            item = link.parent(),
-            submenu = item.children('ul'),
-            horizontal = $this.isHorizontal() && $this.isDesktop();
-            
-            if(horizontal) {
+                    item = link.parent(),
+                    submenu = item.children('ul'),
+                    horizontal = $this.isHorizontal() && $this.isDesktop();
+
+            if (horizontal) {
                 $this.horizontalMenuClick = true;
             }
-                                     
-            if(item.hasClass('active-menuitem')) {
-                if(submenu.length) {
+
+            if (item.hasClass('active-menuitem')) {
+                if (submenu.length) {
                     $this.removeMenuitem(item.attr('id'));
                     item.removeClass('active-menuitem');
-                    
-                    if(horizontal) {
-                        if(item.parent().is($this.jq)) {
+
+                    if (horizontal) {
+                        if (item.parent().is($this.jq)) {
                             $this.menuActive = false;
                         }
-                        
+
                         submenu.hide();
-                    }
-                    else {
+                    } else {
                         submenu.slideUp();
                     }
                 }
-            }
-            else {
+            } else {
                 $this.addMenuitem(item.attr('id'));
-                
-                if(horizontal) {
+
+                if (horizontal) {
                     $this.deactivateItems(item.siblings());
                     item.addClass('active-menuitem');
                     $this.menuActive = true;
                     submenu.show();
-                }
-                else {
+                } else {
                     $this.deactivateItems(item.siblings(), true);
                     $this.activate(item);
                 }
             }
-            
-            if(!horizontal) {
-                setTimeout(function() {
+
+            if (!horizontal) {
+                setTimeout(function () {
                     $(".nano").nanoScroller();
                 }, 500);
             }
-                                    
-            if(submenu.length) {
+
+            if (submenu.length) {
                 e.preventDefault();
             }
         });
-        
-        this.menu.find('> li').on('mouseenter', function(e) {    
-            if($this.isHorizontal() && $this.isDesktop()) {
+
+        this.menu.find('> li').on('mouseenter', function (e) {
+            if ($this.isHorizontal() && $this.isDesktop()) {
                 var item = $(this),
-                link = item.children('a'),
-                submenu = item.children('ul');
-                
-                if(!item.hasClass('active-menuitem')) {
+                        link = item.children('a'),
+                        submenu = item.children('ul');
+
+                if (!item.hasClass('active-menuitem')) {
                     $this.menu.find('.active-menuitem').removeClass('active-menuitem');
                     $this.menu.find('ul:visible').hide();
                     $this.menu.find('.ink').remove();
-                    
-                    if($this.menuActive) {
+
+                    if ($this.menuActive) {
                         item.addClass('active-menuitem');
                         item.children('ul').show();
                     }
                 }
             }
         });
-        
-        this.profileButton.on('click', function(e) {
+
+        this.profileButton.on('click', function (e) {
             var profile = $this.profileMenu.prev('.profile'),
-            expanded = profile.hasClass('profile-expanded');
-            
+                    expanded = profile.hasClass('profile-expanded');
+
             $this.profileMenu.slideToggle();
             $this.profileMenu.prev('.profile').toggleClass('profile-expanded');
             $this.setInlineProfileState(!expanded);
-            
-            setTimeout(function() {
+
+            setTimeout(function () {
                 $(".nano").nanoScroller();
             }, 500);
-            
+
             e.preventDefault();
         });
-        
-        this.topbarLinks.on('click', function(e) {
+
+        this.topbarLinks.on('click', function (e) {
             var link = $(this),
-            item = link.parent(),
-            submenu = link.next();
-            
+                    item = link.parent(),
+                    submenu = link.next();
+
             $this.topbarLinkClick = true;
 
             item.siblings('.active-top-menu').removeClass('active-top-menu');
-            if($this.wrapper.hasClass('layout-menu-overlay-active')) {
+            if ($this.wrapper.hasClass('layout-menu-overlay-active')) {
                 $this.menuButton.removeClass('menu-button-rotate');
                 $this.wrapper.removeClass('layout-menu-overlay-active');
                 $this.disableModal();
             }
 
-            if($this.isDesktop()) {
-                if(submenu.length) {
-                    if(item.hasClass('active-top-menu')) {
+            if ($this.isDesktop()) {
+                if (submenu.length) {
+                    if (item.hasClass('active-top-menu')) {
                         submenu.addClass('fadeOutUp');
-                        
-                        setTimeout(function() {
+
+                        setTimeout(function () {
                             item.removeClass('active-top-menu'),
-                            submenu.removeClass('fadeOutUp');
-                        },500);
-                    }
-                    else {
+                                    submenu.removeClass('fadeOutUp');
+                        }, 500);
+                    } else {
                         item.addClass('active-top-menu');
                         submenu.addClass('fadeInDown');
                     }
                 }
-            }
-            else {
+            } else {
                 item.children('ul').removeClass('fadeInDown fadeOutUp');
                 item.toggleClass('active-top-menu');
-            }   
-            
-            e.preventDefault();         
+            }
+
+            e.preventDefault();
         });
-        
-        $this.topbarItems.children('.search-item').on('click', function(e) {
+
+        $this.topbarItems.children('.search-item').on('click', function (e) {
             $this.topbarLinkClick = true;
         });
-        
-        $(document.body).on('click', function() {
-            if($this.isHorizontal() && !$this.horizontalMenuClick && $this.isDesktop()) {
+
+        $(document.body).on('click', function () {
+            if ($this.isHorizontal() && !$this.horizontalMenuClick && $this.isDesktop()) {
                 $this.menu.find('.active-menuitem').removeClass('active-menuitem');
                 $this.menu.find('ul:visible').hide();
                 $this.menuActive = false;
             }
-            
-            if(!$this.topbarMenuClick && !$this.topbarLinkClick) {
+
+            if (!$this.topbarMenuClick && !$this.topbarLinkClick) {
                 $this.topbarItems.find('.active-top-menu').removeClass('active-top-menu');
             }
-            
-            if(!$this.topbarMenuClick && !$this.topbarLinkClick) {
+
+            if (!$this.topbarMenuClick && !$this.topbarLinkClick) {
                 $this.topbarItems.removeClass('topbar-items-visible');
             }
-            
+
             $this.horizontalMenuClick = false;
             $this.topbarLinkClick = false;
             $this.topbarMenuClick = false;
         });
     },
-    
-    activate: function(item) {
+    activate: function (item) {
         var submenu = item.children('ul');
         item.addClass('active-menuitem');
 
-        if(submenu.length) {
+        if (submenu.length) {
             submenu.slideDown();
         }
     },
-    
-    deactivate: function(item) {
+    deactivate: function (item) {
         var submenu = item.children('ul');
         item.removeClass('active-menuitem');
-        
-        if(submenu.length) {
+
+        if (submenu.length) {
             submenu.hide();
         }
     },
-        
-    deactivateItems: function(items, animate) {
+    deactivateItems: function (items, animate) {
         var $this = this;
-        
-        for(var i = 0; i < items.length; i++) {
+
+        for (var i = 0; i < items.length; i++) {
             var item = items.eq(i),
-            submenu = item.children('ul');
-            
-            if(submenu.length) {
-                if(item.hasClass('active-menuitem')) {
+                    submenu = item.children('ul');
+
+            if (submenu.length) {
+                if (item.hasClass('active-menuitem')) {
                     var activeSubItems = item.find('.active-menuitem');
                     item.removeClass('active-menuitem');
                     item.find('.ink').remove();
-                    
-                    if(animate) {
-                        submenu.slideUp('normal', function() {
-                            $(this).parent().find('.active-menuitem').each(function() {
+
+                    if (animate) {
+                        submenu.slideUp('normal', function () {
+                            $(this).parent().find('.active-menuitem').each(function () {
                                 $this.deactivate($(this));
                             });
                         });
-                    }
-                    else {
+                    } else {
                         submenu.hide();
-                        item.find('.active-menuitem').each(function() {
+                        item.find('.active-menuitem').each(function () {
                             $this.deactivate($(this));
                         });
                     }
-                    
+
                     $this.removeMenuitem(item.attr('id'));
-                    activeSubItems.each(function() {
+                    activeSubItems.each(function () {
                         $this.removeMenuitem($(this).attr('id'));
                     });
-                }
-                else {
-                    item.find('.active-menuitem').each(function() {
+                } else {
+                    item.find('.active-menuitem').each(function () {
                         var subItem = $(this);
                         $this.deactivate(subItem);
                         $this.removeMenuitem(subItem.attr('id'));
                     });
                 }
-            }
-            else if(item.hasClass('active-menuitem')) {
+            } else if (item.hasClass('active-menuitem')) {
                 $this.deactivate(item);
                 $this.removeMenuitem(item.attr('id'));
             }
         }
     },
-            
     removeMenuitem: function (id) {
         this.expandedMenuitems = $.grep(this.expandedMenuitems, function (value) {
             return value !== id;
         });
         this.saveMenuState();
     },
-    
     addMenuitem: function (id) {
         if ($.inArray(id, this.expandedMenuitems) === -1) {
             this.expandedMenuitems.push(id);
         }
         this.saveMenuState();
     },
-    
-    saveMenuState: function() {
+    saveMenuState: function () {
         $.cookie('ultima_expandeditems', this.expandedMenuitems.join(','), {path: '/'});
     },
-    
-    clearMenuState: function() {
+    clearMenuState: function () {
         $.removeCookie('ultima_expandeditems', {path: '/'});
     },
-    
-    setInlineProfileState: function(expanded) {
-        if(expanded)
+    setInlineProfileState: function (expanded) {
+        if (expanded)
             $.cookie('ultima_inlineprofile_expanded', "1", {path: '/'});
         else
             $.removeCookie('ultima_inlineprofile_expanded', {path: '/'});
     },
-    
-    restoreMenuState: function() {
+    restoreMenuState: function () {
         var menucookie = $.cookie('ultima_expandeditems');
         if (menucookie) {
             this.expandedMenuitems = menucookie.split(',');
@@ -350,59 +327,51 @@ PrimeFaces.widget.Ultima = PrimeFaces.widget.BaseWidget.extend({
                 if (id) {
                     var menuitem = $("#" + this.expandedMenuitems[i].replace(/:/g, "\\:"));
                     menuitem.addClass('active-menuitem');
-                    
+
                     var submenu = menuitem.children('ul');
-                    if(submenu.length) {
+                    if (submenu.length) {
                         submenu.show();
                     }
                 }
             }
         }
-        
+
         var inlineProfileCookie = $.cookie('ultima_inlineprofile_expanded');
         if (inlineProfileCookie) {
             this.profileMenu.show().prev('.profile').addClass('profile-expanded');
         }
     },
-    
-    enableModal: function() {
+    enableModal: function () {
         this.modal = this.wrapper.append('<div class="layout-mask"></div>').children('.layout-mask');
     },
-    
-    disableModal: function() {
+    disableModal: function () {
         this.modal.remove();
     },
-    
-    enableSwipe: function() {
+    enableSwipe: function () {
         var $this = this;
         this.menuWrapper.swipe({
-            swipeLeft: function() {
+            swipeLeft: function () {
                 $this.menuButton.click();
             }
         });
     },
-    
-    disableSwipe: function() {
+    disableSwipe: function () {
         this.menuWrapper.swipe('destroy');
     },
-    
-    isHorizontal: function() {
+    isHorizontal: function () {
         return this.wrapper.hasClass('menu-layout-horizontal');
     },
-    
-    isTablet: function() {
+    isTablet: function () {
         var width = window.innerWidth;
         return width <= 1024 && width > 640;
     },
-
-    isDesktop: function() {
+    isDesktop: function () {
         return window.innerWidth > 1024;
     },
-
-    isMobile: function() {
+    isMobile: function () {
         return window.innerWidth <= 640;
     }
-    
+
 });
 
 /*!
@@ -413,173 +382,170 @@ PrimeFaces.widget.Ultima = PrimeFaces.widget.BaseWidget.extend({
  * Released under the MIT license
  */
 (function (factory) {
-	if (typeof define === 'function' && define.amd) {
-		// AMD (Register as an anonymous module)
-		define(['jquery'], factory);
-	} else if (typeof exports === 'object') {
-		// Node/CommonJS
-		module.exports = factory(require('jquery'));
-	} else {
-		// Browser globals
-		factory(jQuery);
-	}
+    if (typeof define === 'function' && define.amd) {
+        // AMD (Register as an anonymous module)
+        define(['jquery'], factory);
+    } else if (typeof exports === 'object') {
+        // Node/CommonJS
+        module.exports = factory(require('jquery'));
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
 }(function ($) {
 
-	var pluses = /\+/g;
+    var pluses = /\+/g;
 
-	function encode(s) {
-		return config.raw ? s : encodeURIComponent(s);
-	}
+    function encode(s) {
+        return config.raw ? s : encodeURIComponent(s);
+    }
 
-	function decode(s) {
-		return config.raw ? s : decodeURIComponent(s);
-	}
+    function decode(s) {
+        return config.raw ? s : decodeURIComponent(s);
+    }
 
-	function stringifyCookieValue(value) {
-		return encode(config.json ? JSON.stringify(value) : String(value));
-	}
+    function stringifyCookieValue(value) {
+        return encode(config.json ? JSON.stringify(value) : String(value));
+    }
 
-	function parseCookieValue(s) {
-		if (s.indexOf('"') === 0) {
-			// This is a quoted cookie as according to RFC2068, unescape...
-			s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
-		}
+    function parseCookieValue(s) {
+        if (s.indexOf('"') === 0) {
+            // This is a quoted cookie as according to RFC2068, unescape...
+            s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+        }
 
-		try {
-			// Replace server-side written pluses with spaces.
-			// If we can't decode the cookie, ignore it, it's unusable.
-			// If we can't parse the cookie, ignore it, it's unusable.
-			s = decodeURIComponent(s.replace(pluses, ' '));
-			return config.json ? JSON.parse(s) : s;
-		} catch(e) {}
-	}
+        try {
+            // Replace server-side written pluses with spaces.
+            // If we can't decode the cookie, ignore it, it's unusable.
+            // If we can't parse the cookie, ignore it, it's unusable.
+            s = decodeURIComponent(s.replace(pluses, ' '));
+            return config.json ? JSON.parse(s) : s;
+        } catch (e) {
+        }
+    }
 
-	function read(s, converter) {
-		var value = config.raw ? s : parseCookieValue(s);
-		return $.isFunction(converter) ? converter(value) : value;
-	}
+    function read(s, converter) {
+        var value = config.raw ? s : parseCookieValue(s);
+        return $.isFunction(converter) ? converter(value) : value;
+    }
 
-	var config = $.cookie = function (key, value, options) {
+    var config = $.cookie = function (key, value, options) {
 
-		// Write
+        // Write
 
-		if (arguments.length > 1 && !$.isFunction(value)) {
-			options = $.extend({}, config.defaults, options);
+        if (arguments.length > 1 && !$.isFunction(value)) {
+            options = $.extend({}, config.defaults, options);
 
-			if (typeof options.expires === 'number') {
-				var days = options.expires, t = options.expires = new Date();
-				t.setMilliseconds(t.getMilliseconds() + days * 864e+5);
-			}
+            if (typeof options.expires === 'number') {
+                var days = options.expires, t = options.expires = new Date();
+                t.setMilliseconds(t.getMilliseconds() + days * 864e+5);
+            }
 
-			return (document.cookie = [
-				encode(key), '=', stringifyCookieValue(value),
-				options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
-				options.path    ? '; path=' + options.path : '',
-				options.domain  ? '; domain=' + options.domain : '',
-				options.secure  ? '; secure' : ''
-			].join(''));
-		}
+            return (document.cookie = [
+                encode(key), '=', stringifyCookieValue(value),
+                options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
+                options.path ? '; path=' + options.path : '',
+                options.domain ? '; domain=' + options.domain : '',
+                options.secure ? '; secure' : ''
+            ].join(''));
+        }
 
-		// Read
+        // Read
 
-		var result = key ? undefined : {},
-			// To prevent the for loop in the first place assign an empty array
-			// in case there are no cookies at all. Also prevents odd result when
-			// calling $.cookie().
-			cookies = document.cookie ? document.cookie.split('; ') : [],
-			i = 0,
-			l = cookies.length;
+        var result = key ? undefined : {},
+                // To prevent the for loop in the first place assign an empty array
+                // in case there are no cookies at all. Also prevents odd result when
+                // calling $.cookie().
+                cookies = document.cookie ? document.cookie.split('; ') : [],
+                i = 0,
+                l = cookies.length;
 
-		for (; i < l; i++) {
-			var parts = cookies[i].split('='),
-				name = decode(parts.shift()),
-				cookie = parts.join('=');
+        for (; i < l; i++) {
+            var parts = cookies[i].split('='),
+                    name = decode(parts.shift()),
+                    cookie = parts.join('=');
 
-			if (key === name) {
-				// If second argument (value) is a function it's a converter...
-				result = read(cookie, value);
-				break;
-			}
+            if (key === name) {
+                // If second argument (value) is a function it's a converter...
+                result = read(cookie, value);
+                break;
+            }
 
-			// Prevent storing a cookie that we couldn't decode.
-			if (!key && (cookie = read(cookie)) !== undefined) {
-				result[name] = cookie;
-			}
-		}
+            // Prevent storing a cookie that we couldn't decode.
+            if (!key && (cookie = read(cookie)) !== undefined) {
+                result[name] = cookie;
+            }
+        }
 
-		return result;
-	};
+        return result;
+    };
 
-	config.defaults = {};
+    config.defaults = {};
 
-	$.removeCookie = function (key, options) {
-		// Must not alter options, thus extending a fresh object...
-		$.cookie(key, '', $.extend({}, options, { expires: -1 }));
-		return !$.cookie(key);
-	};
+    $.removeCookie = function (key, options) {
+        // Must not alter options, thus extending a fresh object...
+        $.cookie(key, '', $.extend({}, options, {expires: -1}));
+        return !$.cookie(key);
+    };
 
 }));
 
 /* Issue #924 is fixed for 5.3+ and 6.0. (compatibility with 5.3) */
-if(window['PrimeFaces'] && window['PrimeFaces'].widget.Dialog) {
+if (window['PrimeFaces'] && window['PrimeFaces'].widget.Dialog) {
     PrimeFaces.widget.Dialog = PrimeFaces.widget.Dialog.extend({
-        
-        enableModality: function() {
+        enableModality: function () {
             this._super();
             $(document.body).children(this.jqId + '_modal').addClass('ui-dialog-mask');
         },
-        
-        syncWindowResize: function() {}
+        syncWindowResize: function () {}
     });
 }
 
 /* JS extensions to support material animations */
-if(PrimeFaces.widget.InputSwitch) {
+if (PrimeFaces.widget.InputSwitch) {
     PrimeFaces.widget.InputSwitch = PrimeFaces.widget.InputSwitch.extend({
-         
-         init: function(cfg) {
-             this._super(cfg);
-             
-             if(this.input.prop('checked')) {
-                 this.jq.addClass('ui-inputswitch-checked');
-             }
-         },
-         
-         toggle: function() {
-             var $this = this;
+        init: function (cfg) {
+            this._super(cfg);
 
-             if(this.input.prop('checked'))
-                 this.uncheck();    
-             else
-                 this.check();    
-             
-             setTimeout(function() {
-                 $this.jq.toggleClass('ui-inputswitch-checked');
-             }, 100);
-         }
+            if (this.input.prop('checked')) {
+                this.jq.addClass('ui-inputswitch-checked');
+            }
+        },
+        toggle: function () {
+            var $this = this;
+
+            if (this.input.prop('checked'))
+                this.uncheck();
+            else
+                this.check();
+
+            setTimeout(function () {
+                $this.jq.toggleClass('ui-inputswitch-checked');
+            }, 100);
+        }
     });
 }
 
-if(PrimeFaces.widget.SelectBooleanButton) {
-    PrimeFaces.widget.SelectBooleanButton.prototype.check = function() {
-        if(!this.disabled) {
+if (PrimeFaces.widget.SelectBooleanButton) {
+    PrimeFaces.widget.SelectBooleanButton.prototype.check = function () {
+        if (!this.disabled) {
             this.input.prop('checked', true);
             this.jq.addClass('ui-state-active').children('.ui-button-text').contents()[0].textContent = this.cfg.onLabel;
 
-            if(this.icon.length > 0) {
+            if (this.icon.length > 0) {
                 this.icon.removeClass(this.cfg.offIcon).addClass(this.cfg.onIcon);
             }
 
             this.input.trigger('change');
         }
     }
-    
-    PrimeFaces.widget.SelectBooleanButton.prototype.uncheck = function() {
-        if(!this.disabled) {
+
+    PrimeFaces.widget.SelectBooleanButton.prototype.uncheck = function () {
+        if (!this.disabled) {
             this.input.prop('checked', false);
             this.jq.removeClass('ui-state-active').children('.ui-button-text').contents()[0].textContent = this.cfg.offLabel;
 
-            if(this.icon.length > 0) {
+            if (this.icon.length > 0) {
                 this.icon.removeClass(this.cfg.onIcon).addClass(this.cfg.offIcon);
             }
 
@@ -588,51 +554,50 @@ if(PrimeFaces.widget.SelectBooleanButton) {
     }
 }
 
-PrimeFaces.skinInput = function(input) {
+PrimeFaces.skinInput = function (input) {
     var parentElem = input.parent();
 
-    setTimeout(function() {
-        if(input.val() != '') {
+    setTimeout(function () {
+        if (input.val() != '') {
             input.addClass('ui-state-filled');
-            
-            if(parentElem && parentElem.is("span:not('.md-inputfield')")) {
+
+            if (parentElem && parentElem.is("span:not('.md-inputfield')")) {
                 parentElem.addClass('inputfield-wrapper');
             }
         }
     }, 1);
-    
-    input.on('mouseenter', function() {
+
+    input.on('mouseenter', function () {
         $(this).addClass('ui-state-hover');
     })
-    .on('mouseleave', function() {
-        $(this).removeClass('ui-state-hover');
-    })
-    .on('focus', function() {
-        $(this).addClass('ui-state-focus');
-        
-        if(parentElem && parentElem.is("span:not('.md-inputfield')")) {
-            parentElem.addClass('inputfield-wrapper');
-        }
-    })
-    .on('blur', function() {
-        $(this).removeClass('ui-state-focus');
+            .on('mouseleave', function () {
+                $(this).removeClass('ui-state-hover');
+            })
+            .on('focus', function () {
+                $(this).addClass('ui-state-focus');
 
-        if(input.hasClass('hasDatepicker')) {
-            setTimeout(function() {
-                onBlurAnimation(input, parentElem);
-            },150);
-        }
-        else {
-            onBlurAnimation(input, parentElem);
-        }
-    });
+                if (parentElem && parentElem.is("span:not('.md-inputfield')")) {
+                    parentElem.addClass('inputfield-wrapper');
+                }
+            })
+            .on('blur', function () {
+                $(this).removeClass('ui-state-focus');
+
+                if (input.hasClass('hasDatepicker')) {
+                    setTimeout(function () {
+                        onBlurAnimation(input, parentElem);
+                    }, 150);
+                } else {
+                    onBlurAnimation(input, parentElem);
+                }
+            });
 
     //aria
     input.attr('role', 'textbox')
             .attr('aria-disabled', input.is(':disabled'))
             .attr('aria-readonly', input.prop('readonly'));
 
-    if(input.is('textarea')) {
+    if (input.is('textarea')) {
         input.attr('aria-multiline', true);
     }
 
@@ -640,16 +605,15 @@ PrimeFaces.skinInput = function(input) {
 };
 
 function onBlurAnimation(input, parentElem) {
-    if(input.val() != '') {
+    if (input.val() != '') {
         input.addClass('ui-state-filled');
-    }
-    else {
+    } else {
         input.removeClass('ui-state-filled');
 
-        if(parentElem) {
+        if (parentElem) {
             parentElem.removeClass('inputfield-wrapper');
         }
-    }    
+    }
 }
-    
+
 

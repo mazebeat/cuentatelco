@@ -23,50 +23,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package cl.intelidata.negocio;
-
-import cl.intelidata.controllers.PersonaJpaController;
-import cl.intelidata.jpa.Persona;
-import cl.intelidata.utils.EntityHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- *
- * @author DFeliu
+ * Clases anexas
  */
-public class NegocioProfile {
-
-    private static Logger logger = LoggerFactory.getLogger(NegocioProfile.class);
-
-    /**
-     * 
-     * @param person
-     * @return 
-     */
-    public Persona load(Persona person) {
-        int id = person.getId();
-
-        try {
-            PersonaJpaController pctrl = new PersonaJpaController(EntityHelper.getInstance().getEntityManagerFactory());
-            return pctrl.findPersona(id);
-        } catch (Exception ex) {
-            logger.error(ex.getMessage(), ex);
-        }
-
-        return null;
-    }
-
-    /**
-     * 
-     * @param p 
-     */
-    public void save(Persona p) {
-        try {
-            PersonaJpaController pctrl = new PersonaJpaController(EntityHelper.getInstance().getEntityManagerFactory());
-            pctrl.edit(p);
-        } catch (Exception ex) {
-            logger.error(ex.getMessage(), ex);
-        }
-    }
-}
+package cl.intelidata.services;

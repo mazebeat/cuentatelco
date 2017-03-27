@@ -45,25 +45,40 @@ import org.slf4j.LoggerFactory;
  * @author DFeliu
  */
 public class NegocioRegister {
-    
+
     private static Logger logger = LoggerFactory.getLogger(NegocioRegister.class);
-    
+
+    /**
+     * 
+     * @param pass
+     * @param passconf
+     * @return 
+     */
     public boolean validatePassword2(String pass, String passconf) {
-        // TODO Add validation of password and hash
+        // XXX: Add validation of password and hash
         if (pass.equals(passconf) && true) {
             return true;
         }
         return false;
     }
-    
+
+    /**
+     * 
+     * @param name
+     * @param lastname
+     * @param email
+     * @param rut
+     * @param password
+     * @return 
+     */
     public boolean register(String name, String lastname, String email, String rut, String password) {
         boolean response = false;
-        
+
         try {
             ClienteJpaController cctrl = new ClienteJpaController(EntityHelper.getInstance().getEntityManagerFactory());
             PersonaJpaController pctrl = new PersonaJpaController(EntityHelper.getInstance().getEntityManagerFactory());
             Cliente cu = new Cliente();
-            
+
             Persona p = new Persona();
             p.setNombre(name);
             p.setApellidos(lastname);
@@ -85,15 +100,21 @@ public class NegocioRegister {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
-        
+
         return response;
     }
-    
+
+    /**
+     * 
+     * @param rut
+     * @return
+     * @throws Exception 
+     */
     public int getIdClient(String rut) throws Exception {
         EntityManager em = null;
         Cliente c;
         int id = -1;
-        
+
         try {
             em = EntityHelper.getInstance().getEntityManager();
             c = em.createNamedQuery("Cliente.findByRut", Cliente.class)
@@ -111,28 +132,29 @@ public class NegocioRegister {
         }
         return id;
     }
-    
+
+    /**
+     * 
+     * @param event 
+     */
     public void validatePassword(ComponentSystemEvent event) {
-        
+
         FacesContext fc = FacesContext.getCurrentInstance();
-        
+
         UIComponent components = event.getComponent();
-        
+
         UIInput uiInputPassword = (UIInput) components.findComponent("password");
-        String password = uiInputPassword.getLocalValue() == null ? ""
-                : uiInputPassword.getLocalValue().toString();
+        String password = uiInputPassword.getLocalValue() == null ? "" : uiInputPassword.getLocalValue().toString();
         String passwordId = uiInputPassword.getClientId();
-        
+
         UIInput uiInputConfirmPassword = (UIInput) components.findComponent("confirmPassword");
-        String confirmPassword = uiInputConfirmPassword.getLocalValue() == null ? ""
-                : uiInputConfirmPassword.getLocalValue().toString();
-        
+        String confirmPassword = uiInputConfirmPassword.getLocalValue() == null ? "" : uiInputConfirmPassword.getLocalValue().toString();
+
         if (password.isEmpty() || confirmPassword.isEmpty()) {
             return;
         }
-        
+
         if (!password.equals(confirmPassword)) {
-            
             FacesMessage msg = new FacesMessage("Password must match confirm password");
             msg.setSeverity(FacesMessage.SEVERITY_ERROR);
             fc.addMessage(passwordId, msg);

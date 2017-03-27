@@ -43,6 +43,12 @@ public class NegocioPhonesByProduct {
 
     private static Logger logger = LoggerFactory.getLogger(NegocioPhonesByProduct.class);
 
+    /**
+     *
+     * @param idCliente
+     * @param date
+     * @return
+     */
     public List<PhonesByProduct> getData(int idCliente, Calendar date) {
         List<Producto> l = new ArrayList<>();
         List<PhonesByProduct> ll = new ArrayList<>();
@@ -71,6 +77,13 @@ public class NegocioPhonesByProduct {
         return ll;
     }
 
+    /**
+     *
+     * @param idCliente
+     * @param idProducto
+     * @param date
+     * @return
+     */
     public List<PhonesByProduct> getData(int idCliente, int idProducto, Calendar date) {
         List<Producto> l = new ArrayList<>();
         List<PhonesByProduct> ll = new ArrayList<>();
@@ -100,6 +113,13 @@ public class NegocioPhonesByProduct {
         return ll;
     }
 
+    /**
+     *
+     * @param idCliente
+     * @param idProducto
+     * @param date
+     * @return
+     */
     private List<PhonesByProduct> data(int idCliente, int idProducto, Calendar date) {
         List<PhonesByProduct> l = new ArrayList<>();
         EntityManager em = null;
@@ -115,7 +135,7 @@ public class NegocioPhonesByProduct {
                     + "AND MONTH(t.fecha) = " + (date.get(Calendar.MONTH) + 1) + " \n"
                     + "ORDER BY t.monto_total DESC\n"
                     + "LIMIT 20";
-            em = EntityHelper.getInstance().getEntityManager();            
+            em = EntityHelper.getInstance().getEntityManager();
             l = em.createNativeQuery(query, PhonesByProduct.class).getResultList();
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
@@ -127,6 +147,11 @@ public class NegocioPhonesByProduct {
         return l;
     }
 
+    /**
+     *
+     * @param idCliente
+     * @return
+     */
     public List<Producto> getProductList(int idCliente) {
         List<Producto> p = new ArrayList<>();
         EntityManager em = null;
