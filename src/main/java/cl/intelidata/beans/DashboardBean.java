@@ -25,8 +25,8 @@
  */
 package cl.intelidata.beans;
 
-import cl.intelidata.negocio.NegocioConfiguration;
-import cl.intelidata.services.ConfigurationService;
+import cl.intelidata.jpa.Settings;
+import cl.intelidata.negocio.NegocioSettings;
 import cl.intelidata.utils.Utils;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -53,23 +53,23 @@ public class DashboardBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
     private static Logger logger = LoggerFactory.getLogger(DashboardBean.class);
-    private Map<String, List<ConfigurationService>> settingsChart;
+    private Map<String, List<Settings>> settingsChart;
     private Calendar date;
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
 
     @ManagedProperty(value = "#{configurationBean}")
-    private ConfigurationBean configurationBean;
+    private SettingsBean configurationBean;
 
     @PostConstruct
     public void init() {
         try {
             settingsChart = new HashMap<>();
-            settingsChart = NegocioConfiguration.getSettings(loginbean.getClient().getId());
+            settingsChart = NegocioSettings.getSettings(loginbean.getClient().getId());
 
             if (settingsChart.isEmpty()) {
-                settingsChart = NegocioConfiguration.defaultSettings();
+                settingsChart = NegocioSettings.defaultSettings();
             }
 
             //configurationBean.setSettingsChart(settingsChart);
@@ -93,11 +93,11 @@ public class DashboardBean implements Serializable {
         return total;
     }
 
-    public Map<String, List<ConfigurationService>> getSettingsChart() {
+    public Map<String, List<Settings>> getSettingsChart() {
         return settingsChart;
     }
 
-    public void setSettingsChart(Map<String, List<ConfigurationService>> settingsChart) {
+    public void setSettingsChart(Map<String, List<Settings>> settingsChart) {
         this.settingsChart = settingsChart;
     }
 
@@ -119,11 +119,11 @@ public class DashboardBean implements Serializable {
         this.loginbean = loginbean;
     }
 
-    public ConfigurationBean getConfigurationBean() {
+    public SettingsBean getConfigurationBean() {
         return configurationBean;
     }
 
-    public void setConfigurationBean(ConfigurationBean configurationBean) {
+    public void setConfigurationBean(SettingsBean configurationBean) {
         this.configurationBean = configurationBean;
     }
 

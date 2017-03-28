@@ -25,11 +25,11 @@
  */
 package cl.intelidata.beans;
 
+import cl.intelidata.jpa.Settings;
 import cl.intelidata.services.PhoneDetailService;
 import cl.intelidata.jpa.Telefono;
 import cl.intelidata.jpa.TelefonosServicios;
 import cl.intelidata.negocio.NegocioMonthDetail;
-import cl.intelidata.services.ConfigurationService;
 import cl.intelidata.utils.Utils;
 import java.io.Serializable;
 import java.text.ParseException;
@@ -74,7 +74,7 @@ public class MonthDetailBean implements Serializable {
     private PieChartModel chart;
 
     @ManagedProperty(value = "#{configurationBean}")
-    private ConfigurationBean configurationBean;
+    private SettingsBean configurationBean;
 
     @PostConstruct
     public void init() {
@@ -95,11 +95,11 @@ public class MonthDetailBean implements Serializable {
     }
 
     /**
-     * 
+     *
      */
     private void createPieModel() {
         try {
-            List<ConfigurationService> configList = new ArrayList<>();
+            List<Settings> configList = new ArrayList<>();
             configList = configurationBean.getSettingByView("month_detail");
 
             if (configList.size() > 0) {
@@ -112,7 +112,7 @@ public class MonthDetailBean implements Serializable {
                 chartList = new ArrayList<>();
                 NegocioMonthDetail n = new NegocioMonthDetail();
 
-                for (ConfigurationService cs : configList) {
+                for (Settings cs : configList) {
                     phoneList = n.getDataChart(loginbean.getClient().getId(), date, cs.getDimension2());
 
                     chart = new PieChartModel();
@@ -138,8 +138,8 @@ public class MonthDetailBean implements Serializable {
     }
 
     /**
-     * 
-     * @param event 
+     *
+     * @param event
      */
     public void itemSelect(ItemSelectEvent event) {
         try {
@@ -154,29 +154,29 @@ public class MonthDetailBean implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param map
      * @param index
-     * @return 
+     * @return
      */
     public Object getPriceElement(LinkedHashMap map, int index) {
         return map.get((map.keySet().toArray())[index]);
     }
 
     /**
-     * 
+     *
      * @param map
      * @param index
-     * @return 
+     * @return
      */
     public Object getPhoneElement(LinkedHashMap map, int index) {
         return map.keySet().toArray()[index];
     }
 
     /**
-     * 
+     *
      * @param phone
-     * @return 
+     * @return
      */
     private List<TelefonosServicios> fillDatatable(String phone) {
         if (date == null) {
@@ -186,11 +186,11 @@ public class MonthDetailBean implements Serializable {
         return n.getDetail(phone, date);
     }
 
-    public ConfigurationBean getConfigurationBean() {
+    public SettingsBean getConfigurationBean() {
         return configurationBean;
     }
 
-    public void setConfigurationBean(ConfigurationBean configurationBean) {
+    public void setConfigurationBean(SettingsBean configurationBean) {
         this.configurationBean = configurationBean;
     }
 

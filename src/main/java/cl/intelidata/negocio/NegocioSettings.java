@@ -26,7 +26,7 @@
 package cl.intelidata.negocio;
 
 import cl.intelidata.jpa.Modelo;
-import cl.intelidata.services.ConfigurationService;
+import cl.intelidata.jpa.Settings;
 import cl.intelidata.utils.EntityHelper;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,9 +40,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author DFeliu
  */
-public class NegocioConfiguration {
+public class NegocioSettings {
 
-    private static Logger logger = LoggerFactory.getLogger(NegocioConfiguration.class);
+    private static Logger logger = LoggerFactory.getLogger(NegocioSettings.class);
 
     /**
      *
@@ -96,7 +96,7 @@ public class NegocioConfiguration {
      */
     public static String cleanURI(String view) {
         String[] a = view.split("/");
-        //return NegocioConfiguration.toTitleCase(a[a.length - 1].replace(".xhtml", ""));
+        //return NegocioSettings.toTitleCase(a[a.length - 1].replace(".xhtml", ""));
         return a[a.length - 1].replace(".xhtml", "");
     }
 
@@ -129,15 +129,15 @@ public class NegocioConfiguration {
      * @param idCliente
      * @return
      */
-    public static Map<String, List<ConfigurationService>> getSettings(int idCliente) {
-        Map<String, List<ConfigurationService>> set = new HashMap<>();
+    public static Map<String, List<Settings>> getSettings(int idCliente) {
+        Map<String, List<Settings>> set = new HashMap<>();
 
         try {
             // TODO: Cambiar por BBDD
-            set.put("month_detail", monthlyDetailSettings());
-            set.put("monthly_evolution", monthlyEvolutionSettings());
-            set.put("historical_category", historicalCategorySettings());
-            set.put("phones_product", phonesProductSettings());
+            set.put("month_detail", monthlyDetailSettings().isEmpty() ? monthlyDetailDefaultSettings() : monthlyDetailSettings());
+            set.put("monthly_evolution", monthlyEvolutionSettings().isEmpty() ? monthlyEvolutionDefaultSettings() : monthlyEvolutionSettings());
+            set.put("historical_category", historicalCategorySettings().isEmpty() ? historicalCategoryDefaultSettings() : historicalCategorySettings());
+            set.put("phones_product", phonesProductSettings().isEmpty() ? phonesProductDefaultSettings() : phonesProductSettings());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -149,8 +149,8 @@ public class NegocioConfiguration {
      *
      * @return
      */
-    public static Map<String, List<ConfigurationService>> defaultSettings() {
-        Map<String, List<ConfigurationService>> set = new HashMap<>();
+    public static Map<String, List<Settings>> defaultSettings() {
+        Map<String, List<Settings>> set = new HashMap<>();
 
         try {
             // TODO: Cambiar por BBDD
@@ -169,12 +169,17 @@ public class NegocioConfiguration {
      *
      * @return
      */
-    public static List<ConfigurationService> monthlyDetailSettings() {
-        List<ConfigurationService> lcs = new ArrayList<>();
+    public static List<Settings> monthlyDetailSettings() {
+        List<Settings> lcs = new ArrayList<>();
 
         try {
             // XXX: Change for DDBB
-            lcs.add(new ConfigurationService("Monto Total", "Teléfono", "t.monto_total", "te.numero"));
+            Settings c = new Settings();
+            c.setLabel1("Monto Total");
+            c.setLabel2("Teléfono");
+            c.setDimension1("t.monto_total");
+            c.setDimension2("te.numero");
+            lcs.add(c);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -186,12 +191,12 @@ public class NegocioConfiguration {
      *
      * @return
      */
-    private static List<ConfigurationService> phonesProductSettings() {
-        List<ConfigurationService> lcs = new ArrayList<>();
+    private static List<Settings> phonesProductSettings() {
+        List<Settings> lcs = new ArrayList<>();
 
         try {
             // XXX: Change for DDBB
-            lcs.add(new ConfigurationService("", "", "", ""));
+            lcs.add(new Settings());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -203,12 +208,17 @@ public class NegocioConfiguration {
      *
      * @return
      */
-    private static List<ConfigurationService> historicalCategorySettings() {
-        List<ConfigurationService> lcs = new ArrayList<>();
+    private static List<Settings> historicalCategorySettings() {
+        List<Settings> lcs = new ArrayList<>();
 
         try {
             // XXX: Change for DDBB
-            lcs.add(new ConfigurationService("Monto Total", "Producto", "t.monto_total", "te.id_producto"));
+            Settings c = new Settings();
+            c.setLabel1("Monto Total");
+            c.setLabel2("Producto");
+            c.setDimension1("t.monto_total");
+            c.setDimension2("te.id_producto");
+            lcs.add(c);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -220,12 +230,17 @@ public class NegocioConfiguration {
      *
      * @return
      */
-    private static List<ConfigurationService> monthlyEvolutionSettings() {
-        List<ConfigurationService> lcs = new ArrayList<>();
+    private static List<Settings> monthlyEvolutionSettings() {
+        List<Settings> lcs = new ArrayList<>();
 
         try {
             // XXX: Change for DDBB
-            lcs.add(new ConfigurationService("Periodo", "Cliente", "*", "id"));
+            Settings c = new Settings();
+            c.setLabel1("Periodo");
+            c.setLabel2("Cliente");
+            c.setDimension1("*");
+            c.setDimension2("id");
+            lcs.add(c);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -237,11 +252,16 @@ public class NegocioConfiguration {
      *
      * @return
      */
-    public static List<ConfigurationService> monthlyDetailDefaultSettings() {
-        List<ConfigurationService> lcs = new ArrayList<>();
+    public static List<Settings> monthlyDetailDefaultSettings() {
+        List<Settings> lcs = new ArrayList<>();
 
         try {
-            lcs.add(new ConfigurationService("Monto Total", "Teléfono", "t.monto_total", "te.numero"));
+            Settings c = new Settings();
+            c.setLabel1("Monto Total");
+            c.setLabel2("Teléfono");
+            c.setDimension1("t.monto_total");
+            c.setDimension2("te.numero");
+            lcs.add(c);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -253,11 +273,11 @@ public class NegocioConfiguration {
      *
      * @return
      */
-    private static List<ConfigurationService> phonesProductDefaultSettings() {
-        List<ConfigurationService> lcs = new ArrayList<>();
+    private static List<Settings> phonesProductDefaultSettings() {
+        List<Settings> lcs = new ArrayList<>();
 
         try {
-            lcs.add(new ConfigurationService("", "", "", ""));
+            lcs.add(new Settings());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -269,11 +289,16 @@ public class NegocioConfiguration {
      *
      * @return
      */
-    private static List<ConfigurationService> historicalCategoryDefaultSettings() {
-        List<ConfigurationService> lcs = new ArrayList<>();
+    private static List<Settings> historicalCategoryDefaultSettings() {
+        List<Settings> lcs = new ArrayList<>();
 
         try {
-            lcs.add(new ConfigurationService("Monto Total", "Producto", "t.monto_total", "te.id_producto"));
+            Settings c = new Settings();
+            c.setLabel1("Monto Total");
+            c.setLabel2("Producto");
+            c.setDimension1("t.monto_total");
+            c.setDimension2("te.id_producto");
+            lcs.add(c);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -285,11 +310,16 @@ public class NegocioConfiguration {
      *
      * @return
      */
-    private static List<ConfigurationService> monthlyEvolutionDefaultSettings() {
-        List<ConfigurationService> lcs = new ArrayList<>();
+    private static List<Settings> monthlyEvolutionDefaultSettings() {
+        List<Settings> lcs = new ArrayList<>();
 
         try {
-            lcs.add(new ConfigurationService("Periodo", "Cliente", "*", "id"));
+            Settings c = new Settings();
+            c.setLabel1("Periodo");
+            c.setLabel2("Cliente");
+            c.setDimension1("*");
+            c.setDimension2("id");
+            lcs.add(c);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -303,7 +333,45 @@ public class NegocioConfiguration {
      * @param view
      * @return
      */
-    public static List<ConfigurationService> getSettingByView(Map<String, List<ConfigurationService>> map, String view) {
+    public static List<Settings> getSettingByView(Map<String, List<Settings>> map, String view) {
         return map.get(view);
     }
+//
+//    public List<Settings> dbSettingsByView(int idClient, String view) {
+//        EntityManager em = null;
+//        List<Settings> s = new ArrayList<>();
+//
+//        try {
+//            em = EntityHelper.getInstance().getEntityManager();
+//            m = em.createNamedQuery("", Modelo.class).getResultList();
+//        } catch (Exception ex) {
+//            logger.error(ex.getMessage(), ex);
+//            throw ex;
+//        } finally {
+//            if (em != null && em.isOpen()) {
+//                em.close();
+//            }
+//        }
+//
+//        return m;
+//    }
+//
+//    public List<Settings> dbSettings(int idClient) {
+//        EntityManager em = null;
+//        List<Settings> s = new ArrayList<>();
+//
+//        try {
+//            em = EntityHelper.getInstance().getEntityManager();
+//            m = em.createNamedQuery("", Modelo.class).getResultList();
+//        } catch (Exception ex) {
+//            logger.error(ex.getMessage(), ex);
+//            throw ex;
+//        } finally {
+//            if (em != null && em.isOpen()) {
+//                em.close();
+//            }
+//        }
+//
+//        return m;
+//    }
 }

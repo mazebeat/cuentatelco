@@ -25,8 +25,8 @@
  */
 package cl.intelidata.beans;
 
-import cl.intelidata.negocio.NegocioConfiguration;
-import cl.intelidata.services.ConfigurationService;
+import cl.intelidata.jpa.Settings;
+import cl.intelidata.negocio.NegocioSettings;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -68,17 +68,17 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 @ManagedBean
 @ViewScoped
-public class ConfigurationBean implements Serializable {
+public class SettingsBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
-    private static Logger logger = LoggerFactory.getLogger(ConfigurationBean.class);
+    private static Logger logger = LoggerFactory.getLogger(SettingsBean.class);
     public FacesMessage msg = null;
 
     private int columns;
     private String label1, label2, dimension1, dimension2, view;
-    private List<ConfigurationService> configList;
+    private List<Settings> configList;
     private List<String> dimensions1, dimensions2;
-    public static Map<String, List<ConfigurationService>> settingsChart = new HashMap<>();
+    public static Map<String, List<Settings>> settingsChart = new HashMap<>();
     private UploadedFile file;
     private File tempfile;
 
@@ -90,18 +90,16 @@ public class ConfigurationBean implements Serializable {
         try {
             configList = new ArrayList();
 
+            HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            view = NegocioSettings.cleanURI(req.getHeader("Referer"));
+
             Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
             if (view.isEmpty() && params.containsKey("view")) {
                 view = params.get("view");
             }
 
-            if (view.isEmpty()) {
-                HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-                view = NegocioConfiguration.cleanURI(req.getHeader("Referer"));
-            }
-
             if (settingsChart.isEmpty()) {
-                settingsChart = NegocioConfiguration.getSettings(loginbean.getClient().getId());
+                settingsChart = NegocioSettings.getSettings(loginbean.getClient().getId());
             }
 
             if (!view.equals("")) {
@@ -147,7 +145,7 @@ public class ConfigurationBean implements Serializable {
                 // XXX: Add dimensions
                 break;
             default:
-//                System.out.println("cl.intelidata.beans.ConfigurationBean.init() CLASS");
+//                System.out.println("cl.intelidata.beans.SettingsBean.init() CLASS");
                 break;
         }
     }
@@ -160,7 +158,13 @@ public class ConfigurationBean implements Serializable {
             configList = settingsChart.get(view);
 
             if (!configList.isEmpty() && configList.size() < 4) {
-                ConfigurationService con = new ConfigurationService(label1, label2, dimension1, dimension2, view, loginbean.getClient().getId());
+                Settings con = new Settings();
+                con.setLabel1(label1);
+                con.setLabel2(label2);
+                con.setDimension1(dimension1);
+                con.setDimension2(dimension2);
+                con.setView(view);
+                con.setIdCliente(loginbean.getClient());
                 configList.add(con);
 
                 settingsChart.remove(view);
@@ -185,7 +189,7 @@ public class ConfigurationBean implements Serializable {
      */
     public void edit(RowEditEvent event) {
         try {
-            msg = new FacesMessage("Item Edited", ((ConfigurationService) event.getObject()).getLabel1());
+            msg = new FacesMessage("Item Edited", ((Settings) event.getObject()).getLabel1());
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -199,7 +203,7 @@ public class ConfigurationBean implements Serializable {
     public void cancel(RowEditEvent event) {
         try {
             msg = new FacesMessage("Item Cancelled");
-            configList.remove((ConfigurationService) event.getObject());
+            configList.remove((Settings) event.getObject());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         } finally {
@@ -211,7 +215,7 @@ public class ConfigurationBean implements Serializable {
      *
      * @param conf
      */
-    public void delete(ConfigurationService conf) {
+    public void delete(Settings conf) {
         try {
             configList.remove(conf);
 
@@ -235,8 +239,8 @@ public class ConfigurationBean implements Serializable {
      * @param idCliente
      * @return
      */
-    public static Map<String, List<ConfigurationService>> getSettings(int idCliente) {
-        settingsChart = NegocioConfiguration.getSettings(idCliente);
+    public static Map<String, List<Settings>> getSettings(int idCliente) {
+        settingsChart = NegocioSettings.getSettings(idCliente);
         return settingsChart;
     }
 
@@ -245,8 +249,8 @@ public class ConfigurationBean implements Serializable {
      * @param view
      * @return
      */
-    public static List<ConfigurationService> getSettingByView(String view) {
-        return NegocioConfiguration.getSettingByView(settingsChart, view);
+    public static List<Settings> getSettingByView(String view) {
+        return NegocioSettings.getSettingByView(settingsChart, view);
     }
 
     /**
@@ -420,11 +424,11 @@ public class ConfigurationBean implements Serializable {
         this.view = view;
     }
 
-    public List<ConfigurationService> getConfigList() {
+    public List<Settings> getConfigList() {
         return configList;
     }
 
-    public void setConfigList(List<ConfigurationService> configList) {
+    public void setConfigList(List<Settings> configList) {
         this.configList = configList;
     }
 
