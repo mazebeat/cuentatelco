@@ -59,8 +59,8 @@ public class DashboardBean implements Serializable {
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
 
-    @ManagedProperty(value = "#{configurationBean}")
-    private SettingsBean configurationBean;
+    @ManagedProperty(value = "#{settingsBean}")
+    private SettingsBean settingsBean;
 
     @PostConstruct
     public void init() {
@@ -119,12 +119,12 @@ public class DashboardBean implements Serializable {
         this.loginbean = loginbean;
     }
 
-    public SettingsBean getConfigurationBean() {
-        return configurationBean;
+    public SettingsBean getSettingsBean() {
+        return settingsBean;
     }
 
-    public void setConfigurationBean(SettingsBean configurationBean) {
-        this.configurationBean = configurationBean;
+    public void setSettingsBean(SettingsBean settingsBean) {
+        this.settingsBean = settingsBean;
     }
 
     public String getFormatDate() {
