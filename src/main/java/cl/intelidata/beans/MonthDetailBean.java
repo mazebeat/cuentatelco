@@ -73,8 +73,8 @@ public class MonthDetailBean implements Serializable {
     private LoginBean loginbean;
     private PieChartModel chart;
 
-    @ManagedProperty(value = "#{configurationBean}")
-    private SettingsBean configurationBean;
+    @ManagedProperty(value = "#{settingsBean}")
+    private SettingsBean settingsBean;
 
     @PostConstruct
     public void init() {
@@ -100,7 +100,7 @@ public class MonthDetailBean implements Serializable {
     private void createPieModel() {
         try {
             List<Settings> configList = new ArrayList<>();
-            configList = configurationBean.getSettingByView("month_detail");
+            configList = settingsBean.getSettingByView("month_detail");
 
             if (configList.size() > 0) {
                 columns = 1;
@@ -186,12 +186,12 @@ public class MonthDetailBean implements Serializable {
         return n.getDetail(phone, date);
     }
 
-    public SettingsBean getConfigurationBean() {
-        return configurationBean;
+    public SettingsBean getSettingsBean() {
+        return settingsBean;
     }
 
-    public void setConfigurationBean(SettingsBean configurationBean) {
-        this.configurationBean = configurationBean;
+    public void setSettingsBean(SettingsBean settingsBean) {
+        this.settingsBean = settingsBean;
     }
 
     public String getPhone() {

@@ -64,8 +64,8 @@ public class HistoricalCategoryBean implements Serializable {
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
 
-    @ManagedProperty(value = "#{configurationBean}")
-    private SettingsBean configurationBean;
+    @ManagedProperty(value = "#{settingsBean}")
+    private SettingsBean settingsBean;
 
     @PostConstruct
     public void init() {
@@ -82,7 +82,7 @@ public class HistoricalCategoryBean implements Serializable {
             date.set(2015, 4, 1, 0, 0);
 
             List<Settings> configList = new ArrayList<>();
-            configList = configurationBean.getSettingByView("historical_category");
+            configList = settingsBean.getSettingByView("historical_category");
             chartList = new ArrayList<>();
 
             columns = 1;
@@ -165,12 +165,12 @@ public class HistoricalCategoryBean implements Serializable {
         this.chartList = chartList;
     }
 
-    public SettingsBean getConfigurationBean() {
-        return configurationBean;
+    public SettingsBean getSettingsBean() {
+        return settingsBean;
     }
 
-    public void setConfigurationBean(SettingsBean configurationBean) {
-        this.configurationBean = configurationBean;
+    public void setSettingsBean(SettingsBean settingsBean) {
+        this.settingsBean = settingsBean;
     }
 
 }

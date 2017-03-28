@@ -67,8 +67,8 @@ public class MonthlyEvolutionBean implements Serializable {
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
 
-    @ManagedProperty(value = "#{configurationBean}")
-    private SettingsBean configurationBean;
+    @ManagedProperty(value = "#{settingsBean}")
+    private SettingsBean settingsBean;
 
     @PostConstruct
     public void init() {
@@ -85,7 +85,7 @@ public class MonthlyEvolutionBean implements Serializable {
     private void createLineModels() {
         try {
             List<Settings> configList = new ArrayList<>();
-            configList = configurationBean.getSettingByView("monthly_evolution");
+            configList = settingsBean.getSettingByView("monthly_evolution");
             chartList = new ArrayList<>();
 
             columns = 1;
@@ -172,12 +172,12 @@ public class MonthlyEvolutionBean implements Serializable {
         this.chartList = chartList;
     }
 
-    public SettingsBean getConfigurationBean() {
-        return configurationBean;
+    public SettingsBean getSettingsBean() {
+        return settingsBean;
     }
 
-    public void setConfigurationBean(SettingsBean configurationBean) {
-        this.configurationBean = configurationBean;
+    public void setSettingsBean(SettingsBean settingsBean) {
+        this.settingsBean = settingsBean;
     }
 
 }

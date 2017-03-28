@@ -88,28 +88,27 @@ public class SettingsBean implements Serializable {
     @PostConstruct
     public void init() {
         try {
+            view = "dashboard";
             configList = new ArrayList();
 
             HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
             view = NegocioSettings.cleanURI(req.getHeader("Referer"));
 
             Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-            if (view.isEmpty() && params.containsKey("view")) {
+            if (params.containsKey("view")) {
                 view = params.get("view");
             }
 
-            if (settingsChart.isEmpty()) {
-                settingsChart = NegocioSettings.getSettings(loginbean.getClient().getId());
-            }
-
-            if (!view.equals("")) {
+            if (!view.isEmpty()) {
                 generateDimensions(view);
+
+                if (settingsChart.isEmpty()) {
+                    settingsChart = NegocioSettings.getSettings(loginbean.getClient().getId());
+                }
 
                 if (!settingsChart.isEmpty()) {
                     configList = settingsChart.get(view);
                 }
-            } else {
-                logger.info("Variable 'view' no encontrada");
             }
             columns = 1;
         } catch (Exception e) {
