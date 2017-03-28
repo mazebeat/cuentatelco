@@ -28,11 +28,12 @@ package cl.intelidata.beans;
 import cl.intelidata.jpa.Modelo;
 import cl.intelidata.negocio.NegocioCatalog;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,7 @@ import org.slf4j.LoggerFactory;
  * @author DFeliu
  */
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class CatalogBean implements Serializable {
 
     private static Logger logger = LoggerFactory.getLogger(CatalogBean.class);
@@ -59,6 +60,18 @@ public class CatalogBean implements Serializable {
         try {
             NegocioCatalog n = new NegocioCatalog();
             devicesList = n.getDevicesList();
+
+            String[] i = new String[]{"/equipos/samsung galaxy s5/image.png", "/equipos/LG G Flex/image.png", "/equipos/nokia 220 white/image.png", "/equipos/samsung galaxy note 3/image.png", "/equipos/sony xperia C3 Selfie Pro/image.png"};
+            // XXX: Delete when all the images are in the repository
+
+            List<Modelo> devicesList2 = new ArrayList<>();
+            for (Modelo modelo : devicesList) {
+                String m = i[randomWithRange(0, i.length - 1)];
+                modelo.setUrlImg(m);
+                devicesList2.add(modelo);
+            }
+
+            devicesList = devicesList2;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -78,5 +91,10 @@ public class CatalogBean implements Serializable {
 
     public void setDevicesList(List<Modelo> devicesList) {
         this.devicesList = devicesList;
+    }
+
+    int randomWithRange(int min, int max) {
+        int range = (max - min) + 1;
+        return (int) (Math.random() * range) + min;
     }
 }

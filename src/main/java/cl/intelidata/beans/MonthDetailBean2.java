@@ -1,3 +1,5 @@
+package cl.intelidata.beans;
+
 /*
  * Copyright (c) 2016, Intelidata S.A.
  * All rights reserved.
@@ -23,13 +25,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package cl.intelidata.beans;
-
 import cl.intelidata.jpa.Settings;
 import cl.intelidata.services.PhoneDetailService;
 import cl.intelidata.jpa.Telefono;
 import cl.intelidata.jpa.TelefonosServicios;
-import cl.intelidata.negocio.NegocioMonthDetail;
+import cl.intelidata.negocio.NegocioMonthDetail2;
 import cl.intelidata.utils.Utils;
 import java.io.Serializable;
 import java.text.ParseException;
@@ -55,10 +55,10 @@ import org.slf4j.LoggerFactory;
  */
 @ManagedBean
 @RequestScoped
-public class MonthDetailBean implements Serializable {
+public class MonthDetailBean2 implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
-    private static Logger logger = LoggerFactory.getLogger(MonthDetailBean.class);
+    private static Logger logger = LoggerFactory.getLogger(MonthDetailBean2.class);
 
     private String phone, sContratados, sConsumidos, sPcsnoincluidos, sTerceros, cobrosDesc;
     private Number price;
@@ -110,7 +110,7 @@ public class MonthDetailBean implements Serializable {
                 }
 
                 chartList = new ArrayList<>();
-                NegocioMonthDetail n = new NegocioMonthDetail();
+                NegocioMonthDetail2 n = new NegocioMonthDetail2();
 
                 for (Settings cs : configList) {
                     phoneList = n.getDataChart(loginbean.getClient().getId(), date, cs.getDimension2());
@@ -128,6 +128,7 @@ public class MonthDetailBean implements Serializable {
 //                    chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
                     chart.setLegendCols(5);
                     chart.setLegendRows(2);
+                    chart.setExtender("chartExtender");
                     chartList.add(chart);
                 }
             }
@@ -182,7 +183,7 @@ public class MonthDetailBean implements Serializable {
         if (date == null) {
             date = Calendar.getInstance();
         }
-        NegocioMonthDetail n = new NegocioMonthDetail();
+        NegocioMonthDetail2 n = new NegocioMonthDetail2();
         return n.getDetail(phone, date);
     }
 

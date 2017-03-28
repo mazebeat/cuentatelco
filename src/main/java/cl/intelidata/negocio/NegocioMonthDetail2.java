@@ -39,9 +39,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author DFeliu
  */
-public class NegocioMonthDetail {
+public class NegocioMonthDetail2 {
 
-    private static Logger logger = LoggerFactory.getLogger(NegocioMonthDetail.class);
+    private static Logger logger = LoggerFactory.getLogger(NegocioMonthDetail2.class);
 
     /**
      * 

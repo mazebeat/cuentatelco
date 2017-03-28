@@ -98,6 +98,7 @@ public class PhonesByProductBean implements Serializable {
 //            chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
             chart.setLegendCols(5);
             chart.setLegendRows(4);
+            chart.setExtender("chartExtender");
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }

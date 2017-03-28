@@ -21,7 +21,7 @@
 
                         <!-- Dynamic charts -->
                         <p:dataGrid id="chartdataGrid" var="list" value="#{historicalCategoryBean.chartList}" columns="#{historicalCategoryBean.columns}" style="border:none !important;">
-                            <p:chart type="pie" model="#{list}" style="width:100%; min-height:300px; border:none !important;" responsive="true"/>
+                            <p:chart type="pie" model="#{list}" style="width:100%; min-height:500px; border:none !important;" responsive="true"/>
                         </p:dataGrid>
                     </div>
 
@@ -29,7 +29,5 @@
                 </div>
             </div>
         </h:form>
-
     </ui:define>
-
 </ui:composition>

@@ -9,7 +9,7 @@
         <div class="ui-g">
             <div class="ui-g-12">
                 <div class="card">
-                    <h1>Linea de Tiempo</h1>
+                    <h1>Catálogo</h1>
                     <p:growl id="growl" showSummary="true" showDetail="true" autoUpdate="true"/> 
 
                     <p:dataTable var="d" value="#{catalogBean.devicesList}" 
@@ -17,15 +17,15 @@
                         <f:facet name="header">
                         </f:facet>
 
-                        <p:column headerText="">
-                            <p:graphicImage url="resources/images#{d.urlImg}" height="100px" width="auto" style="margin:24px;" />
+                        <p:column headerText="" style="white-space: normal;text-align: center;padding: 0 !important;">
+                            <p:graphicImage url="resources/images#{d.urlImg}" height="100px" width="auto" style="" />
                         </p:column>
 
-                        <p:column headerText="Modelo" sortBy="#{d.modelo}">
+                        <p:column headerText="Modelo" sortBy="#{d.modelo}" style="white-space: normal;text-align: center;padding: 0 !important;">
                             <h:outputText value="#{d.modelo}" />
                         </p:column>
 
-                        <p:column headerText="Marca" sortBy="#{d.idMarca.marca}">
+                        <p:column headerText="Marca" sortBy="#{d.idMarca.marca}" style="white-space: normal;text-align: center;padding: 0 !important; ">
                             <h:outputText value="#{d.idMarca.marca}" />
                         </p:column>
 

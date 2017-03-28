@@ -108,7 +108,7 @@ public class HistoricalCategoryBean implements Serializable {
 //                    chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
                     chart.setLegendCols(3);
                     chart.setLegendRows(4);
-
+                    chart.setExtender("chartExtender");
                     chartList.add(chart);
                 }
             }
