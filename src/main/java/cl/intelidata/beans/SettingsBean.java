@@ -85,7 +85,7 @@ public class SettingsBean implements Serializable {
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
 
-    @PostConstruct
+    @PostConstruct 
     public void init() {
         try {
             view = "dashboard";
