@@ -26,8 +26,8 @@
 package cl.intelidata.beans;
 
 import cl.intelidata.jpa.ResumenAnualCliente;
+import cl.intelidata.jpa.Settings;
 import cl.intelidata.negocio.NegocioMonthlyEvolution;
-import cl.intelidata.services.ConfigurationService;
 import cl.intelidata.utils.Utils;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -68,7 +68,7 @@ public class MonthlyEvolutionBean implements Serializable {
     private LoginBean loginbean;
 
     @ManagedProperty(value = "#{configurationBean}")
-    private ConfigurationBean configurationBean;
+    private SettingsBean configurationBean;
 
     @PostConstruct
     public void init() {
@@ -84,7 +84,7 @@ public class MonthlyEvolutionBean implements Serializable {
      */
     private void createLineModels() {
         try {
-            List<ConfigurationService> configList = new ArrayList<>();
+            List<Settings> configList = new ArrayList<>();
             configList = configurationBean.getSettingByView("monthly_evolution");
             chartList = new ArrayList<>();
 
@@ -95,7 +95,7 @@ public class MonthlyEvolutionBean implements Serializable {
                     columns = 2;
                 }
 
-                for (ConfigurationService cs : configList) {
+                for (Settings cs : configList) {
                     chart = new LineChartModel();
                     LineChartSeries series = new LineChartSeries();
 
@@ -172,11 +172,11 @@ public class MonthlyEvolutionBean implements Serializable {
         this.chartList = chartList;
     }
 
-    public ConfigurationBean getConfigurationBean() {
+    public SettingsBean getConfigurationBean() {
         return configurationBean;
     }
 
-    public void setConfigurationBean(ConfigurationBean configurationBean) {
+    public void setConfigurationBean(SettingsBean configurationBean) {
         this.configurationBean = configurationBean;
     }
 

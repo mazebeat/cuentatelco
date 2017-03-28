@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
     <f:metadata>
-        <f:viewParam name="view" value="#{configurationBean.view}" />
+        <f:viewParam name="view" value="#{settingsBean.view}" />
         <f:viewAction action="#{beanGuestPreferences.checkF5}" onPostback="true" />
     </f:metadata>
 
@@ -21,12 +21,12 @@
 
 
                         <!-- Configuration Table -->
-                        <p:dataTable id="configTable" value="#{configurationBean.configList}" var="c" editable="true">
+                        <p:dataTable id="configTable" value="#{settingsBean.configList}" var="c" editable="true">
                             <f:facet name="header">  
-                                Configuration #{configurationBean.view}                                
+                                Configuration #{settingsBean.view}                                
                             </f:facet>
-                            <p:ajax event="rowEdit" listener="#{configurationBean.edit}" update=":configForm:messages" />  
-                            <p:ajax event="rowEditCancel" listener="#{configurationBean.cancel}" update=":configForm:messages" /> 
+                            <p:ajax event="rowEdit" listener="#{settingsBean.edit}" update=":configForm:messages" />  
+                            <p:ajax event="rowEditCancel" listener="#{settingsBean.cancel}" update=":configForm:messages" /> 
 
                             <p:column>
                                 <f:facet name="header"><h:outputLabel value="Label 1" /></f:facet>
@@ -47,9 +47,9 @@
                                         <h:outputText value="#{c.dimension1}" />  
                                     </f:facet>  
                                     <f:facet name="input">  
-                                        <p:selectOneMenu id="dim1" value="#{configurationBean.dimension1}">
+                                        <p:selectOneMenu id="dim1" value="#{settingsBean.dimension1}">
                                             <f:selectItem itemLabel="Select One" itemValue="" />
-                                            <f:selectItems value="#{configurationBean.dimensions1}" />
+                                            <f:selectItems value="#{settingsBean.dimensions1}" />
                                         </p:selectOneMenu>
                                     </f:facet>  
                                 </p:cellEditor> 
@@ -74,9 +74,9 @@
                                         <h:outputText value="#{c.dimension2}" />  
                                     </f:facet>  
                                     <f:facet name="input">  
-                                        <p:selectOneMenu id="dim2" value="#{configurationBean.dimension2}">
+                                        <p:selectOneMenu id="dim2" value="#{settingsBean.dimension2}">
                                             <f:selectItem itemLabel="Select One" itemValue="" />
-                                            <f:selectItems value="#{configurationBean.dimensions2}" />
+                                            <f:selectItems value="#{settingsBean.dimensions2}" />
                                         </p:selectOneMenu>
                                     </f:facet>  
                                 </p:cellEditor> 
@@ -85,7 +85,7 @@
                             <p:column>
                                 <f:facet name="header"><h:outputLabel value="Action" /></f:facet>
                                 <!--<p:rowEditor />-->
-                                <h:commandLink id="remove" value="delete" action="#{configurationBean.delete(c)}"
+                                <h:commandLink id="remove" value="delete" action="#{settingsBean.delete(c)}"
                                                onclick="return confirm('Are you sure?')">
                                     <f:ajax render="configForm:configTable" />
                                 </h:commandLink>
@@ -104,41 +104,41 @@
                                 <h:outputLabel value="Valor 1" style="font-weight: bold;" />
 
                                 <h:panelGroup styleClass="md-inputfield">
-                                    <p:inputText id="lbl1" value="#{configurationBean.label1}" required="true" requiredMessage="Label 1 required" style="width: 100%;"/>
+                                    <p:inputText id="lbl1" value="#{settingsBean.label1}" required="true" requiredMessage="Label 1 required" style="width: 100%;"/>
                                     <p:message for="lbl1" style="color: red;" />
                                     <p:outputLabel value="Label 1" for="lbl1"/>
                                 </h:panelGroup>                           
 
                                 <h:outputLabel for="dim1" value="Dimension 1" />
 
-                                <p:selectOneMenu id="dim1" value="#{configurationBean.dimension1}" required="true" requiredMessage="Dimension 1 required">
+                                <p:selectOneMenu id="dim1" value="#{settingsBean.dimension1}" required="true" requiredMessage="Dimension 1 required">
                                     <f:selectItem itemLabel="Select One" itemValue="" />
-                                    <f:selectItems value="#{configurationBean.dimensions1}" />
+                                    <f:selectItems value="#{settingsBean.dimensions1}" />
                                 </p:selectOneMenu>
 
                                 <h:outputLabel value="Valor 2" style="font-weight: bold;"/>
 
                                 <h:panelGroup styleClass="md-inputfield">
-                                    <p:inputText id="lbl2" value="#{configurationBean.label2}" required="true" requiredMessage="Label 2 required" style="width: 100%;" />
+                                    <p:inputText id="lbl2" value="#{settingsBean.label2}" required="true" requiredMessage="Label 2 required" style="width: 100%;" />
                                     <p:message for="lbl2" style="color: red;" />
                                     <p:outputLabel value="Label 2" for="lbl2"/>
                                 </h:panelGroup>                            
 
                                 <h:outputLabel for="dim2" value="Dimension 2" />
-                                <p:selectOneMenu id="dim2" value="#{configurationBean.dimension2}" required="true" requiredMessage="Dimension 2 required">
+                                <p:selectOneMenu id="dim2" value="#{settingsBean.dimension2}" required="true" requiredMessage="Dimension 2 required">
                                     <f:selectItem itemLabel="Select One" itemValue="" />
-                                    <f:selectItems value="#{configurationBean.dimensions2}" />
+                                    <f:selectItems value="#{settingsBean.dimensions2}" />
                                 </p:selectOneMenu>
                             </p:panelGrid> 
 
-                            <p:commandButton action="#{configurationBean.add}" value="Add" update="messages configTable">
+                            <p:commandButton action="#{settingsBean.add}" value="Add" update="messages configTable">
                                 <f:ajax execute="configForm" render="configForm:configTable" />
                             </p:commandButton>
                         </p:dialog>   
 
                     </div>
 
-                    <p:fileUpload value="#{configurationBean.file}" 
+                    <p:fileUpload value="#{settingsBean.file}" 
                                   skinSimple="true"
                                   mode="advanced"
                                   update=":configForm:messages" 
@@ -148,7 +148,7 @@
 
                 </h:form> 
 
-                <p:button outcome="/#{configurationBean.view}" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
+                <p:button outcome="/#{settingsBean.view}" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
             </div>
         </div>
     </ui:define>

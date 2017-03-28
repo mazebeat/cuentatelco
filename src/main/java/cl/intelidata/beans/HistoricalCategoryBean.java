@@ -27,7 +27,7 @@ package cl.intelidata.beans;
 
 import cl.intelidata.negocio.NegocioHistoricalCategory;
 import cl.intelidata.jpa.HistoricalCategory;
-import cl.intelidata.services.ConfigurationService;
+import cl.intelidata.jpa.Settings;
 import cl.intelidata.utils.Utils;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public class HistoricalCategoryBean implements Serializable {
     private LoginBean loginbean;
 
     @ManagedProperty(value = "#{configurationBean}")
-    private ConfigurationBean configurationBean;
+    private SettingsBean configurationBean;
 
     @PostConstruct
     public void init() {
@@ -81,7 +81,7 @@ public class HistoricalCategoryBean implements Serializable {
             Calendar date = GregorianCalendar.getInstance(Utils.LOCAL_ES);
             date.set(2015, 4, 1, 0, 0);
 
-            List<ConfigurationService> configList = new ArrayList<>();
+            List<Settings> configList = new ArrayList<>();
             configList = configurationBean.getSettingByView("historical_category");
             chartList = new ArrayList<>();
 
@@ -92,7 +92,7 @@ public class HistoricalCategoryBean implements Serializable {
                     columns = 2;
                 }
 
-                for (ConfigurationService cs : configList) {
+                for (Settings cs : configList) {
                     chart = new PieChartModel();
                     NegocioHistoricalCategory n = new NegocioHistoricalCategory();
                     List<HistoricalCategory> l = n.getData(loginbean.getClient().getId(), date, cs.getDimension2());
@@ -165,11 +165,11 @@ public class HistoricalCategoryBean implements Serializable {
         this.chartList = chartList;
     }
 
-    public ConfigurationBean getConfigurationBean() {
+    public SettingsBean getConfigurationBean() {
         return configurationBean;
     }
 
-    public void setConfigurationBean(ConfigurationBean configurationBean) {
+    public void setConfigurationBean(SettingsBean configurationBean) {
         this.configurationBean = configurationBean;
     }
 
