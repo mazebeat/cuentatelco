@@ -144,7 +144,6 @@ public class SettingsBean implements Serializable {
                 // XXX: Add dimensions
                 break;
             default:
-//                System.out.println("cl.intelidata.beans.SettingsBean.init() CLASS");
                 break;
         }
     }
