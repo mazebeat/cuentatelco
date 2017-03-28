@@ -29,7 +29,7 @@ import cl.intelidata.jpa.Settings;
 import cl.intelidata.services.PhoneDetailService;
 import cl.intelidata.jpa.Telefono;
 import cl.intelidata.jpa.TelefonosServicios;
-import cl.intelidata.negocio.NegocioMonthDetail2;
+import cl.intelidata.negocio.NegocioMonthDetail;
 import cl.intelidata.utils.Utils;
 import java.io.Serializable;
 import java.text.ParseException;
@@ -55,10 +55,10 @@ import org.slf4j.LoggerFactory;
  */
 @ManagedBean
 @RequestScoped
-public class MonthDetailBean2 implements Serializable {
+public class MonthDetailBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
-    private static Logger logger = LoggerFactory.getLogger(MonthDetailBean2.class);
+    private static Logger logger = LoggerFactory.getLogger(MonthDetailBean.class);
 
     private String phone, sContratados, sConsumidos, sPcsnoincluidos, sTerceros, cobrosDesc;
     private Number price;
@@ -110,7 +110,7 @@ public class MonthDetailBean2 implements Serializable {
                 }
 
                 chartList = new ArrayList<>();
-                NegocioMonthDetail2 n = new NegocioMonthDetail2();
+                NegocioMonthDetail n = new NegocioMonthDetail();
 
                 for (Settings cs : configList) {
                     phoneList = n.getDataChart(loginbean.getClient().getId(), date, cs.getDimension2());
@@ -183,7 +183,7 @@ public class MonthDetailBean2 implements Serializable {
         if (date == null) {
             date = Calendar.getInstance();
         }
-        NegocioMonthDetail2 n = new NegocioMonthDetail2();
+        NegocioMonthDetail n = new NegocioMonthDetail();
         return n.getDetail(phone, date);
     }
 
