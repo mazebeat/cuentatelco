@@ -70,7 +70,7 @@ public class MonthDetailBean implements Serializable {
     private List<PieChartModel> chartList;
 
     @ManagedProperty(value = "#{loginBean}")
-    private LoginBean loginbean;    
+    private LoginBean loginbean;
 
     @ManagedProperty(value = "#{settingsBean}")
     private SettingsBean settingsBean;
@@ -116,7 +116,8 @@ public class MonthDetailBean implements Serializable {
                     chart = new PieChartModel();
 
                     for (Telefono telefono : phoneList) {
-                        chart.set(telefono.getNumero(), telefono.getTotalList().get(0).getMontoTotal());
+//                        chart.set(telefono.getNumero(), telefono.getTotalList().get(0).getMontoTotal());
+                        chart.set(telefono.getNumero(), Math.random() * 1000);
                     }
 
                     chart.setTitle(cs.getLabel1() + "/" + cs.getLabel2());

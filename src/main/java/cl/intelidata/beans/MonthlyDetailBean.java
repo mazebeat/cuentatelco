@@ -25,14 +25,11 @@
  */
 package cl.intelidata.beans;
 
-import cl.intelidata.jpa.ResumenAnualCliente;
 import cl.intelidata.jpa.Settings;
 import cl.intelidata.jpa.Telefono;
 import cl.intelidata.negocio.NegocioMonthDetail;
-import cl.intelidata.negocio.NegocioMonthlyEvolution;
 import cl.intelidata.utils.Utils;
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,13 +39,9 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import org.primefaces.model.chart.AxisType;
-import org.primefaces.model.chart.DateAxis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.primefaces.model.chart.LineChartModel;
-import org.primefaces.model.chart.LineChartSeries;
 import org.primefaces.model.chart.PieChartModel;
 
 /**
@@ -104,27 +97,27 @@ public class MonthlyDetailBean implements Serializable {
 //                if (configList.size() > 1) {
 //                    columns = 2;
 //                }
-            for (Settings cs : configList) {
-                chart = new PieChartModel();
+//            for (Settings cs : configList) {
+            chart = new PieChartModel();
 
-                NegocioMonthDetail n = new NegocioMonthDetail();
-                List<Telefono> l = n.getDataChart(loginbean.getClient().getId(), date, cs.getDimension2());
+            NegocioMonthDetail n = new NegocioMonthDetail();
+            List<Telefono> l = n.getDataChart(loginbean.getClient().getId(), date, "");
 
-                chart.setExtender("chartExtender");
-                for (Telefono telefono : l) {
-                    chart.set(telefono.getNumero(), telefono.getTotalList().get(0).getMontoTotal());
-                }
-
-                chart.setTitle(cs.getLabel1() + "/" + cs.getLabel2());
-                chart.setLegendPosition("s");
-                chart.setShowDataLabels(true);
-                chart.setMouseoverHighlight(true);
-//                    chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
-                chart.setLegendCols(5);
-                chart.setLegendRows(2);
-                chart.setExtender("chartExtender");
-                chartList.add(chart);
+            for (Telefono telefono : l) {
+//                    chart.set(telefono.getNumero(), telefono.getTotalList().get(0).getMontoTotal());
+                chart.set(telefono.getNumero(), Math.random() * 1000);
             }
+
+//            chart.setTitle(cs.getLabel1() + "/" + cs.getLabel2());
+//            chart.setLegendPosition("s");
+//            chart.setShowDataLabels(true);
+//            chart.setMouseoverHighlight(true);
+////                    chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
+//            chart.setLegendCols(5);
+//            chart.setLegendRows(2);
+//            chart.setExtender("chartExtender");
+//            chartList.add(chart);
+//            }
 //            }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
