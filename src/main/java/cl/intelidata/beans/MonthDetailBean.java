@@ -78,8 +78,7 @@ public class MonthDetailBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        try {
-            RequestContext.getCurrentInstance().update("formMonthDetail:chartdataGrid");
+        try {            
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
             String dateInString = "2015-05-01";
