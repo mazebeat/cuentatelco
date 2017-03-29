@@ -116,8 +116,7 @@ public class MonthDetailBean implements Serializable {
                     chart = new PieChartModel();
 
                     for (Telefono telefono : phoneList) {
-//                        chart.set(telefono.getNumero(), telefono.getTotalList().get(0).getMontoTotal());
-                        chart.set(telefono.getNumero(), Math.random() * 1000);
+                        chart.set(telefono.getNumero(), telefono.getTotalList().get(0).getMontoTotal());
                     }
 
                     chart.setTitle(cs.getLabel1() + "/" + cs.getLabel2());

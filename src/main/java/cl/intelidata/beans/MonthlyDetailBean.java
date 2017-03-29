@@ -70,12 +70,6 @@ public class MonthlyDetailBean implements Serializable {
     @PostConstruct
     public void init() {
         try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-            String dateInString = "2015-05-01";
-            date = GregorianCalendar.getInstance(Utils.LOCAL_ES);
-            date.setTime(formatter.parse(dateInString));
-
             createModels();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -87,38 +81,19 @@ public class MonthlyDetailBean implements Serializable {
      */
     private void createModels() {
         try {
-            List<Settings> configList = new ArrayList<>();
-            configList = settingsBean.getSettingByView("month_detail");
-            chartList = new ArrayList<>();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+            String dateInString = "2015-05-01";
+            date = GregorianCalendar.getInstance(Utils.LOCAL_ES);
+            date.setTime(formatter.parse(dateInString));
 
             columns = 1;
-
-//            if (!configList.isEmpty()) {
-//                if (configList.size() > 1) {
-//                    columns = 2;
-//                }
-//            for (Settings cs : configList) {
-            chart = new PieChartModel();
-
             NegocioMonthDetail n = new NegocioMonthDetail();
-            List<Telefono> l = n.getDataChart(loginbean.getClient().getId(), date, "");
 
-            for (Telefono telefono : l) {
-//                    chart.set(telefono.getNumero(), telefono.getTotalList().get(0).getMontoTotal());
-                chart.set(telefono.getNumero(), Math.random() * 1000);
+            chart = new PieChartModel();
+            for (int i = 0; i < 10; i++) {
+                chart.set("numero " + i, Math.random() * 1000);
             }
-
-//            chart.setTitle(cs.getLabel1() + "/" + cs.getLabel2());
-//            chart.setLegendPosition("s");
-//            chart.setShowDataLabels(true);
-//            chart.setMouseoverHighlight(true);
-////                    chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
-//            chart.setLegendCols(5);
-//            chart.setLegendRows(2);
-//            chart.setExtender("chartExtender");
-//            chartList.add(chart);
-//            }
-//            }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }

@@ -93,13 +93,13 @@ public class NegocioMonthDetail {
         }
 
         try {
-            String query = "SELECT *, SUM(t.monto_total) AS total FROM telefono te\n"
+            String query = "SELECT * FROM telefono te \n"
                     + "INNER JOIN total t ON te.id = t.id_telefono\n"
                     + "INNER JOIN producto p ON te.id_producto = p.id\n"
                     + "WHERE te.id_cliente = " + idClient + "\n"
-                    + "-- AND MONTH(fecha) = " + (date.get(Calendar.MONTH) + 1) + "\n"
+//                    + "-- AND MONTH(fecha) = " + (date.get(Calendar.MONTH) + 1) + "\n"
                     + "GROUP BY " + groupby + "\n"
-                    + "-- GROUP BY p.id\n"
+//                    + "-- GROUP BY p.id\n"
                     + "ORDER BY t.monto_total DESC\n"
                     + "LIMIT 20;";
 
