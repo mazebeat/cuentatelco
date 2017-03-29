@@ -85,7 +85,7 @@ public class HistoricalCategoryBean implements Serializable {
             configList = settingsBean.getSettingByView("historical_category");
             chartList = new ArrayList<>();
 
-            columns = 1;
+            columns = 1;                
 
             if (!configList.isEmpty()) {
                 if (configList.size() > 1) {
