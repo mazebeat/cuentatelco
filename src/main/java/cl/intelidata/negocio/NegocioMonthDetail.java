@@ -44,22 +44,22 @@ public class NegocioMonthDetail {
     private static Logger logger = LoggerFactory.getLogger(NegocioMonthDetail.class);
 
     /**
-     * 
+     *
      * @param idClient
      * @param date
      * @param groupby
-     * @return 
+     * @return
      */
     public List<Telefono> getDataChart(int idClient, Calendar date, String groupby) {
         return postTelefonosConServicio(idClient, date, groupby);
     }
 
     /**
-     * 
+     *
      * @param idClient
      * @param date
      * @param groupby
-     * @return 
+     * @return
      */
     private List<Telefono> postTelefonosConServicio(int idClient, Calendar date, String groupby) {
 
@@ -78,29 +78,29 @@ public class NegocioMonthDetail {
     }
 
     /**
-     * 
+     *
      * @param idClient
      * @param date
      * @param groupby
-     * @return 
+     * @return
      */
     private List<Telefono> getAltosGastos(int idClient, Calendar date, String groupby) {
         List<Telefono> n = new ArrayList<>();
         EntityManager em = null;
 
-        if (groupby.equals("")) {
-            groupby = "te.numero";
-        }
+//        if (groupby.equals("")) {
+            groupby = "telefono.numero";
+//        }
 
         try {
-            String query = "SELECT * FROM telefono te \n"
-                    + "INNER JOIN total t ON te.id = t.id_telefono\n"
-                    + "INNER JOIN producto p ON te.id_producto = p.id\n"
-                    + "WHERE te.id_cliente = " + idClient + "\n"
-//                    + "-- AND MONTH(fecha) = " + (date.get(Calendar.MONTH) + 1) + "\n"
+            String query = "SELECT * FROM telefono \n"
+                    + "INNER JOIN total t ON telefono.id = total.id_telefono\n"
+                    + "INNER JOIN producto ON telefono.id_producto = producto.id\n"
+                    + "WHERE telefono.id_cliente = " + idClient + "\n"
+                    //                    + "-- AND MONTH(fecha) = " + (date.get(Calendar.MONTH) + 1) + "\n"
                     + "GROUP BY " + groupby + "\n"
-//                    + "-- GROUP BY p.id\n"
-                    + "ORDER BY t.monto_total DESC\n"
+                    //                    + "-- GROUP BY p.id\n"
+                    + "ORDER BY total.monto_total DESC\n"
                     + "LIMIT 20;";
 
             em = EntityHelper.getInstance().getEntityManager();
@@ -117,10 +117,10 @@ public class NegocioMonthDetail {
     }
 
     /**
-     * 
+     *
      * @param phone
      * @param date
-     * @return 
+     * @return
      */
     public List<TelefonosServicios> getDetail(String phone, Calendar date) {
         List<TelefonosServicios> n = new ArrayList<>();
