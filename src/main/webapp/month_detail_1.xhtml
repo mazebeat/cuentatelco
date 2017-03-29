@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">        
+        <h:form id="formMonthDetail1">
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card">
+                        <div class="clearfix">
+                            <h1 style="float: left;">Detalle Mensual</h1> 
+                            <p:commandButton style="float: right" icon="fa fa-cog" action="configuration?faces-redirect=true">
+                                <f:param name="view" value="monthy_detail" />
+                            </p:commandButton>
+                        </div>
+
+                        <!-- Dynamic charts -->
+                        <p:chart type="pie" model="#{monthlyDetailBean.chart}" style="width:100%; min-height:500px; border:none !important;" responsive="true" />
+                    </div>
+                    <p:button outcome="/dashboard" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

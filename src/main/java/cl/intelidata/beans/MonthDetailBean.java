@@ -43,7 +43,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.model.chart.PieChartModel;
 import org.slf4j.Logger;
@@ -67,11 +66,11 @@ public class MonthDetailBean implements Serializable {
     private Calendar date;
 
     private int columns;
+    private PieChartModel chart;
     private List<PieChartModel> chartList;
 
     @ManagedProperty(value = "#{loginBean}")
-    private LoginBean loginbean;
-    private PieChartModel chart;
+    private LoginBean loginbean;    
 
     @ManagedProperty(value = "#{settingsBean}")
     private SettingsBean settingsBean;
