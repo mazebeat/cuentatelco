@@ -19,7 +19,6 @@
 
                         <p:growl id="messages" showDetail="true" life="2000" />
 
-
                         <!-- Configuration Table -->
                         <p:dataTable id="configTable" value="#{settingsBean.configList}" var="c" editable="true">
                             <f:facet name="header">  
@@ -135,19 +134,17 @@
                                 <f:ajax execute="configForm" render="configForm:configTable" />
                             </p:commandButton>
                         </p:dialog>   
-
                     </div>
 
                     <p:fileUpload value="#{settingsBean.file}" 
-                                  skinSimple="true"
+                                  skinSimple="false"
+                                  fileUploadListener="#{settingsBean.handleFileUpload}"
                                   mode="advanced"
                                   update=":configForm:messages" 
                                   auto="true" 
                                   sizeLimit="100000" 
                                   allowTypes="/(\.|\/)(xls|xlsx)$/" />
-
                 </h:form> 
-
                 <p:button outcome="/#{settingsBean.view}" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
             </div>
         </div>
@@ -155,5 +152,4 @@
 
     <script type="text/javascript" language="javascript">
     </script>
-
 </ui:composition>

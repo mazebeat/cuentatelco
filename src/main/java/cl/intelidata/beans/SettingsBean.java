@@ -40,6 +40,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -77,7 +78,7 @@ public class SettingsBean implements Serializable {
     private int columns;
     private String label1, label2, dimension1, dimension2, view;
     private List<Settings> configList;
-    private List<String> dimensions1, dimensions2;
+    private Map<String, Object> dimensions1, dimensions2;
     public static Map<String, List<Settings>> settingsChart = new HashMap<>();
     private UploadedFile file;
     private File tempfile;
@@ -121,24 +122,25 @@ public class SettingsBean implements Serializable {
      * @param view
      */
     private void generateDimensions(String view) {
-        dimensions1 = new ArrayList<>();
-        dimensions2 = new ArrayList<>();
+        dimensions1 = new LinkedHashMap<String, Object>();
+        dimensions2 = new LinkedHashMap<String, Object>();
 
         switch (view) {
             case "month_detail":
-                dimensions1.add("t.monto_total");
+                dimensions1.put("Monto Total", "t.monto_total");
 
-                dimensions2.add("te.numero");
-                dimensions2.add("p.id");
+                dimensions2.put("Teléfono", "te.numero");
+                dimensions2.put("Servicio", "p.id");
                 break;
             case "monthly_evolution":
-                dimensions1.add("*");
+                dimensions1.put("Todos", "*");
 
-                dimensions2.add("id");
+                dimensions2.put("", "id");
                 break;
             case "historical_category":
-                dimensions1.add("t.monto_total");
-                dimensions2.add("te.id_producto");
+                dimensions1.put("Monto Total", "t.monto_total");
+
+                dimensions2.put("Producto", "te.id_producto");
                 break;
             case "phones_product":
                 // XXX: Add dimensions
@@ -258,14 +260,13 @@ public class SettingsBean implements Serializable {
      */
     public void handleFileUpload(FileUploadEvent event) {
         try {
-            copyFile(event.getFile().getFileName() + "_" + view, event.getFile().getInputstream());
+            copyFile(view + "_" + event.getFile().getFileName(), event.getFile().getInputstream());
             if (tempfile.exists()) {
                 readFile(tempfile);
                 msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is loaded.");
             } else {
                 msg = new FacesMessage("Process Error", event.getFile().getFileName());
             }
-
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -280,7 +281,7 @@ public class SettingsBean implements Serializable {
     private void copyFile(String fileName, InputStream in) {
         try {
             if (view != null) {
-                tempfile = File.createTempFile(fileName, ".tmp");
+                tempfile = File.createTempFile(fileName, "");
                 logger.info("Temp file : " + tempfile.getAbsolutePath());
 
                 OutputStream out = new FileOutputStream(tempfile);
@@ -431,19 +432,19 @@ public class SettingsBean implements Serializable {
         this.configList = configList;
     }
 
-    public List<String> getDimensions1() {
+    public Map<String, Object> getDimensions1() {
         return dimensions1;
     }
 
-    public void setDimensions1(List<String> dimensions1) {
+    public void setDimensions1(Map<String, Object> dimensions1) {
         this.dimensions1 = dimensions1;
     }
 
-    public List<String> getDimensions2() {
+    public Map<String, Object> getDimensions2() {
         return dimensions2;
     }
 
-    public void setDimensions2(List<String> dimensions2) {
+    public void setDimensions2(Map<String, Object> dimensions2) {
         this.dimensions2 = dimensions2;
     }
 
