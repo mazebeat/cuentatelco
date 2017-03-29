@@ -131,7 +131,7 @@ public class MonthlyEvolutionBean implements Serializable {
                     axis.setTickFormat("%b %#d");
 
                     chart.getAxes().put(AxisType.X, axis);
-
+                    chart.setExtender("chartExtender");
                     chartList.add(chart);
                 }
             }
