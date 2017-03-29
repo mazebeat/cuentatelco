@@ -78,7 +78,7 @@ public class MonthDetailBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        try {            
+        try {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
             String dateInString = "2015-05-01";
@@ -127,6 +127,7 @@ public class MonthDetailBean implements Serializable {
 //                    chart.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
                     chart.setLegendCols(5);
                     chart.setLegendRows(2);
+                    chart.setExtender("chartExtender");
                     chartList.add(chart);
                 }
             }
