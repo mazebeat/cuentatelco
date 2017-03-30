@@ -22,57 +22,35 @@
                         <!-- Configuration Table -->
                         <p:dataTable id="configTable" value="#{settingsBean.configList}" var="c" editable="true">
                             <f:facet name="header">  
-                                Configuration #{settingsBean.view}                                
+                                Configuración #{settingsBean.view}                                
                             </f:facet>
                             <p:ajax event="rowEdit" listener="#{settingsBean.edit}" update=":configForm:messages" />  
                             <p:ajax event="rowEditCancel" listener="#{settingsBean.cancel}" update=":configForm:messages" /> 
 
-                            <p:column>
-                                <f:facet name="header"><h:outputLabel value="Label 1" /></f:facet>
+                            <p:column style="text-align: center;">
+                                <f:facet name="header"><h:outputLabel value="Etiqueta" /></f:facet>
                                 <p:cellEditor>  
                                     <f:facet name="output">  
-                                        <h:outputText value="#{c.label1}" />  
+                                        <h:outputText value="#{c.label1}" />/<h:outputText value="#{c.label2}" />  
                                     </f:facet>  
                                     <f:facet name="input">  
-                                        <p:inputText readonly="true" value="#{c.label1}" style="width:100%"/>  
+                                        <p:inputText readonly="true" value="#{c.label1}" style="width:100%"/>
+                                        <p:inputText readonly="true" value="#{c.label2}" style="width:100%"/>
                                     </f:facet>  
                                 </p:cellEditor> 
                             </p:column>
 
-                            <p:column>
-                                <f:facet name="header"><h:outputLabel value="Dimension 1" /></f:facet>
+                            <p:column style="text-align: center;">
+                                <f:facet name="header"><h:outputLabel value="Dimención" /></f:facet>
                                 <p:cellEditor>  
                                     <f:facet name="output">  
-                                        <h:outputText value="#{c.dimension1}" />  
+                                        <h:outputText value="#{c.dimension1}" />/<h:outputText value="#{c.dimension2}" />
                                     </f:facet>  
                                     <f:facet name="input">  
                                         <p:selectOneMenu id="dim1" value="#{settingsBean.dimension1}">
                                             <f:selectItem itemLabel="Select One" itemValue="" />
                                             <f:selectItems value="#{settingsBean.dimensions1}" />
                                         </p:selectOneMenu>
-                                    </f:facet>  
-                                </p:cellEditor> 
-                            </p:column>
-
-                            <p:column>
-                                <f:facet name="header"><h:outputLabel value="Label 2" /></f:facet>
-                                <p:cellEditor>  
-                                    <f:facet name="output">  
-                                        <h:outputText value="#{c.label2}" />  
-                                    </f:facet>  
-                                    <f:facet name="input">  
-                                        <p:inputText readonly="true" value="#{c.label2}" style="width:100%"/>                                          
-                                    </f:facet>  
-                                </p:cellEditor> 
-                            </p:column>
-
-                            <p:column>
-                                <f:facet name="header"><h:outputLabel value="Dimension 2" /></f:facet>
-                                <p:cellEditor>  
-                                    <f:facet name="output">  
-                                        <h:outputText value="#{c.dimension2}" />  
-                                    </f:facet>  
-                                    <f:facet name="input">  
                                         <p:selectOneMenu id="dim2" value="#{settingsBean.dimension2}">
                                             <f:selectItem itemLabel="Select One" itemValue="" />
                                             <f:selectItems value="#{settingsBean.dimensions2}" />
@@ -81,11 +59,10 @@
                                 </p:cellEditor> 
                             </p:column>
 
-                            <p:column>
-                                <f:facet name="header"><h:outputLabel value="Action" /></f:facet>
-                                <!--<p:rowEditor />-->
+                            <p:column style="text-align: center;">
+                                <f:facet name="header"><h:outputLabel value="Acción" /></f:facet>
                                 <h:commandLink id="remove" value="delete" action="#{settingsBean.delete(c)}"
-                                               onclick="return confirm('Are you sure?')">
+                                               onclick="return confirm('Estás seguro?')">
                                     <f:ajax render="configForm:configTable" />
                                 </h:commandLink>
                             </p:column>
@@ -105,10 +82,10 @@
                                 <h:panelGroup styleClass="md-inputfield">
                                     <p:inputText id="lbl1" value="#{settingsBean.label1}" required="true" requiredMessage="Label 1 required" style="width: 100%;"/>
                                     <p:message for="lbl1" style="color: red;" />
-                                    <p:outputLabel value="Label 1" for="lbl1"/>
+                                    <p:outputLabel value="Etiqueta 1" for="lbl1"/>
                                 </h:panelGroup>                           
 
-                                <h:outputLabel for="dim1" value="Dimension 1" />
+                                <h:outputLabel for="dim1" value="Dimención 1" />
 
                                 <p:selectOneMenu id="dim1" value="#{settingsBean.dimension1}" required="true" requiredMessage="Dimension 1 required">
                                     <f:selectItem itemLabel="Select One" itemValue="" />
@@ -120,10 +97,10 @@
                                 <h:panelGroup styleClass="md-inputfield">
                                     <p:inputText id="lbl2" value="#{settingsBean.label2}" required="true" requiredMessage="Label 2 required" style="width: 100%;" />
                                     <p:message for="lbl2" style="color: red;" />
-                                    <p:outputLabel value="Label 2" for="lbl2"/>
+                                    <p:outputLabel value="Etiqueta 2" for="lbl2"/>
                                 </h:panelGroup>                            
 
-                                <h:outputLabel for="dim2" value="Dimension 2" />
+                                <h:outputLabel for="dim2" value="Dimención 2" />
                                 <p:selectOneMenu id="dim2" value="#{settingsBean.dimension2}" required="true" requiredMessage="Dimension 2 required">
                                     <f:selectItem itemLabel="Select One" itemValue="" />
                                     <f:selectItems value="#{settingsBean.dimensions2}" />
@@ -136,7 +113,8 @@
                         </p:dialog>   
                     </div>
 
-                    <p:fileUpload value="#{settingsBean.file}" 
+                    <p:fileUpload label="SUBIR VARIABLES"
+                                  value="#{settingsBean.file}" 
                                   skinSimple="false"
                                   fileUploadListener="#{settingsBean.handleFileUpload}"
                                   mode="advanced"
