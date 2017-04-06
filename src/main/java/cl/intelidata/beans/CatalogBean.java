@@ -62,8 +62,8 @@ public class CatalogBean implements Serializable {
             devicesList = n.getDevicesList();
 
             String[] i = new String[]{"/equipos/samsung galaxy s5/image.png", "/equipos/LG G Flex/image.png", "/equipos/nokia 220 white/image.png", "/equipos/samsung galaxy note 3/image.png", "/equipos/sony xperia C3 Selfie Pro/image.png"};
+            
             // XXX: Delete when all the images are in the repository
-
             List<Modelo> devicesList2 = new ArrayList<>();
             for (Modelo modelo : devicesList) {
                 String m = i[randomWithRange(0, i.length - 1)];

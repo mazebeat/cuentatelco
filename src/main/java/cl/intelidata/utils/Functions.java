@@ -36,19 +36,19 @@ public class Functions {
     public Functions() {
     }
 
-    public String randomString(int length, boolean min, boolean uc, boolean n, boolean sc) {
+    public static String randomString(int length, boolean min, boolean uc, boolean n, boolean sc) {
         String source = "";
 
-        if (min == true) {
+        if (min) {
             source += "abcdefghijklmnopqrstuvwxyz";
         }
-        if (uc == true) {
+        if (uc) {
             source += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         }
-        if (n == true) {
+        if (n) {
             source += "1234567890";
         }
-        if (sc == true) {
+        if (sc) {
             source += "|@#~$%()=^*+[]{}-_";
         }
 
@@ -57,7 +57,8 @@ public class Functions {
             int max = source.length() - 1;
             for (int i = 1; i <= length; i++) {
                 int num = randInt(1, max);
-                rstr += source.substring(source.length(), num - 1);
+//                rstr += source.substring(source.length() , num - 1);
+                rstr += source.substring(0 , num - 1);
             }
             return rstr;
         } else {

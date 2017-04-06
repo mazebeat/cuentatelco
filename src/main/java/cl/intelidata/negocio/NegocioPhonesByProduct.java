@@ -85,7 +85,7 @@ public class NegocioPhonesByProduct {
      * @return
      */
     public List<PhonesByProduct> getData(int idCliente, int idProducto, Calendar date) {
-        List<Producto> l = new ArrayList<>();
+        List<Producto> l;
         List<PhonesByProduct> ll = new ArrayList<>();
         try {
             if (idProducto <= 0) {
@@ -102,6 +102,7 @@ public class NegocioPhonesByProduct {
             }
 
             ll = data(idCliente, idProducto, date);
+
             if (ll.size() <= 0) {
                 date.add(Calendar.MONTH, -1);
                 return getData(idCliente, idProducto, date);

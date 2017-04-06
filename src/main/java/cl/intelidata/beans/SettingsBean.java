@@ -25,6 +25,7 @@
  */
 package cl.intelidata.beans;
 
+import cl.intelidata.jpa.Cliente;
 import cl.intelidata.jpa.Settings;
 import cl.intelidata.negocio.NegocioSettings;
 import java.io.BufferedReader;
@@ -37,7 +38,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -47,7 +47,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.context.RequestContext;
@@ -68,13 +68,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author DFeliu
  */
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class SettingsBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
     private static Logger logger = LoggerFactory.getLogger(SettingsBean.class);
     public FacesMessage msg = null;
 
+    private NegocioSettings ns;
     private int columns;
     private String label1, label2, dimension1, dimension2, view;
     private List<Settings> configList;
@@ -90,10 +91,10 @@ public class SettingsBean implements Serializable {
     public void init() {
         try {
             view = "dashboard";
-            configList = new ArrayList();
+            ns = new NegocioSettings();
 
             HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-            view = NegocioSettings.cleanURI(req.getHeader("Referer"));
+            view = ns.cleanURI(req.getHeader("Referer"));
 
             Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
             if (params.containsKey("view")) {
@@ -104,11 +105,11 @@ public class SettingsBean implements Serializable {
                 generateDimensions(view);
 
                 if (settingsChart.isEmpty()) {
-                    settingsChart = NegocioSettings.getSettings(loginbean.getClient().getId());
+                    settingsChart = ns.getSettings(loginbean.getClient());
                 }
 
                 if (!settingsChart.isEmpty()) {
-                    configList = settingsChart.get(view);
+                    configList = (List<Settings>) settingsChart.get(view);
                 }
             }
             columns = 1;
@@ -144,6 +145,9 @@ public class SettingsBean implements Serializable {
                 break;
             case "phones_product":
                 // XXX: Add dimensions
+                dimensions1.put("Monto Total", "t.monto_total");
+
+                dimensions2.put("Producto", "te.id_producto");
                 break;
             default:
 //                System.out.println("cl.intelidata.beans.SettingsBean.init() CLASS");
@@ -158,7 +162,7 @@ public class SettingsBean implements Serializable {
         try {
             configList = settingsChart.get(view);
 
-            if (!configList.isEmpty() && configList.size() < 4) {
+            if (configList.isEmpty() || configList.size() < 4) {
                 Settings con = new Settings();
                 con.setLabel1(label1);
                 con.setLabel2(label2);
@@ -170,6 +174,8 @@ public class SettingsBean implements Serializable {
 
                 settingsChart.remove(view);
                 settingsChart.put(view, configList);
+
+                ns.save(con);
 
                 msg = new FacesMessage("Item Added", label1);
                 RequestContext.getCurrentInstance().execute("PF('addConfigDlg').hide()");
@@ -190,7 +196,9 @@ public class SettingsBean implements Serializable {
      */
     public void edit(RowEditEvent event) {
         try {
-            msg = new FacesMessage("Item Edited", ((Settings) event.getObject()).getLabel1());
+            Settings s = ((Settings) event.getObject());
+            ns.edit(s);
+            msg = new FacesMessage("Item Edited", s.getLabel1());
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -203,8 +211,9 @@ public class SettingsBean implements Serializable {
      */
     public void cancel(RowEditEvent event) {
         try {
+            Settings s = ((Settings) event.getObject());
             msg = new FacesMessage("Item Cancelled");
-            configList.remove((Settings) event.getObject());
+//            configList.remove((Settings) event.getObject());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         } finally {
@@ -216,22 +225,22 @@ public class SettingsBean implements Serializable {
      *
      * @param conf
      */
-    public void delete(Settings conf) {
+    public void delete(Settings s) {
         try {
-            configList.remove(conf);
-
+            configList.remove(s);
             settingsChart.remove(view);
             settingsChart.put(view, configList);
 
-            msg = new FacesMessage("Item Deleted", conf.getLabel1());
+            ns.delete(s);
+
+            msg = new FacesMessage("Item Deleted", s.getLabel1());
 
             if (columns > 1) {
                 columns = configList.size();
             }
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-        } finally {
-            FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
 
@@ -240,8 +249,8 @@ public class SettingsBean implements Serializable {
      * @param idCliente
      * @return
      */
-    public static Map<String, List<Settings>> getSettings(int idCliente) {
-        settingsChart = NegocioSettings.getSettings(idCliente);
+    public Map<String, List<Settings>> getSettings(Cliente client) {
+        settingsChart = ns.getSettings(client);
         return settingsChart;
     }
 
@@ -250,8 +259,8 @@ public class SettingsBean implements Serializable {
      * @param view
      * @return
      */
-    public static List<Settings> getSettingByView(String view) {
-        return NegocioSettings.getSettingByView(settingsChart, view);
+    public List<Settings> getSettingByView(String view) {
+        return ns.getSettingByView(settingsChart, view);
     }
 
     /**
@@ -315,33 +324,67 @@ public class SettingsBean implements Serializable {
             FileInputStream excelFile = new FileInputStream(file);
             Workbook workbook = new XSSFWorkbook(excelFile);
 
+            // XXX: Change by one sheet
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
                 Sheet sheet = workbook.getSheetAt(i);
                 Iterator<Row> rowIterator = sheet.iterator();
 
                 while (rowIterator.hasNext()) {
                     Row row = rowIterator.next();
+                    Settings s = new Settings();
+                    s.setView(view);
+                    s.setIdCliente(loginbean.getClient());
 
-                    Iterator<Cell> cellIterator = row.cellIterator();
-                    while (cellIterator.hasNext()) {
+                    logger.info("ROWNUM: " + row.getRowNum());
 
-                        Cell cell = cellIterator.next();
+                    if ((row.getRowNum() > 0 && row.getRowNum() < 5)) {
+                        Iterator<Cell> cellIterator = row.cellIterator();
+                        while (cellIterator.hasNext()) {
+                            Cell cell = cellIterator.next();
+                            String value = "";
+                            logger.info("COLUMNINDEX: " + cell.getColumnIndex());
 
-                        switch (cell.getCellType()) {
-                            case Cell.CELL_TYPE_STRING:
-                                logger.info(cell.getStringCellValue() + "\t");
-                                break;
-                            case Cell.CELL_TYPE_NUMERIC:
-                                logger.info(cell.getNumericCellValue() + "\t");
-                                break;
-                            case Cell.CELL_TYPE_BOOLEAN:
-                                logger.info(cell.getBooleanCellValue() + "\t");
-                                break;
-                            default:
-                                break;
+                            switch (cell.getCellType()) {
+                                case Cell.CELL_TYPE_STRING:
+                                    logger.info(cell.getStringCellValue().toString() + "\t");
+                                    value = cell.getStringCellValue();
+                                    break;
+                                case Cell.CELL_TYPE_NUMERIC:
+                                    logger.info(cell.getNumericCellValue() + "\t");
+                                    value = String.valueOf(cell.getNumericCellValue());
+                                    break;
+                                case Cell.CELL_TYPE_BOOLEAN:
+                                    logger.info(cell.getBooleanCellValue() + "\t");
+                                    value = String.valueOf(cell.getBooleanCellValue());
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            switch (cell.getColumnIndex()) {
+                                case 0:
+                                    s.setLabel2(value);
+                                    break;
+                                case 1:
+                                    s.setDimension2(value);
+                                    break;
+                                case 2:
+                                    s.setLabel1(value);
+                                    break;
+                                case 3:
+                                    s.setDimension1(value);
+                                    break;
+                            }
+                        }
+
+                        s.setLabel1("Monto Total");
+                        s.setDimension2("t.monto_total");
+
+                        if (configList.size() < 4) {
+                            configList.add(s);
+                            ns.saveSettings(s);
                         }
                     }
-                    logger.info("");
                 }
             }
         } catch (FileNotFoundException e) {
@@ -351,7 +394,9 @@ public class SettingsBean implements Serializable {
         }
     }
 
-    //***///
+    /**
+     *
+     */
     private void getVersion() {
         try {
             Process p = Runtime.getRuntime().exec(new String[]{"cmd.exe", "/c", "assoc", ".xls"});
@@ -470,5 +515,13 @@ public class SettingsBean implements Serializable {
 
     public void setTempfile(File tempfile) {
         this.tempfile = tempfile;
+    }
+
+    public NegocioSettings getNs() {
+        return ns;
+    }
+
+    public void setNs(NegocioSettings ns) {
+        this.ns = ns;
     }
 }

@@ -65,14 +65,9 @@ public class DashboardBean implements Serializable {
     @PostConstruct
     public void init() {
         try {
+            NegocioSettings ns = new NegocioSettings();
             settingsChart = new HashMap<>();
-            settingsChart = NegocioSettings.getSettings(loginbean.getClient().getId());
-
-            if (settingsChart.isEmpty()) {
-                settingsChart = NegocioSettings.defaultSettings();
-            }
-
-            //configurationBean.setSettingsChart(settingsChart);
+            settingsChart = ns.getSettings(loginbean.getClient());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }

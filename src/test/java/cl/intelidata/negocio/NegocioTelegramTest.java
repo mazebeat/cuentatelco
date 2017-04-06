@@ -25,23 +25,27 @@
  */
 package cl.intelidata.negocio;
 
-import cl.intelidata.utils.Utils;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import cl.intelidata.controllers.UsuariosJpaController;
+import cl.intelidata.jpa.Usuarios;
+import cl.intelidata.utils.EntityHelper;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
 
 /**
  *
  * @author Dev-DFeliu
  */
-public class DashboardTest {
+public class NegocioTelegramTest {
 
-    public DashboardTest() {
+    private NegocioTelegram n;
+    private Usuarios u;
+
+    public NegocioTelegramTest() {
     }
 
     @BeforeClass
@@ -54,36 +58,28 @@ public class DashboardTest {
 
     @Before
     public void setUp() {
+        n = new NegocioTelegram();
+        UsuariosJpaController ctrl = new UsuariosJpaController(EntityHelper.getInstance().getEntityManagerFactory());
+        u = ctrl.findUsuarios(1);
     }
 
     @After
     public void tearDown() {
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
     @Test
-    public void hello() {
-        // en_GB = 34
-        // en_US = 36
-        // sv_SV = 34
-        // en_SV = 36 --> wrong
-
-        printTest("es", "ES", 34);
-        printTest("en", "GB", 34);
-        printTest("en", "US", 36);
-        printTest("sv", "SV", 34);
-        printTest("en", "SV", 34);
+    public void test1() {
+        assertNotNull(n.getCodigoIntegracion(u));
     }
 
-    private static void printTest(String language, String country, int expected) {
-        Locale locale = new Locale(language, country);
+    @Test
+    public void test2() throws Exception {
+        assertNotNull(n.getUserCode(u));
+    }
 
-        Calendar cal = Calendar.getInstance(locale);
-
-        System.err.println(Utils.calendarToString(cal));
-        System.err.println(Utils.dateToString(new Date()));
+    @Test
+    public void test3() {
+//        assertNotNull(n.genCodeIntegration());
     }
 
 }

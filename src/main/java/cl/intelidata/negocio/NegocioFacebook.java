@@ -30,6 +30,9 @@ import cl.intelidata.jpa.FacebookUsuarioIntegracion;
 import cl.intelidata.jpa.TelegramUsuarioIntegracion;
 import cl.intelidata.jpa.Usuarios;
 import cl.intelidata.utils.EntityHelper;
+import cl.intelidata.utils.Functions;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,9 +49,9 @@ public class NegocioFacebook {
     }
 
     /**
-     * 
+     *
      * @param user
-     * @return 
+     * @return
      */
     public int getCodigoIntegracion(Usuarios user) {
         int code = 0;
@@ -73,10 +76,10 @@ public class NegocioFacebook {
     }
 
     /**
-     * 
+     *
      * @param user
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     public int getUserCode(Usuarios user) throws Exception {
         EntityManager em = null;
@@ -97,14 +100,33 @@ public class NegocioFacebook {
                 em.close();
             }
         }
-        return code;
+        return (code);
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
-    private int genCodeIntegration() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int genCodeIntegration() {
+        int codigo = Integer.parseInt(Functions.randomString(6, false, false, true, false));
+
+        EntityManager em = null;
+        List<FacebookUsuarioIntegracion> l = new ArrayList<>();
+
+        try {
+            em = EntityHelper.getInstance().getEntityManager();
+            l = em.createNamedQuery("FacebookUsuarioIntegracion.findByCodigo", FacebookUsuarioIntegracion.class)
+                    .setParameter("codigo", codigo)
+                    .getResultList();
+
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+        } finally {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+        return ((l.isEmpty()) ? codigo : genCodeIntegration());
     }
+
 }

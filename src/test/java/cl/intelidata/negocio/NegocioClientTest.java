@@ -30,14 +30,17 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Dev-DFeliu
  */
-public class AccountDetailTest {
+public class NegocioClientTest {
 
-    public AccountDetailTest() {
+    private NegocioClient n;
+
+    public NegocioClientTest() {
     }
 
     @BeforeClass
@@ -50,17 +53,20 @@ public class AccountDetailTest {
 
     @Before
     public void setUp() {
+        n = new NegocioClient();
     }
 
     @After
     public void tearDown() {
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
     @Test
-    public void hello() {
+    public void test1() {
+        assertNotNull(n.findById(6687));
     }
 
+    @Test
+    public void test2() {
+        assertNotNull(n.findPersonaByCliente(6687));
+    }
 }

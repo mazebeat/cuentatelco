@@ -25,19 +25,24 @@
  */
 package cl.intelidata.negocio;
 
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 /**
  *
  * @author Dev-DFeliu
  */
-public class ProfileTest {
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class NegocioAccountDetailTest {
 
-    public ProfileTest() {
+    public NegocioAccountDetailTest() {
     }
 
     @BeforeClass
@@ -56,11 +61,11 @@ public class ProfileTest {
     public void tearDown() {
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
     @Test
-    public void hello() {
+    public void test1() throws Exception {
+        NegocioAccountDetail n = new NegocioAccountDetail();
+        List<?> result = n.fillLastValues(0);
+        assertNotNull(result);
     }
 
 }

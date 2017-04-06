@@ -11,6 +11,11 @@
 
     <ui:define name="content">
 
+        <style>
+            .ui-helper-clearfix::after {
+                display: inline-block !important;
+            }
+        </style>
         <div class="ui-g">
             <div class="ui-g-12">
                 <h:form id="configForm">
@@ -24,8 +29,8 @@
                             <f:facet name="header">  
                                 Configuración #{settingsBean.view}                                
                             </f:facet>
-                            <p:ajax event="rowEdit" listener="#{settingsBean.edit}" update=":configForm:messages" />  
-                            <p:ajax event="rowEditCancel" listener="#{settingsBean.cancel}" update=":configForm:messages" /> 
+                            <p:ajax event="rowEdit" listener="#{settingsBean.edit}" update=":configForm:messages :configForm:configTable" />  
+                            <p:ajax event="rowEditCancel" listener="#{settingsBean.cancel}" update=":configForm:messages :configForm:configTable" /> 
 
                             <p:column style="text-align: center;">
                                 <f:facet name="header"><h:outputLabel value="Etiqueta" /></f:facet>
@@ -34,8 +39,8 @@
                                         <h:outputText value="#{c.label1}" />/<h:outputText value="#{c.label2}" />  
                                     </f:facet>  
                                     <f:facet name="input">  
-                                        <p:inputText readonly="true" value="#{c.label1}" style="width:100%"/>
-                                        <p:inputText readonly="true" value="#{c.label2}" style="width:100%"/>
+                                        <p:inputText value="#{c.label1}" style="width:100%"/>                                        
+                                        <p:inputText value="#{c.label2}" style="width:100%"/>
                                     </f:facet>  
                                 </p:cellEditor> 
                             </p:column>
@@ -47,11 +52,12 @@
                                         <h:outputText value="#{c.dimension1}" />/<h:outputText value="#{c.dimension2}" />
                                     </f:facet>  
                                     <f:facet name="input">  
-                                        <p:selectOneMenu id="dim1" value="#{settingsBean.dimension1}">
+                                        <p:selectOneMenu id="dim1" value="#{c.dimension1}">
                                             <f:selectItem itemLabel="Select One" itemValue="" />
                                             <f:selectItems value="#{settingsBean.dimensions1}" />
                                         </p:selectOneMenu>
-                                        <p:selectOneMenu id="dim2" value="#{settingsBean.dimension2}">
+                                        <br />
+                                        <p:selectOneMenu id="dim2" value="#{c.dimension2}">
                                             <f:selectItem itemLabel="Select One" itemValue="" />
                                             <f:selectItems value="#{settingsBean.dimensions2}" />
                                         </p:selectOneMenu>
@@ -61,8 +67,10 @@
 
                             <p:column style="text-align: center;">
                                 <f:facet name="header"><h:outputLabel value="Acción" /></f:facet>
-                                <h:commandLink id="remove" value="delete" action="#{settingsBean.delete(c)}"
-                                               onclick="return confirm('Estás seguro?')">
+                                <p:rowEditor style="display: inline-block !important;"/>
+
+                                <h:commandLink id="remove" styleClass="ui-helper-clearfix ui-icon " value="" action="#{settingsBean.delete(c)}" onclick="return confirm('Estás seguro?')">
+                                    <i class="fa fa-trash"></i>
                                     <f:ajax render="configForm:configTable" />
                                 </h:commandLink>
                             </p:column>
@@ -107,8 +115,8 @@
                                 </p:selectOneMenu>
                             </p:panelGrid> 
 
-                            <p:commandButton action="#{settingsBean.add}" value="Add" update="messages configTable">
-                                <f:ajax execute="configForm" render="configForm:configTable" />
+                            <p:commandButton action="#{settingsBean.add}" value="Add" update=":configForm:messages :configForm:configTable">
+                                <f:ajax execute="configForm" render=":configForm:configTable" />
                             </p:commandButton>
                         </p:dialog>   
                     </div>
@@ -118,7 +126,7 @@
                                   skinSimple="false"
                                   fileUploadListener="#{settingsBean.handleFileUpload}"
                                   mode="advanced"
-                                  update=":configForm:messages" 
+                                  update=":configForm:messages :configForm:configTable" 
                                   auto="true" 
                                   sizeLimit="100000" 
                                   allowTypes="/(\.|\/)(xls|xlsx)$/" />

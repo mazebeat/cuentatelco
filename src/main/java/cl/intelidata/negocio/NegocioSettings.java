@@ -25,6 +25,8 @@
  */
 package cl.intelidata.negocio;
 
+import cl.intelidata.controllers.SettingsJpaController;
+import cl.intelidata.jpa.Cliente;
 import cl.intelidata.jpa.Modelo;
 import cl.intelidata.jpa.Settings;
 import cl.intelidata.utils.EntityHelper;
@@ -43,6 +45,36 @@ import org.slf4j.LoggerFactory;
 public class NegocioSettings {
 
     private static Logger logger = LoggerFactory.getLogger(NegocioSettings.class);
+    private SettingsJpaController ctrl;
+
+    /**
+     *
+     * @param set
+     * @throws Exception
+     */
+    public void saveSettings(Settings set) throws Exception {
+        EntityManager em = null;
+
+        try {
+            em = EntityHelper.getInstance().getEntityManager();
+            em.getTransaction().begin();
+
+            em.persist(set);
+            em.flush();
+
+            Settings st = em.find(Settings.class, set.getId());
+            logger.info("Save correctly", st);
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw e;
+        } finally {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+    }
 
     /**
      *
@@ -69,32 +101,10 @@ public class NegocioSettings {
 
     /**
      *
-     * @param s
-     * @return
-     */
-    public static boolean isInteger(String s) {
-        try {
-            Integer.parseInt(s);
-        } catch (NumberFormatException nf) {
-            logger.info(nf.getMessage(), nf);
-            return false;
-        } catch (NullPointerException n) {
-            logger.info(n.getMessage(), n);
-            return false;
-        } catch (Exception e) {
-            logger.info(e.getMessage(), e);
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     *
      * @param view
      * @return
      */
-    public static String cleanURI(String view) {
+    public String cleanURI(String view) {
         String[] a = view.split("/");
         //return NegocioSettings.toTitleCase(a[a.length - 1].replace(".xhtml", ""));
         return a[a.length - 1].replace(".xhtml", "");
@@ -126,18 +136,17 @@ public class NegocioSettings {
 
     /**
      *
-     * @param idCliente
+     * @param client
      * @return
      */
-    public static Map<String, List<Settings>> getSettings(int idCliente) {
+    public Map<String, List<Settings>> getSettings(Cliente client) {
         Map<String, List<Settings>> set = new HashMap<>();
 
         try {
-            // TODO: Cambiar por BBDD
-            set.put("month_detail", monthlyDetailSettings().isEmpty() ? monthlyDetailDefaultSettings() : monthlyDetailSettings());
-            set.put("monthly_evolution", monthlyEvolutionSettings().isEmpty() ? monthlyEvolutionDefaultSettings() : monthlyEvolutionSettings());
-            set.put("historical_category", historicalCategorySettings().isEmpty() ? historicalCategoryDefaultSettings() : historicalCategorySettings());
-            set.put("phones_product", phonesProductSettings().isEmpty() ? phonesProductDefaultSettings() : phonesProductSettings());
+            set.put("month_detail", monthlyDetailSettings(client, "month_detail"));
+            set.put("monthly_evolution", monthlyEvolutionSettings(client, "monthly_evolution"));
+            set.put("historical_category", historicalCategorySettings(client, "historical_category"));
+            set.put("phones_product", phonesProductSettings(client, "phones_product"));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -149,15 +158,15 @@ public class NegocioSettings {
      *
      * @return
      */
-    public static Map<String, List<Settings>> defaultSettings() {
+    public Map<String, List<Settings>> defaultSettings(Cliente client) {
         Map<String, List<Settings>> set = new HashMap<>();
 
         try {
             // TODO: Cambiar por BBDD
-            set.put("month_detail", monthlyDetailDefaultSettings());
-            set.put("monthly_evolution", monthlyEvolutionDefaultSettings());
-            set.put("historical_category", historicalCategoryDefaultSettings());
-            set.put("phones_product", phonesProductDefaultSettings());
+            set.put("month_detail", monthlyDetailDefaultSettings(client, "month_detail"));
+            set.put("monthly_evolution", monthlyEvolutionDefaultSettings(client, "monthly_evolution"));
+            set.put("historical_category", historicalCategoryDefaultSettings(client, "historical_category"));
+            set.put("phones_product", phonesProductDefaultSettings(client, "phones_product"));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -167,18 +176,103 @@ public class NegocioSettings {
 
     /**
      *
+     * @param client
      * @return
      */
-    public static List<Settings> monthlyDetailSettings() {
+    public List<Settings> monthlyDetailSettings(Cliente client, String view) {
         List<Settings> lcs = new ArrayList<>();
 
         try {
-            // XXX: Change for DDBB
+            lcs = dbSettingsByView(client, "month_detail");
+
+            if (lcs.isEmpty()) {
+                lcs = monthlyDetailDefaultSettings(client, view);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return lcs;
+    }
+
+    /**
+     *
+     * @param client
+     * @return
+     */
+    private List<Settings> monthlyEvolutionSettings(Cliente client, String view) {
+        List<Settings> lcs = new ArrayList<>();
+
+        try {
+            lcs = dbSettingsByView(client, "monthly_evolution");
+            if (lcs.isEmpty()) {
+                lcs = monthlyEvolutionDefaultSettings(client, view);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return lcs;
+    }
+
+    /**
+     *
+     * @param client
+     * @return
+     */
+    private List<Settings> phonesProductSettings(Cliente client, String view) {
+        List<Settings> lcs = new ArrayList<>();
+
+        try {
+            lcs = dbSettingsByView(client, view);
+
+            if (lcs.isEmpty()) {
+                lcs = phonesProductDefaultSettings(client, view);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return lcs;
+    }
+
+    /**
+     *
+     * @param client
+     * @return
+     */
+    private List<Settings> historicalCategorySettings(Cliente client, String view) {
+        List<Settings> lcs = new ArrayList<>();
+
+        try {
+            lcs = dbSettingsByView(client, view);
+
+            if (lcs.isEmpty()) {
+                lcs = historicalCategoryDefaultSettings(client, view);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return lcs;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<Settings> monthlyDetailDefaultSettings(Cliente client, String view) {
+        List<Settings> lcs = new ArrayList<>();
+
+        try {
             Settings c = new Settings();
             c.setLabel1("Monto Total");
             c.setLabel2("Teléfono");
             c.setDimension1("t.monto_total");
             c.setDimension2("te.numero");
+            c.setIdCliente(client);
+            c.setView(view);
+            save(c);
             lcs.add(c);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -191,11 +285,10 @@ public class NegocioSettings {
      *
      * @return
      */
-    private static List<Settings> phonesProductSettings() {
+    private List<Settings> phonesProductDefaultSettings(Cliente cliente, String view) {
         List<Settings> lcs = new ArrayList<>();
 
         try {
-            // XXX: Change for DDBB
             lcs.add(new Settings());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -208,88 +301,7 @@ public class NegocioSettings {
      *
      * @return
      */
-    private static List<Settings> historicalCategorySettings() {
-        List<Settings> lcs = new ArrayList<>();
-
-        try {
-            // XXX: Change for DDBB
-            Settings c = new Settings();
-            c.setLabel1("Monto Total");
-            c.setLabel2("Producto");
-            c.setDimension1("t.monto_total");
-            c.setDimension2("te.id_producto");
-            lcs.add(c);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-
-        return lcs;
-    }
-
-    /**
-     *
-     * @return
-     */
-    private static List<Settings> monthlyEvolutionSettings() {
-        List<Settings> lcs = new ArrayList<>();
-
-        try {
-            // XXX: Change for DDBB
-            Settings c = new Settings();
-            c.setLabel1("Periodo");
-            c.setLabel2("Cliente");
-            c.setDimension1("*");
-            c.setDimension2("id");
-            lcs.add(c);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-
-        return lcs;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public static List<Settings> monthlyDetailDefaultSettings() {
-        List<Settings> lcs = new ArrayList<>();
-
-        try {
-            Settings c = new Settings();
-            c.setLabel1("Monto Total");
-            c.setLabel2("Teléfono");
-            c.setDimension1("t.monto_total");
-            c.setDimension2("te.numero");
-            lcs.add(c);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-
-        return lcs;
-    }
-
-    /**
-     *
-     * @return
-     */
-    private static List<Settings> phonesProductDefaultSettings() {
-        List<Settings> lcs = new ArrayList<>();
-
-        try {
-            lcs.add(new Settings());
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-
-        return lcs;
-    }
-
-    /**
-     *
-     * @return
-     */
-    private static List<Settings> historicalCategoryDefaultSettings() {
+    private List<Settings> historicalCategoryDefaultSettings(Cliente client, String view) {
         List<Settings> lcs = new ArrayList<>();
 
         try {
@@ -298,6 +310,9 @@ public class NegocioSettings {
             c.setLabel2("Producto");
             c.setDimension1("t.monto_total");
             c.setDimension2("te.id_producto");
+            c.setIdCliente(client);
+            c.setView(view);
+            save(c);
             lcs.add(c);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -310,7 +325,7 @@ public class NegocioSettings {
      *
      * @return
      */
-    private static List<Settings> monthlyEvolutionDefaultSettings() {
+    private List<Settings> monthlyEvolutionDefaultSettings(Cliente client, String view) {
         List<Settings> lcs = new ArrayList<>();
 
         try {
@@ -319,6 +334,9 @@ public class NegocioSettings {
             c.setLabel2("Cliente");
             c.setDimension1("*");
             c.setDimension2("id");
+            c.setIdCliente(client);
+            c.setView(view);
+            save(c);
             lcs.add(c);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -333,45 +351,110 @@ public class NegocioSettings {
      * @param view
      * @return
      */
-    public static List<Settings> getSettingByView(Map<String, List<Settings>> map, String view) {
+    public List<Settings> getSettingByView(Map<String, List<Settings>> map, String view) {
         return map.get(view);
     }
-//
-//    public List<Settings> dbSettingsByView(int idClient, String view) {
-//        EntityManager em = null;
-//        List<Settings> s = new ArrayList<>();
-//
-//        try {
-//            em = EntityHelper.getInstance().getEntityManager();
-//            m = em.createNamedQuery("", Modelo.class).getResultList();
-//        } catch (Exception ex) {
-//            logger.error(ex.getMessage(), ex);
-//            throw ex;
-//        } finally {
-//            if (em != null && em.isOpen()) {
-//                em.close();
-//            }
-//        }
-//
-//        return m;
-//    }
-//
-//    public List<Settings> dbSettings(int idClient) {
-//        EntityManager em = null;
-//        List<Settings> s = new ArrayList<>();
-//
-//        try {
-//            em = EntityHelper.getInstance().getEntityManager();
-//            m = em.createNamedQuery("", Modelo.class).getResultList();
-//        } catch (Exception ex) {
-//            logger.error(ex.getMessage(), ex);
-//            throw ex;
-//        } finally {
-//            if (em != null && em.isOpen()) {
-//                em.close();
-//            }
-//        }
-//
-//        return m;
-//    }
+
+    /**
+     *
+     * @param client
+     * @param view
+     * @return
+     */
+    private List<Settings> dbSettingsByView(Cliente client, String view) {
+        EntityManager em = null;
+        List<Settings> s = new ArrayList<>();
+
+        try {
+            em = EntityHelper.getInstance().getEntityManager();
+            s = em.createNamedQuery("Settings.findByIdClienteView", Settings.class)
+                    .setParameter("view", view)
+                    .setParameter("idCliente", client)
+                    .getResultList();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
+        return s;
+    }
+
+    /**
+     *
+     * @param client
+     * @return
+     */
+    private List<Settings> dbSettings(Cliente client) {
+        EntityManager em = null;
+        List<Settings> s = new ArrayList<>();
+
+        try {
+            em = EntityHelper.getInstance().getEntityManager();
+            s = em.createNamedQuery("Settings.findByIdCliente", Settings.class)
+                    .setParameter("idCliente", client)
+                    .getResultList();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
+        return s;
+    }
+
+    /**
+     *
+     * @param s
+     * @throws Exception
+     */
+    public void delete(Settings s) throws Exception {
+        try {
+            ctrl = new SettingsJpaController(EntityHelper.getInstance().getEntityManagerFactory());
+
+            if (s != null) {
+                ctrl.destroy(s.getId());
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     *
+     * @param s
+     * @throws Exception
+     */
+    public void save(Settings s) throws Exception {
+        try {
+            ctrl = new SettingsJpaController(EntityHelper.getInstance().getEntityManagerFactory());
+
+            if (s != null) {
+                ctrl.create(s);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     *
+     * @param s
+     * @throws Exception
+     */
+    public void edit(Settings s) throws Exception {
+        try {
+            ctrl = new SettingsJpaController(EntityHelper.getInstance().getEntityManagerFactory());
+
+            if (s != null) {
+                ctrl.edit(s);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
 }

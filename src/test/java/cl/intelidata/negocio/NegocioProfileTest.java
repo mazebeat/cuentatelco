@@ -30,29 +30,28 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
  * @author Dev-DFeliu
  */
-public class FacebookTest {
-    
-    public FacebookTest() {
+public class NegocioProfileTest {
+
+    public NegocioProfileTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -60,6 +59,8 @@ public class FacebookTest {
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:
     //
-    // @Test
-    // public void hello() {}
+    @Test
+    public void hello() {
+    }
+
 }

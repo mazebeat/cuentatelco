@@ -25,6 +25,7 @@
  */
 package cl.intelidata.negocio;
 
+import java.util.Calendar;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -36,30 +37,32 @@ import static org.junit.Assert.*;
  *
  * @author Dev-DFeliu
  */
-public class HistoricalCategoryTest {
-    
-    public HistoricalCategoryTest() {
+public class NegocioHistoricalCategoryTest {
+
+    private NegocioHistoricalCategory n;
+
+    public NegocioHistoricalCategoryTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
+        n = new NegocioHistoricalCategory();
     }
-    
+
     @After
     public void tearDown() {
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
+    @Test
+    public void test1() {
+        assertNotNull(n.getData(6687, Calendar.getInstance(), ""));
+    }
 }

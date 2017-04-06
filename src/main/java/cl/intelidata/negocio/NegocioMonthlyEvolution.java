@@ -62,9 +62,11 @@ public class NegocioMonthlyEvolution {
 
         try {
             String query = "SELECT * FROM resumen_anual_cliente\n"
-                    + "WHERE id_cliente = " + idCliente + "\n"
-                    + "GROUP BY " + groupby + "\n"
-                    + "ORDER BY id DESC;";
+                    + "WHERE id_cliente = " + idCliente + "\n";
+            if (!groupby.isEmpty()) {
+                query += "GROUP BY " + groupby + "\n";
+            }
+            query += "ORDER BY id DESC;";
 
             em = EntityHelper.getInstance().getEntityManager();
             n = em.createNativeQuery(query, ResumenAnualCliente.class).getResultList();

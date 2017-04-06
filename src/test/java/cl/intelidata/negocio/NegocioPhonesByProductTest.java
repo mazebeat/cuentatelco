@@ -25,6 +25,7 @@
  */
 package cl.intelidata.negocio;
 
+import java.util.Calendar;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -36,30 +37,42 @@ import static org.junit.Assert.*;
  *
  * @author Dev-DFeliu
  */
-public class PhonesByProductTest {
-    
-    public PhonesByProductTest() {
+public class NegocioPhonesByProductTest {
+
+    private NegocioPhonesByProduct n;
+
+    public NegocioPhonesByProductTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
+        n = new NegocioPhonesByProduct();
     }
-    
+
     @After
     public void tearDown() {
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
+    @Test
+    public void test1() {
+        assertNotNull(n.getProductList(6687));
+    }
+
+    @Test
+    public void test2() {
+        assertNotNull(n.getData(6687, Calendar.getInstance()));
+    }
+
+    @Test
+    public void test3() {
+//        assertNotNull(n.getData(6687, 1956, Calendar.getInstance()));
+    }
 }

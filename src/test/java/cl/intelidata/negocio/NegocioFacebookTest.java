@@ -25,6 +25,9 @@
  */
 package cl.intelidata.negocio;
 
+import cl.intelidata.controllers.UsuariosJpaController;
+import cl.intelidata.jpa.Usuarios;
+import cl.intelidata.utils.EntityHelper;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -36,30 +39,45 @@ import static org.junit.Assert.*;
  *
  * @author Dev-DFeliu
  */
-public class ClientTest {
-    
-    public ClientTest() {
+public class NegocioFacebookTest {
+
+    private NegocioFacebook n;
+    private Usuarios u;
+
+    public NegocioFacebookTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
+        n = new NegocioFacebook();
+        UsuariosJpaController ctrl = new UsuariosJpaController(EntityHelper.getInstance().getEntityManagerFactory());
+        u = ctrl.findUsuarios(1);
     }
-    
+
     @After
     public void tearDown() {
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
+    @Test
+    public void test1() {
+        assertNotNull(n.getCodigoIntegracion(u));
+    }
+
+    @Test
+    public void test2() throws Exception {
+        assertNotNull(n.getUserCode(u));
+    }
+
+    @Test
+    public void test3() {
+//        assertNotNull(n.genCodeIntegration());
+    }
 }

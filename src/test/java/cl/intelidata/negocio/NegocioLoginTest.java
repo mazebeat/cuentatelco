@@ -25,6 +25,9 @@
  */
 package cl.intelidata.negocio;
 
+import cl.intelidata.controllers.ClienteJpaController;
+import cl.intelidata.controllers.PersonaJpaController;
+import cl.intelidata.utils.EntityHelper;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -36,30 +39,44 @@ import static org.junit.Assert.*;
  *
  * @author Dev-DFeliu
  */
-public class MonthlyEvolutionTest {
-    
-    public MonthlyEvolutionTest() {
+public class NegocioLoginTest {
+
+    private NegocioLogin n;
+
+    public NegocioLoginTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
+        n = new NegocioLogin();
     }
-    
+
     @After
     public void tearDown() {
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
+    @Test
+    public void test1() throws Exception {
+        assertNotNull(n.validLogin("user1"));
+    }
+
+    @Test
+    public void test2() throws Exception {
+        ClienteJpaController ctrl = new ClienteJpaController(EntityHelper.getInstance().getEntityManagerFactory());
+        assertNotNull(n.gotAnswers(ctrl.findCliente(6687)));
+    }
+
+    @Test
+    public void test3() throws Exception {
+        PersonaJpaController ctrl = new PersonaJpaController(EntityHelper.getInstance().getEntityManagerFactory());
+        assertNotNull(n.gotRegister(ctrl.findPersona(1431)));
+    }
 }

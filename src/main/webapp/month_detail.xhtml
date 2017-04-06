@@ -9,6 +9,7 @@
         <h:form id="formMonthDetail">
             <p:growl id="growl" showDetail="true" />
 
+
             <div class="ui-g">
                 <div class="ui-g-12">
                     <div class="card">
@@ -28,7 +29,7 @@
                     </div>
 
                     <div class="card">
-                        <p:dataTable id="detailtable" widgetVar="detailtables" var="det" value="#{monthDetailBean.phoneDetail}" emptyMessage="Seleccione un número" reflow="true">
+                        <p:dataTable rendered="#{monthDetailBean.phoneDetail.size()}" id="detailtable" widgetVar="detailtables" var="det" value="#{monthDetailBean.phoneDetail}" emptyMessage="Seleccione un número" reflow="true">
                             <f:facet name="header">
                                 Detalle N° <h:outputText value="#{monthDetailBean.phone}" />
                             </f:facet>

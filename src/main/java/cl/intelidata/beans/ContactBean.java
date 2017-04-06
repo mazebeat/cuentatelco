@@ -96,6 +96,7 @@ public class ContactBean implements Serializable {
     public void getQuestions() {
         try {
             NegocioContact nc = new NegocioContact();
+            setQuestionList(nc.getQuestions());
             html = nc.macroQuestions(nc.getQuestions(), loginbean.getClient().getId());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
