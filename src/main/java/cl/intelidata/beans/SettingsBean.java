@@ -428,7 +428,7 @@ public class SettingsBean implements Serializable {
             logger.error(e.getMessage(), e);
         }
     }
-
+    
     public int getColumns() {
         return columns;
     }
