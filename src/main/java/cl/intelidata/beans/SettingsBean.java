@@ -422,7 +422,10 @@ public class SettingsBean implements Serializable {
     }
 
     public void orderByColumns() {
-        System.out.println();
+        try {
+            System.out.println();
+        } catch (Exception e) {
+        }
     }
 
     public int getColumns() {
