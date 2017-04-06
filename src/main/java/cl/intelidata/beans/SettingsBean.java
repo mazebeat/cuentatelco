@@ -425,6 +425,7 @@ public class SettingsBean implements Serializable {
         try {
             System.out.println();
         } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         }
     }
 
