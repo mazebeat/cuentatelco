@@ -421,6 +421,10 @@ public class SettingsBean implements Serializable {
         }
     }
 
+    public void orderByColumns() {
+        System.out.println();
+    }
+
     public int getColumns() {
         return columns;
     }
