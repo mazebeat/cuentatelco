@@ -144,13 +144,12 @@ public class SettingsBean implements Serializable {
                 dimensions2.put("Producto", "te.id_producto");
                 break;
             case "phones_product":
-                // XXX: Add dimensions
+                // XXX: Add dimensions by Database
                 dimensions1.put("Monto Total", "t.monto_total");
 
                 dimensions2.put("Producto", "te.id_producto");
                 break;
             default:
-//                System.out.println("cl.intelidata.beans.SettingsBean.init() CLASS");
                 break;
         }
     }
@@ -223,7 +222,7 @@ public class SettingsBean implements Serializable {
 
     /**
      *
-     * @param conf
+     * @param s
      */
     public void delete(Settings s) {
         try {
@@ -246,7 +245,7 @@ public class SettingsBean implements Serializable {
 
     /**
      *
-     * @param idCliente
+     * @param client
      * @return
      */
     public Map<String, List<Settings>> getSettings(Cliente client) {
@@ -346,7 +345,7 @@ public class SettingsBean implements Serializable {
 
                             switch (cell.getCellType()) {
                                 case Cell.CELL_TYPE_STRING:
-                                    logger.info(cell.getStringCellValue().toString() + "\t");
+                                    logger.info(cell.getStringCellValue() + "\t");
                                     value = cell.getStringCellValue();
                                     break;
                                 case Cell.CELL_TYPE_NUMERIC:
