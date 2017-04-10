@@ -38,6 +38,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -47,7 +49,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.context.RequestContext;
@@ -68,7 +70,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author DFeliu
  */
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class SettingsBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
@@ -83,6 +85,7 @@ public class SettingsBean implements Serializable {
     public static Map<String, List<Settings>> settingsChart = new HashMap<>();
     private UploadedFile file;
     private File tempfile;
+    private List<?> data;
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
@@ -323,40 +326,45 @@ public class SettingsBean implements Serializable {
             FileInputStream excelFile = new FileInputStream(file);
             Workbook workbook = new XSSFWorkbook(excelFile);
 
-            // XXX: Change by one sheet
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
                 Sheet sheet = workbook.getSheetAt(i);
                 Iterator<Row> rowIterator = sheet.iterator();
 
+                Map<String, Glosa> lg = new HashMap<String, Glosa>();
+
                 while (rowIterator.hasNext()) {
-                    Row row = rowIterator.next();
                     Settings s = new Settings();
                     s.setView(view);
                     s.setIdCliente(loginbean.getClient());
+                    Glosa g = new Glosa();
+                    Row row = rowIterator.next();
+                    Iterator<Cell> cellIterator = row.cellIterator();
 
-                    logger.info("ROWNUM: " + row.getRowNum());
-
-                    if ((row.getRowNum() > 0 && row.getRowNum() < 5)) {
-                        Iterator<Cell> cellIterator = row.cellIterator();
+                    if (row.getRowNum() == 0) {
+                        List<String> t = getHeaderFile(cellIterator);
+                        for (String string : t) {
+                            g.columnA = string;
+                            lg.put(string, g);
+                            // XXX: Save to DDBB Settings list
+                        }
+                    } else {
+                        // XXX: Save to DDBB Glosa list
                         while (cellIterator.hasNext()) {
                             Cell cell = cellIterator.next();
-                            String value = "";
-                            logger.info("COLUMNINDEX: " + cell.getColumnIndex());
+                            String value = getCellValue(cell);
 
-                            switch (cell.getCellType()) {
-                                case Cell.CELL_TYPE_STRING:
-                                    logger.info(cell.getStringCellValue() + "\t");
-                                    value = cell.getStringCellValue();
+                            switch (cell.getColumnIndex()) {
+                                case 0:
+                                    g.number = value;
                                     break;
-                                case Cell.CELL_TYPE_NUMERIC:
-                                    logger.info(cell.getNumericCellValue() + "\t");
-                                    value = String.valueOf(cell.getNumericCellValue());
+                                case 1:
+                                    g.montoTotal = Integer.parseInt(value);
                                     break;
-                                case Cell.CELL_TYPE_BOOLEAN:
-                                    logger.info(cell.getBooleanCellValue() + "\t");
-                                    value = String.valueOf(cell.getBooleanCellValue());
+                                case 2:
+                                    g.columnA = value;
                                     break;
-                                default:
+                                case 3:
+                                    g.columnB = value;
                                     break;
                             }
 
@@ -376,12 +384,17 @@ public class SettingsBean implements Serializable {
                             }
                         }
 
-                        s.setLabel1("Monto Total");
+                        s.setLabel2("Monto Total");
                         s.setDimension2("t.monto_total");
 
-                        if (configList.size() < 4) {
-                            configList.add(s);
-                            ns.saveSettings(s);
+                        // XXX: Save Setting and Glosa class from file values
+                        if (row.getRowNum() != 0 && configList.size() < 4) {
+
+//                        configList.add(s);
+//                        ns.saveSettings(s);
+                            logger.info("SAVE SETTINGS: " + s.toString());
+                        } else {
+                            logger.info("SAVE GLOSA: " + g.toString());
                         }
                     }
                 }
@@ -391,6 +404,41 @@ public class SettingsBean implements Serializable {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
+    }
+
+    public List<String> getHeaderFile(Iterator<Cell> cellIterator) {
+        List<String> result = new ArrayList<>();
+
+        while (cellIterator.hasNext()) {
+            Cell cell = cellIterator.next();
+            String value = getCellValue(cell);
+            result.add(value);
+        }
+
+        return result;
+    }
+
+    public String getCellValue(Cell cell) {
+        String value = "";
+
+        switch (cell.getCellType()) {
+            case Cell.CELL_TYPE_STRING:
+                logger.info(cell.getStringCellValue() + "\t");
+                value = cell.getStringCellValue();
+                break;
+            case Cell.CELL_TYPE_NUMERIC:
+                logger.info(cell.getNumericCellValue() + "\t");
+                value = String.valueOf(cell.getNumericCellValue());
+                break;
+            case Cell.CELL_TYPE_BOOLEAN:
+                logger.info(cell.getBooleanCellValue() + "\t");
+                value = String.valueOf(cell.getBooleanCellValue());
+                break;
+            default:
+                break;
+        }
+
+        return value;
     }
 
     /**
@@ -531,4 +579,18 @@ public class SettingsBean implements Serializable {
     public void setNs(NegocioSettings ns) {
         this.ns = ns;
     }
+}
+
+class Glosa {
+
+    public static String number;
+    public static int montoTotal;
+    public static String columnA;
+    public static String columnB;
+
+    @Override
+    public String toString() {
+        return "Number " + number + " Monto Total " + montoTotal + " ColumnaA " + columnA + " ColumnaB " + columnB;
+    }
+
 }
