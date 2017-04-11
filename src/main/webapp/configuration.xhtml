@@ -67,7 +67,7 @@
 
                             <p:column style="text-align: center;">
                                 <f:facet name="header"><h:outputLabel value="Acción" /></f:facet>
-                                <p:rowEditor style="display: inline-block !important;"/>
+                                <p:rowEditor style="display: inline-block !important;" />
 
                                 <h:commandLink id="remove" styleClass="ui-helper-clearfix ui-icon " value="" action="#{settingsBean.delete(c)}" onclick="return confirm('Estás seguro?')">
                                     <i class="fa fa-trash"></i>
@@ -130,7 +130,7 @@
                                   auto="true" 
                                   sizeLimit="100000" 
                                   allowTypes="/(\.|\/)(xls|xlsx)$/" />
-                </h:form> 
+                </h:form>
                 <p:button outcome="/#{settingsBean.view}" value="Volver" icon="fa fa-angle-double-left" styleClass="secondary" />
             </div>
         </div>

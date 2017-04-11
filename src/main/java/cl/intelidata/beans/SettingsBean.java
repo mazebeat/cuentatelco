@@ -28,6 +28,7 @@ package cl.intelidata.beans;
 import cl.intelidata.jpa.Cliente;
 import cl.intelidata.jpa.Settings;
 import cl.intelidata.negocio.NegocioSettings;
+import cl.intelidata.utils.Utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,8 +39,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -368,33 +370,35 @@ public class SettingsBean implements Serializable {
                                     break;
                             }
 
-                            switch (cell.getColumnIndex()) {
-                                case 0:
-                                    s.setLabel2(value);
-                                    break;
-                                case 1:
-                                    s.setDimension2(value);
-                                    break;
-                                case 2:
-                                    s.setLabel1(value);
-                                    break;
-                                case 3:
-                                    s.setDimension1(value);
-                                    break;
-                            }
+//                            switch (cell.getColumnIndex()) {
+//                                case 0:
+//                                    s.setLabel2(value);
+//                                    break;
+//                                case 1:
+//                                    s.setDimension2(value);
+//                                    break;
+//                                case 2:
+//                                    s.setLabel1(value);
+//                                    break;
+//                                case 3:
+//                                    s.setDimension1(value);
+//                                    break;
+//                            }
                         }
 
-                        s.setLabel2("Monto Total");
-                        s.setDimension2("t.monto_total");
-
+//                        s.setLabel2("Monto Total");
+//                        s.setDimension2("t.monto_total");
                         // XXX: Save Setting and Glosa class from file values
                         if (row.getRowNum() != 0 && configList.size() < 4) {
 
 //                        configList.add(s);
 //                        ns.saveSettings(s);
                             logger.info("SAVE SETTINGS: " + s.toString());
-                        } else {
                             logger.info("SAVE GLOSA: " + g.toString());
+                        } else {
+                            logger.info("TITLES: " + lg.toString());
+                            Settings s2 = new Settings();
+                            
                         }
                     }
                 }
@@ -427,8 +431,8 @@ public class SettingsBean implements Serializable {
                 value = cell.getStringCellValue();
                 break;
             case Cell.CELL_TYPE_NUMERIC:
-                logger.info(cell.getNumericCellValue() + "\t");
-                value = String.valueOf(cell.getNumericCellValue());
+                logger.info(new Double(cell.getNumericCellValue()).intValue() + "\t");
+                value = String.valueOf(new Double(cell.getNumericCellValue()).intValue());
                 break;
             case Cell.CELL_TYPE_BOOLEAN:
                 logger.info(cell.getBooleanCellValue() + "\t");
