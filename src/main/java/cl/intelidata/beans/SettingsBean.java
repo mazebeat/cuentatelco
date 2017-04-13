@@ -28,7 +28,6 @@ package cl.intelidata.beans;
 import cl.intelidata.jpa.Cliente;
 import cl.intelidata.jpa.Settings;
 import cl.intelidata.negocio.NegocioSettings;
-import cl.intelidata.utils.Utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,8 +38,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -327,6 +324,7 @@ public class SettingsBean implements Serializable {
         try {
             FileInputStream excelFile = new FileInputStream(file);
             Workbook workbook = new XSSFWorkbook(excelFile);
+            List<String> titles = new ArrayList<>();
 
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
                 Sheet sheet = workbook.getSheetAt(i);
@@ -343,10 +341,10 @@ public class SettingsBean implements Serializable {
                     Iterator<Cell> cellIterator = row.cellIterator();
 
                     if (row.getRowNum() == 0) {
-                        List<String> t = getHeaderFile(cellIterator);
-                        for (String string : t) {
-                            g.columnA = string;
-                            lg.put(string, g);
+                        titles = getHeaderFile(cellIterator);
+                        for (String title : titles) {
+                            g.columnA = title;
+                            lg.put(title, g);
                             // XXX: Save to DDBB Settings list
                         }
                     } else {
@@ -397,9 +395,19 @@ public class SettingsBean implements Serializable {
                             logger.info("SAVE GLOSA: " + g.toString());
                         } else {
                             logger.info("TITLES: " + lg.toString());
-                            Settings s2 = new Settings();
-                            
+
+                            if (!titles.isEmpty()) {
+                                for (String title : titles) {
+                                    s.setLabel1("");
+                                    s.setLabel2(title);
+                                    s.setDimension1("monto_total");
+                                    s.setDimension2(title);
+                                    s.setUploaded(new Short("1"));
+                                }
+                            }
                         }
+                        configList.add(s);
+                        ns.saveSettings(s);
                     }
                 }
             }
