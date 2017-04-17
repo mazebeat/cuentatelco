@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
  */
 public class NegocioSettings {
 
-    private static Logger logger = LoggerFactory.getLogger(NegocioSettings.class);
+    private static final Logger logger = LoggerFactory.getLogger(NegocioSettings.class);
     private SettingsJpaController ctrl;
 
     /**
@@ -156,6 +156,7 @@ public class NegocioSettings {
 
     /**
      *
+     * @param client
      * @return
      */
     public Map<String, List<Settings>> defaultSettings(Cliente client) {
@@ -177,6 +178,7 @@ public class NegocioSettings {
     /**
      *
      * @param client
+     * @param view
      * @return
      */
     public List<Settings> monthlyDetailSettings(Cliente client, String view) {
@@ -259,6 +261,8 @@ public class NegocioSettings {
 
     /**
      *
+     * @param client
+     * @param view
      * @return
      */
     public List<Settings> monthlyDetailDefaultSettings(Cliente client, String view) {

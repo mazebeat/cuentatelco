@@ -25,8 +25,11 @@
  */
 package cl.intelidata.beans;
 
+import cl.intelidata.controllers.GlosaJpaController;
 import cl.intelidata.jpa.Cliente;
+import cl.intelidata.jpa.Glosa;
 import cl.intelidata.jpa.Settings;
+import cl.intelidata.negocio.NegocioGlosa;
 import cl.intelidata.negocio.NegocioSettings;
 import java.io.BufferedReader;
 import java.io.File;
@@ -73,18 +76,17 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class SettingsBean implements Serializable {
 
     private static final long serialVersionUID = -2152389656664659476L;
-    private static Logger logger = LoggerFactory.getLogger(SettingsBean.class);
+    private static final Logger logger = LoggerFactory.getLogger(SettingsBean.class);
     public FacesMessage msg = null;
 
     private NegocioSettings ns;
-    private int columns;
+    private int columns, idSetting;
     private String label1, label2, dimension1, dimension2, view;
     private List<Settings> configList;
     private Map<String, Object> dimensions1, dimensions2;
     public static Map<String, List<Settings>> settingsChart = new HashMap<>();
     private UploadedFile file;
     private File tempfile;
-    private List<?> data;
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginbean;
@@ -125,15 +127,20 @@ public class SettingsBean implements Serializable {
      * @param view
      */
     private void generateDimensions(String view) {
-        dimensions1 = new LinkedHashMap<String, Object>();
-        dimensions2 = new LinkedHashMap<String, Object>();
+        dimensions1 = new LinkedHashMap<>();
+        dimensions2 = new LinkedHashMap<>();
 
+        // XXX: Agregar carga por BBDD        
+        // XXX: Add id into the list
         switch (view) {
             case "month_detail":
                 dimensions1.put("Monto Total", "t.monto_total");
+                dimensions1.put("Monto Total", "Monto Total");
 
                 dimensions2.put("Teléfono", "te.numero");
                 dimensions2.put("Servicio", "p.id");
+                dimensions2.put("Centro de Costo", "Centro de Costo");
+                dimensions2.put("Número", "Número");
                 break;
             case "monthly_evolution":
                 dimensions1.put("Todos", "*");
@@ -270,6 +277,7 @@ public class SettingsBean implements Serializable {
      */
     public void handleFileUpload(FileUploadEvent event) {
         try {
+            configList = settingsChart.get(view);
             copyFile(view + "_" + event.getFile().getFileName(), event.getFile().getInputstream());
             if (tempfile.exists()) {
                 readFile(tempfile);
@@ -294,18 +302,17 @@ public class SettingsBean implements Serializable {
                 tempfile = File.createTempFile(fileName, "");
                 logger.info("Temp file : " + tempfile.getAbsolutePath());
 
-                OutputStream out = new FileOutputStream(tempfile);
+                try (OutputStream out = new FileOutputStream(tempfile)) {
+                    int read = 0;
+                    byte[] bytes = new byte[1024];
 
-                int read = 0;
-                byte[] bytes = new byte[1024];
+                    while ((read = in.read(bytes)) != -1) {
+                        out.write(bytes, 0, read);
+                    }
 
-                while ((read = in.read(bytes)) != -1) {
-                    out.write(bytes, 0, read);
+                    in.close();
+                    out.flush();
                 }
-
-                in.close();
-                out.flush();
-                out.close();
 
                 logger.info("New file created! (" + tempfile.getAbsolutePath() + ")");
             }
@@ -324,90 +331,60 @@ public class SettingsBean implements Serializable {
         try {
             FileInputStream excelFile = new FileInputStream(file);
             Workbook workbook = new XSSFWorkbook(excelFile);
-            List<String> titles = new ArrayList<>();
 
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
                 Sheet sheet = workbook.getSheetAt(i);
                 Iterator<Row> rowIterator = sheet.iterator();
 
-                Map<String, Glosa> lg = new HashMap<String, Glosa>();
-
                 while (rowIterator.hasNext()) {
-                    Settings s = new Settings();
-                    s.setView(view);
-                    s.setIdCliente(loginbean.getClient());
                     Glosa g = new Glosa();
                     Row row = rowIterator.next();
                     Iterator<Cell> cellIterator = row.cellIterator();
 
                     if (row.getRowNum() == 0) {
-                        titles = getHeaderFile(cellIterator);
-                        for (String title : titles) {
-                            g.columnA = title;
-                            lg.put(title, g);
-                            // XXX: Save to DDBB Settings list
+                        List<String> titles = getHeaderFile(cellIterator);
+                        if (!titles.isEmpty()) {
+                            for (String title : titles) {
+                                Settings s = new Settings();
+                                s.setLabel1("Monto Total");
+                                s.setLabel2(title);
+                                s.setDimension1("Monto Total");
+                                s.setDimension2(title);
+                                s.setUploaded(new Short("1"));
+                                s.setView(view);
+                                s.setIdCliente(loginbean.getClient());
+
+                                configList.add(s);
+                                ns.save(s);
+                            }
                         }
                     } else {
-                        // XXX: Save to DDBB Glosa list
                         while (cellIterator.hasNext()) {
                             Cell cell = cellIterator.next();
                             String value = getCellValue(cell);
 
                             switch (cell.getColumnIndex()) {
                                 case 0:
-                                    g.number = value;
+                                    g.setTelephone(value);
                                     break;
                                 case 1:
-                                    g.montoTotal = Integer.parseInt(value);
+                                    g.setMontoTotal(Integer.parseInt(value));
                                     break;
                                 case 2:
-                                    g.columnA = value;
+                                    g.setColumnaA(value);
                                     break;
                                 case 3:
-                                    g.columnB = value;
+                                    g.setColumnaB(value);
                                     break;
                             }
-
-//                            switch (cell.getColumnIndex()) {
-//                                case 0:
-//                                    s.setLabel2(value);
-//                                    break;
-//                                case 1:
-//                                    s.setDimension2(value);
-//                                    break;
-//                                case 2:
-//                                    s.setLabel1(value);
-//                                    break;
-//                                case 3:
-//                                    s.setDimension1(value);
-//                                    break;
-//                            }
                         }
 
-//                        s.setLabel2("Monto Total");
-//                        s.setDimension2("t.monto_total");
-                        // XXX: Save Setting and Glosa class from file values
-                        if (row.getRowNum() != 0 && configList.size() < 4) {
-
-//                        configList.add(s);
-//                        ns.saveSettings(s);
-                            logger.info("SAVE SETTINGS: " + s.toString());
-                            logger.info("SAVE GLOSA: " + g.toString());
-                        } else {
-                            logger.info("TITLES: " + lg.toString());
-
-                            if (!titles.isEmpty()) {
-                                for (String title : titles) {
-                                    s.setLabel1("");
-                                    s.setLabel2(title);
-                                    s.setDimension1("monto_total");
-                                    s.setDimension2(title);
-                                    s.setUploaded(new Short("1"));
-                                }
-                            }
+                        if (row.getRowNum() != 0) {
+                            NegocioGlosa ng = new NegocioGlosa();
+                            g.setView(view);
+                            g.setIdCliente(loginbean.getClient());
+                            ng.save(g);
                         }
-                        configList.add(s);
-                        ns.saveSettings(s);
                     }
                 }
             }
@@ -418,6 +395,11 @@ public class SettingsBean implements Serializable {
         }
     }
 
+    /**
+     *
+     * @param cellIterator
+     * @return
+     */
     public List<String> getHeaderFile(Iterator<Cell> cellIterator) {
         List<String> result = new ArrayList<>();
 
@@ -430,6 +412,11 @@ public class SettingsBean implements Serializable {
         return result;
     }
 
+    /**
+     *
+     * @param cell
+     * @return
+     */
     public String getCellValue(Cell cell) {
         String value = "";
 
@@ -451,41 +438,6 @@ public class SettingsBean implements Serializable {
         }
 
         return value;
-    }
-
-    /**
-     *
-     */
-    private void getVersion() {
-        try {
-            Process p = Runtime.getRuntime().exec(new String[]{"cmd.exe", "/c", "assoc", ".xls"});
-            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String extensionType = input.readLine();
-            input.close();
-            // extract type
-            if (extensionType == null) {
-                System.out.println("no office installed ?");
-                System.exit(1);
-            }
-            String fileType[] = extensionType.split("=");
-
-            p = Runtime.getRuntime().exec(new String[]{"cmd.exe", "/c", "ftype", fileType[1]});
-            input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String fileAssociation = input.readLine();
-            // extract path
-            String officePath = fileAssociation.split("=")[1];
-            System.out.println(officePath);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-    }
-
-    public void orderByColumns() {
-        try {
-            System.out.println();
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
     }
 
     public int getColumns() {
@@ -591,18 +543,12 @@ public class SettingsBean implements Serializable {
     public void setNs(NegocioSettings ns) {
         this.ns = ns;
     }
-}
-
-class Glosa {
-
-    public static String number;
-    public static int montoTotal;
-    public static String columnA;
-    public static String columnB;
-
-    @Override
-    public String toString() {
-        return "Number " + number + " Monto Total " + montoTotal + " ColumnaA " + columnA + " ColumnaB " + columnB;
+    
+    public int getIdSetting() {
+        return idSetting;
     }
 
+    public void setIdSetting(int idSetting) {
+        this.idSetting = idSetting;
+    }
 }
